@@ -1,0 +1,812 @@
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Hàn Quốc 3–10/10/2026</title>
+<meta name="robots" content="noindex, nofollow">
+<meta name="description" content="Lịch trình Seoul và Busan, 3–10/10/2026, 2 người.">
+<meta property="og:title" content="Seoul / Busan — 3–10/10/2026">
+<meta property="og:description" content="Lịch trình 7 đêm, chi phí theo ngày, gợi ý khách sạn.">
+<meta property="og:type" content="website">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;800&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+<style>
+  :root{
+    --paper:#EFF0EA;
+    --card:#FFFFFF;
+    --ink:#18222E;
+    --ink-soft:#5C6674;
+    --ink-faint:#8B95A1;
+    --seoul:#27406E;
+    --seoul-wash:#DEE3EE;
+    --busan:#0E6A61;
+    --busan-wash:#D6E6E2;
+    --alert:#A32E44;
+    --alert-wash:#F4DFE3;
+    --rule:#D5D7CF;
+    --mono:"IBM Plex Mono",ui-monospace,SFMono-Regular,Menlo,monospace;
+    --sans:"Be Vietnam Pro",system-ui,-apple-system,"Segoe UI",sans-serif;
+  }
+
+  *{box-sizing:border-box}
+
+  body{
+    margin:0;
+    background:var(--paper);
+    color:var(--ink);
+    font-family:var(--sans);
+    font-size:16px;
+    line-height:1.6;
+    -webkit-font-smoothing:antialiased;
+  }
+
+  .wrap{max-width:760px;margin:0 auto;padding:0 20px 80px}
+
+  .hero{padding:44px 0 28px}
+
+  .kicker{
+    font-family:var(--mono);
+    font-size:12px;
+    letter-spacing:.04em;
+    color:var(--ink-faint);
+    margin:0 0 14px;
+  }
+
+  h1{
+    font-size:clamp(34px,9vw,52px);
+    line-height:1.02;
+    font-weight:800;
+    letter-spacing:-.03em;
+    margin:0 0 6px;
+  }
+  h1 .sep{color:var(--ink-faint);font-weight:400}
+
+  .subtitle{
+    font-size:17px;
+    color:var(--ink-soft);
+    margin:0 0 30px;
+    max-width:46ch;
+  }
+
+  .spine{display:flex;gap:3px;margin-bottom:12px}
+  .seg{flex:1;min-width:0;text-decoration:none;color:inherit;display:block}
+  .seg .bar{height:34px;border-radius:3px;display:flex;align-items:center;justify-content:center}
+  .seg[data-city="seoul"] .bar{background:var(--seoul)}
+  .seg[data-city="busan"] .bar{background:var(--busan)}
+  .seg[data-city="s2b"] .bar{background:linear-gradient(100deg,var(--seoul) 12%,var(--busan) 88%)}
+  .seg[data-city="b2s"] .bar{background:linear-gradient(100deg,var(--busan) 12%,var(--seoul) 88%)}
+  .seg .bar span{font-family:var(--mono);font-size:12px;font-weight:500;color:#fff}
+  .seg .dow{display:block;text-align:center;font-family:var(--mono);font-size:10px;color:var(--ink-faint);margin-top:5px}
+  .seg:focus-visible .bar{outline:2px solid var(--ink);outline-offset:2px}
+
+  .legend{display:flex;flex-wrap:wrap;gap:16px;font-size:13px;color:var(--ink-soft);margin-bottom:34px}
+  .legend i{width:10px;height:10px;border-radius:2px;display:inline-block;margin-right:6px;vertical-align:-1px}
+  .legend .s{background:var(--seoul)}
+  .legend .b{background:var(--busan)}
+
+  .flights{background:var(--card);border:1px solid var(--rule);border-radius:6px;overflow:hidden;margin-bottom:44px}
+  .flight{display:flex;align-items:baseline;gap:14px;padding:15px 18px;flex-wrap:wrap}
+  .flight + .flight{border-top:1px solid var(--rule)}
+  .flight .route{font-weight:600;font-size:16px;letter-spacing:-.01em}
+  .flight .when{font-family:var(--mono);font-size:13px;color:var(--ink-soft)}
+  .flight .tag{font-size:12px;color:var(--ink-faint);margin-left:auto}
+
+  section{margin-bottom:46px;scroll-margin-top:64px}
+
+  h2{
+    font-size:13px;font-weight:600;letter-spacing:.02em;color:var(--ink-soft);
+    margin:0 0 16px;padding-bottom:9px;border-bottom:1px solid var(--rule);
+  }
+
+  .task{
+    display:flex;gap:13px;align-items:flex-start;background:var(--card);
+    border:1px solid var(--rule);border-radius:6px;padding:14px 16px;
+    margin-bottom:9px;cursor:pointer;transition:opacity .18s ease;
+  }
+  .task.urgent{border-left:3px solid var(--alert)}
+  .task input{
+    appearance:none;width:19px;height:19px;flex:0 0 19px;margin:3px 0 0;
+    border:1.5px solid var(--ink-faint);border-radius:4px;background:#fff;
+    cursor:pointer;position:relative;
+  }
+  .task input:checked{background:var(--ink);border-color:var(--ink)}
+  .task input:checked::after{
+    content:"";position:absolute;left:6px;top:2px;width:4px;height:9px;
+    border:solid #fff;border-width:0 2px 2px 0;transform:rotate(42deg);
+  }
+  .task input:focus-visible{outline:2px solid var(--ink);outline-offset:2px}
+  .task .body{flex:1;min-width:0}
+  .task .t{font-weight:600;font-size:15px;display:block;letter-spacing:-.01em}
+  .task .d{font-size:14px;color:var(--ink-soft);display:block;margin-top:2px}
+  .task .due{
+    font-family:var(--mono);font-size:11px;color:var(--alert);background:var(--alert-wash);
+    padding:2px 7px;border-radius:3px;display:inline-block;margin-top:7px;
+  }
+  .task.done{opacity:.42}
+  .task.done .t{text-decoration:line-through}
+
+  .progress{font-family:var(--mono);font-size:12px;color:var(--ink-faint);margin-top:14px}
+
+  .day{background:var(--card);border:1px solid var(--rule);border-radius:6px;margin-bottom:14px;overflow:hidden}
+  .day-head{padding:16px 18px 14px;border-left:4px solid var(--seoul);background:var(--seoul-wash)}
+  .day[data-city="busan"] .day-head{border-left-color:var(--busan);background:var(--busan-wash)}
+  .day[data-city="s2b"] .day-head{border-left-color:var(--busan);background:linear-gradient(100deg,var(--seoul-wash),var(--busan-wash))}
+  .day[data-city="b2s"] .day-head{border-left-color:var(--seoul);background:linear-gradient(100deg,var(--busan-wash),var(--seoul-wash))}
+
+  .day-date{font-family:var(--mono);font-size:12px;color:var(--ink-soft);display:block;margin-bottom:3px}
+  .day-title{font-size:21px;font-weight:700;letter-spacing:-.02em;margin:0;line-height:1.2}
+  .day-body{padding:6px 18px 18px}
+
+  .sched{margin:12px 0 0}
+  .row{display:flex;gap:14px;padding:10px 0;border-bottom:1px dotted var(--rule)}
+  .row:last-child{border-bottom:0}
+  .row .time{font-family:var(--mono);font-size:13px;color:var(--ink-soft);flex:0 0 54px;padding-top:1px}
+  .row .what{flex:1;min-width:0}
+  .row .what b{font-weight:600;letter-spacing:-.01em}
+  .row .what p{margin:3px 0 0;font-size:14px;color:var(--ink-soft);line-height:1.5}
+
+  .links{margin-top:6px;display:flex;flex-wrap:wrap;gap:12px}
+  .links a{
+    font-size:12.5px;color:var(--seoul);text-decoration:none;
+    border-bottom:1px solid rgba(39,64,110,.35);padding-bottom:1px;
+  }
+  .links a:hover{border-bottom-color:currentColor}
+  .links a:focus-visible{outline:2px solid var(--ink);outline-offset:2px}
+  .day[data-city="busan"] .links a,
+  .day[data-city="s2b"] .links a{color:var(--busan);border-bottom-color:rgba(14,106,97,.35)}
+
+  .move{
+    margin-top:14px;padding:12px 14px;background:var(--paper);border-radius:5px;
+    font-size:14px;color:var(--ink-soft);line-height:1.55;
+  }
+  .move b{color:var(--ink);font-weight:600}
+
+  .cost{margin-top:10px;border:1px solid var(--rule);border-radius:5px;overflow:hidden}
+  .cost .cost-head{
+    display:flex;justify-content:space-between;align-items:baseline;gap:10px;
+    padding:10px 14px;background:var(--paper);flex-wrap:wrap;
+  }
+  .cost .cost-head span:first-child{font-size:13px;font-weight:600}
+  .cost .cost-head span:last-child{font-family:var(--mono);font-size:13px}
+  .cost ul{margin:0;padding:8px 14px 11px;list-style:none}
+  .cost li{
+    display:flex;justify-content:space-between;gap:12px;
+    font-size:13px;color:var(--ink-soft);padding:3px 0;
+  }
+  .cost li span:last-child{font-family:var(--mono);white-space:nowrap}
+
+  details.notes{margin-top:12px}
+  details.notes summary{font-size:13px;color:var(--ink-faint);cursor:pointer;list-style:none;padding:4px 0}
+  details.notes summary::-webkit-details-marker{display:none}
+  details.notes summary::before{content:"+ ";font-family:var(--mono)}
+  details.notes[open] summary::before{content:"− "}
+  details.notes summary:focus-visible{outline:2px solid var(--ink);outline-offset:2px}
+  textarea{
+    width:100%;min-height:74px;margin-top:8px;padding:11px 13px;
+    border:1px solid var(--rule);border-radius:5px;font-family:var(--sans);
+    font-size:14px;line-height:1.55;color:var(--ink);background:var(--paper);resize:vertical;
+  }
+  textarea:focus{outline:2px solid var(--ink);outline-offset:1px}
+
+  .budget{background:var(--card);border:1px solid var(--rule);border-radius:6px;overflow:hidden}
+  .bline{display:flex;align-items:baseline;gap:12px;padding:12px 18px;border-bottom:1px solid var(--rule);flex-wrap:wrap}
+  .bline .label{flex:1;min-width:130px;font-size:15px}
+  .bline .label em{display:block;font-style:normal;font-size:13px;color:var(--ink-faint)}
+  .bline .amt{font-family:var(--mono);font-size:13px;color:var(--ink-soft);white-space:nowrap}
+  .bline.total{background:var(--paper);border-bottom:0;padding:16px 18px}
+  .bline.total .label{font-weight:700;font-size:16px}
+  .bline.total .amt{color:var(--ink);font-weight:500;font-size:14px}
+
+  .fine{font-size:13px;color:var(--ink-faint);margin-top:12px;line-height:1.55}
+
+  .note-item{background:var(--card);border:1px solid var(--rule);border-radius:6px;padding:14px 16px;margin-bottom:9px}
+  .note-item h3{font-size:15px;font-weight:600;margin:0 0 4px;letter-spacing:-.01em}
+  .note-item p{margin:0;font-size:14px;color:var(--ink-soft);line-height:1.55}
+  .note-item a{color:var(--seoul);text-decoration:none;border-bottom:1px solid rgba(39,64,110,.35)}
+
+
+  .lead{font-size:15px;color:var(--ink-soft);line-height:1.6;margin:0 0 18px;max-width:64ch}
+  .lead b{color:var(--ink);font-weight:600}
+  .hotel{background:var(--card);border:1px solid var(--rule);border-radius:6px;padding:15px 17px;margin-bottom:10px}
+  .hotel.best{border-left:3px solid var(--seoul)}
+  .hotel-head{display:flex;justify-content:space-between;align-items:baseline;gap:10px;flex-wrap:wrap;margin-bottom:7px}
+  .hotel-name{font-weight:600;font-size:16px;letter-spacing:-.01em;color:var(--seoul);text-decoration:none;border-bottom:1px solid rgba(39,64,110,.35)}
+  .hotel-name:hover{border-bottom-color:currentColor}
+  .hotel-name:focus-visible{outline:2px solid var(--ink);outline-offset:2px}
+  .hotel-area{font-family:var(--mono);font-size:12px;color:var(--ink-faint)}
+  .hotel p{margin:0 0 8px;font-size:14px;color:var(--ink-soft);line-height:1.55}
+  .hotel p:last-child{margin-bottom:0}
+  .hotel .check{background:var(--paper);border-radius:5px;padding:10px 12px;font-size:13.5px}
+  .hotel .check b{color:var(--ink);font-weight:600}
+
+  .status{
+    position:fixed;left:50%;bottom:18px;transform:translateX(-50%) translateY(70px);
+    background:var(--ink);color:#fff;font-family:var(--mono);font-size:12px;
+    padding:8px 15px;border-radius:20px;transition:transform .25s ease;
+    pointer-events:none;z-index:20;
+  }
+  .status.show{transform:translateX(-50%) translateY(0)}
+
+  footer{border-top:1px solid var(--rule);padding-top:18px;font-size:13px;color:var(--ink-faint);line-height:1.6}
+
+  @media (max-width:560px){
+    .wrap{padding:0 15px 70px}
+    .hero{padding:30px 0 22px}
+    .seg .bar{height:30px}
+    .seg .bar span{font-size:11px}
+    .row .time{flex:0 0 46px;font-size:12px}
+    .flight .tag{margin-left:0;width:100%}
+  }
+
+  @media (prefers-reduced-motion:reduce){
+    *{transition:none!important;animation:none!important}
+  }
+</style>
+
+<div class="wrap">
+
+  <header class="hero">
+    <p class="kicker">3–10 tháng 10, 2026 · 7 đêm · 2 người</p>
+    <h1>Seoul <span class="sep">/</span> Busan</h1>
+    <p class="subtitle">Sáng thứ Bảy và sáng Chủ nhật ở Seoul với bạn bè, chiều Chủ nhật xuống Busan. Bấm vào một ngày để nhảy tới lịch chi tiết.</p>
+
+    <div class="spine">
+      <a class="seg" data-city="seoul" href="#d1"><span class="bar"><span>3</span></span><span class="dow">T7</span></a>
+      <a class="seg" data-city="s2b" href="#d2"><span class="bar"><span>4</span></span><span class="dow">CN</span></a>
+      <a class="seg" data-city="busan" href="#d3"><span class="bar"><span>5</span></span><span class="dow">T2</span></a>
+      <a class="seg" data-city="busan" href="#d4"><span class="bar"><span>6</span></span><span class="dow">T3</span></a>
+      <a class="seg" data-city="busan" href="#d5"><span class="bar"><span>7</span></span><span class="dow">T4</span></a>
+      <a class="seg" data-city="b2s" href="#d6"><span class="bar"><span>8</span></span><span class="dow">T5</span></a>
+      <a class="seg" data-city="seoul" href="#d7"><span class="bar"><span>9</span></span><span class="dow">T6</span></a>
+      <a class="seg" data-city="seoul" href="#d8"><span class="bar"><span>10</span></span><span class="dow">T7</span></a>
+    </div>
+    <div class="legend">
+      <span><i class="s"></i>Seoul</span>
+      <span><i class="b"></i>Busan</span>
+      <span>Ngày chuyển màu là ngày đi tàu</span>
+    </div>
+
+    <div class="flights">
+      <div class="flight">
+        <span class="route">HAN → ICN</span>
+        <span class="when">T7 3/10 · 00:45 – 07:35</span>
+        <span class="tag">Jeju Air · 4h50</span>
+      </div>
+      <div class="flight">
+        <span class="route">ICN → HAN</span>
+        <span class="when">T7 10/10 · 20:40 – 23:45</span>
+        <span class="tag">Jeju Air · 5h05 · không hoàn vé</span>
+      </div>
+    </div>
+  </header>
+
+  <section id="chuan-bi">
+    <h2>Cần làm trước khi đi</h2>
+
+    <label class="task urgent">
+      <input type="checkbox" data-task="ktx-di">
+      <span class="body">
+        <span class="t">Đặt vé KTX Seoul → Busan chiều 4/10</span>
+        <span class="d">Chuyến khoảng 15:00. Chiều Chủ nhật giữa kỳ nghỉ lễ nên cạnh tranh hơn sáng thứ Hai — đặt ngay.</span>
+        <span class="due">Đã mở bán</span>
+      </span>
+    </label>
+
+    <label class="task">
+      <input type="checkbox" data-task="ktx-ve">
+      <span class="body">
+        <span class="t">Đặt vé KTX Busan → Seoul chiều 8/10</span>
+        <span class="d">Chuyến khoảng 15:00. Dự phòng nếu hết vé: bay Gimhae → Gimpo, 55 phút.</span>
+      </span>
+    </label>
+
+    <label class="task">
+      <input type="checkbox" data-task="ks-seoul">
+      <span class="body">
+        <span class="t">Đặt khách sạn Seoul — 3 đêm</span>
+        <span class="d">Đêm 3, 8, 9/10. Khu Myeongdong hoặc Euljiro: đi bộ tới cung điện, gần ga Seoul. Đêm 9/10 là đêm lễ nên giá cao hơn.</span>
+      </span>
+    </label>
+
+    <label class="task">
+      <input type="checkbox" data-task="ks-busan">
+      <span class="body">
+        <span class="t">Đặt khách sạn Busan — 4 đêm</span>
+        <span class="d">Đêm 4, 5, 6, 7/10. Khu Seomyeon: hai tuyến metro giao nhau, đi Gamcheon và Haeundae đều tiện, rẻ hơn Haeundae.</span>
+      </span>
+    </label>
+
+    <label class="task">
+      <input type="checkbox" data-task="sky-capsule">
+      <span class="body">
+        <span class="t">Đặt vé Sky Capsule ngày 6/10</span>
+        <span class="d">Hay hết vé, nên đặt online trước. Khoảng 35.000–45.000₩/cabin 4 chỗ.</span>
+      </span>
+    </label>
+
+    <label class="task">
+      <input type="checkbox" data-task="hanh-ly">
+      <span class="body">
+        <span class="t">Kiểm tra hành lý ký gửi Jeju Air</span>
+        <span class="d">Hãng giá rẻ, giá vé rất có thể chưa gồm va li ký gửi. Mua thêm lúc đặt rẻ hơn ở sân bay nhiều.</span>
+      </span>
+    </label>
+
+    <label class="task">
+      <input type="checkbox" data-task="ten">
+      <span class="body">
+        <span class="t">Đối chiếu tên hành khách với hộ chiếu</span>
+        <span class="d">Phải khớp từng ký tự. Kiểm tra luôn terminal ở Incheon — T1 và T2 tách rời, AREX dừng T1 trước.</span>
+      </span>
+    </label>
+
+    <label class="task">
+      <input type="checkbox" data-task="app">
+      <span class="body">
+        <span class="t">Cài app: Naver Map, Korail Talk, Kakao T, Papago</span>
+        <span class="d">Google Maps hoạt động rất kém ở Hàn Quốc, bắt buộc phải có Naver Map hoặc KakaoMap.</span>
+      </span>
+    </label>
+
+    <label class="task">
+      <input type="checkbox" data-task="esim">
+      <span class="body">
+        <span class="t">Mua eSIM</span>
+        <span class="d">Khoảng 10–20 USD cho 7 ngày, nhận ngay, rẻ hơn thuê pocket wifi.</span>
+      </span>
+    </label>
+
+    <p class="progress" id="progress">Đang tải…</p>
+  </section>
+
+  <section id="khach-san">
+    <h2>Chọn khách sạn đêm đầu — 3/10</h2>
+
+    <p class="lead">Đêm 3/10 giờ là <b>một đêm đứng riêng</b>: sáng 4/10 các bạn trả phòng, đi cung điện, rồi 15:00 lên tàu đi Busan. Nên tiêu chí không phải là gần cung điện, mà là ba thứ theo thứ tự: <b>dễ về từ AREX</b>, <b>giữ được va li tới trưa hôm sau</b>, và <b>ra ga Seoul nhanh</b>. Mình không mở được link Agoda nên phần dưới là phân tích vị trí, kèm những thứ bạn cần tự kiểm tra. Bấm vào tên khách sạn để mở trang đặt phòng — link đã đặt sẵn ngày 3/10, 2 người, 1 đêm.</p>
+
+    <div class="hotel best">
+      <div class="hotel-head"><a class="hotel-name" href="https://www.agoda.com/vi-vn/24-guesthouse-seoul-city-hall/hotel/seoul-kr.html?countryId=212&amp;finalPriceView=1&amp;isShowMobileAppPrice=false&amp;cid=1922896&amp;adults=2&amp;children=0&amp;rooms=1&amp;checkIn=2026-10-3&amp;currencyCode=VND&amp;los=1" target="_blank" rel="noopener">24 Guesthouse Seoul City Hall</a><span class="hotel-area">City Hall</span></div>
+      <p>Trên giấy tờ đây là vị trí hợp lịch nhất. Ga City Hall cách ga Seoul đúng <b>một ga tuyến 1</b>. Cung Deoksugung nằm ngay cạnh ga, suối Cheonggyecheon đi bộ vài phút — tức là toàn bộ ngày 3/10 nằm quanh khách sạn, không cần đi tàu lần nào. Sáng 4/10 lên Gyeongbokgung khoảng 15 phút, rồi quay lại lấy va li ra ga rất nhanh.</p>
+      <p class="check"><b>Cần kiểm tra:</b> 24 Guesthouse là chuỗi guesthouse, có cả phòng riêng lẫn phòng tập thể. Xem kỹ loại phòng đang chọn là phòng đôi riêng biệt, và phòng tắm riêng hay chung.</p>
+    </div>
+
+    <div class="hotel">
+      <div class="hotel-head"><a class="hotel-name" href="https://www.agoda.com/vi-vn/k-pop-hotel-seoul-tower/hotel/seoul-kr.html?countryId=212&amp;finalPriceView=1&amp;isShowMobileAppPrice=false&amp;cid=1922896&amp;adults=2&amp;children=0&amp;rooms=1&amp;checkIn=2026-10-3&amp;currencyCode=VND&amp;los=1" target="_blank" rel="noopener">K-Pop Hotel Seoul Tower</a><span class="hotel-area">Namsan / Myeongdong</span></div>
+      <p>Chuỗi khách sạn bình dân của Hàn, phòng thường nhỏ nhưng sạch và tiêu chuẩn ổn định. Khu Myeongdong cách ga Seoul một ga tuyến 4, tiện cho cả hôm sau lẫn ngày cuối chuyến.</p>
+      <p class="check"><b>Cần kiểm tra:</b> tên có chữ Tower nên nhiều khả năng nằm về phía chân núi Namsan. Mở bản đồ trên Agoda xem có phải leo dốc từ ga không — sau chuyến bay đêm kéo va li lên dốc là chuyện khác hẳn. Phòng chuỗi này thường rất nhỏ, xem ảnh phòng đôi trước.</p>
+    </div>
+
+    <div class="hotel">
+      <div class="hotel-head"><a class="hotel-name" href="https://www.agoda.com/vi-vn/pixel-stay/hotel/seoul-kr.html?countryId=212&amp;finalPriceView=1&amp;isShowMobileAppPrice=false&amp;cid=1922896&amp;adults=2&amp;children=0&amp;rooms=1&amp;checkIn=2026-10-3&amp;currencyCode=VND&amp;los=1" target="_blank" rel="noopener">Pixel Stay</a><span class="hotel-area">Myeongdong</span></div>
+      <p>Mình không có thông tin đáng tin về chỗ này nên không dám nhận xét. Nếu vị trí nằm trong khu Myeongdong hoặc Hoehyeon thì logistics tương đương lựa chọn trên.</p>
+      <p class="check"><b>Cần kiểm tra:</b> ga metro gần nhất và khoảng cách đi bộ thật, số lượng đánh giá — chỗ mới hoặc ít đánh giá thì rủi ro cao hơn.</p>
+    </div>
+
+    <div class="hotel">
+      <div class="hotel-head"><a class="hotel-name" href="https://www.agoda.com/vi-vn/namsan203-guest-house/hotel/seoul-kr.html?countryId=212&amp;finalPriceView=1&amp;isShowMobileAppPrice=false&amp;cid=1922896&amp;adults=2&amp;children=0&amp;rooms=1&amp;checkIn=2026-10-3&amp;currencyCode=VND&amp;los=1" target="_blank" rel="noopener">Namsan203 Guest House</a><span class="hotel-area">Sườn Namsan</span></div>
+      <p>Tên gợi ý nằm trên sườn núi Namsan, khu Huam-dong hoặc tương tự. Những khu này thường yên tĩnh, view đẹp, giá mềm — nhưng gần như chắc chắn có dốc.</p>
+      <p class="check"><b>Cần kiểm tra:</b> đây là lựa chọn rủi ro nhất cho đêm 3/10 vì các bạn hạ cánh 7:35 sau chuyến bay đêm. Xem địa chỉ trên Google Maps ở chế độ Street View để biết dốc tới mức nào, và có thang máy trong toà nhà không.</p>
+    </div>
+
+    <div class="hotel">
+      <div class="hotel-head"><a class="hotel-name" href="https://www.agoda.com/vi-vn/noo-noo-hotel/hotel/seoul-kr.html?countryId=212&amp;finalPriceView=1&amp;isShowMobileAppPrice=false&amp;cid=1922896&amp;adults=2&amp;children=0&amp;rooms=1&amp;checkIn=2026-10-3&amp;currencyCode=VND&amp;los=1" target="_blank" rel="noopener">Noo Noo Hotel</a><span class="hotel-area">Jongno</span></div>
+      <p>Jongno gần cung điện hơn hẳn, nhưng với lịch mới thì lợi thế đó không lớn: ngày 3/10 các bạn không đi cung, còn sáng 4/10 chỉ ở cung khoảng 2 tiếng rồi phải ra ga Seoul. Jongno ra ga Seoul mất thêm khoảng 10 phút so với City Hall hay Myeongdong.</p>
+      <p class="check"><b>Cần kiểm tra:</b> ga gần nhất là Jongno 3-ga hay Jonggak. Nếu là Jongno 3-ga thì có tuyến 1 chạy thẳng về ga Seoul, chấp nhận được. Bù lại buổi tối khu này ăn uống ngon hơn Myeongdong nhiều.</p>
+    </div>
+
+    <div class="move" style="margin-top:16px"><b>Kiểm tra chung cho cả năm chỗ:</b> có giữ hành lý sau khi trả phòng không (bắt buộc, vì sáng 4/10 các bạn đi cung điện trước khi ra ga); có thang máy không; giá đã gồm thuế 10% chưa; có huỷ miễn phí không. Và nếu chỗ nào cho gửi một va li trong bốn ngày đi Busan thì đặt luôn chỗ đó cho cả đêm 8 và 9/10 — xuống Busan chỉ mang túi nhỏ.</div>
+  </section>
+
+  <section id="khach-san-busan">
+    <h2>Chọn khu ở Busan — 4 đêm, 4/10 đến 8/10</h2>
+
+    <p class="lead">Điểm quyết định là <b>ga Busan</b>: các bạn dùng nó bốn lần — đến ngày 4/10, đi và về Gyeongju ngày 7/10, rời đi ngày 8/10. May mắn là <b>metro tuyến 1</b> nối gần hết mọi thứ trong lịch: Beomeosa ở đầu bắc, rồi Seomyeon, ga Busan, và Nampo ở đầu nam. Chỉ ngày 6/10 đi bờ đông là cần tuyến 2.</p>
+
+    <div class="hotel best">
+      <div class="hotel-head"><span class="hotel-name">Seomyeon — nên chọn</span><span class="hotel-area">tuyến 1 + tuyến 2</span></div>
+      <p>Nút giao của hai tuyến metro, nên là chỗ duy nhất đi đâu cũng nhanh: ga Busan 7 phút, Nampo 15 phút, Beomeosa 25 phút, Haeundae 35 phút. Đây cũng là khu ăn uống và mua sắm lớn nhất Busan nên buổi tối về muộn vẫn có chỗ ăn. Giá phòng thường mềm hơn Haeundae và Nampo.</p>
+      <p class="check"><b>Nhược điểm:</b> là khu thương mại hiện đại, không có nét riêng như Nampo. Đông và ồn vào cuối tuần.</p>
+    </div>
+
+    <div class="hotel">
+      <div class="hotel-head"><span class="hotel-name">Nampo-dong</span><span class="hotel-area">tuyến 1, đầu nam</span></div>
+      <p>Trọn ngày 5/10 diễn ra ở đây: Gamcheon, Jagalchi, BIFF Square, chợ đêm Bupyeong đều đi bộ hoặc một chặng xe buýt. Sáng 8/10 ghé chợ Gukje cũng ngay cạnh. Khu phố cổ, buổi tối sống động, ăn uống đúng chất Busan.</p>
+      <p class="check"><b>Nhược điểm:</b> ngày 6/10 đi Haeundae mất khoảng 55 phút mỗi chiều, và sáng 8/10 lên Beomeosa mất 40 phút. Ga Busan 10 phút, vẫn ổn.</p>
+    </div>
+
+    <div class="hotel">
+      <div class="hotel-head"><span class="hotel-name">Haeundae — không nên</span><span class="hotel-area">tuyến 2, đầu đông</span></div>
+      <p>Bãi biển đẹp nhưng nằm lệch hẳn về phía đông, trong khi lịch của bạn nghiêng về phía tây và ga Busan. Ba trong bốn ngày sẽ mất thêm 1–2 tiếng đi lại, riêng hai lượt đi Gyeongju ngày 7/10 sẽ rất mệt vì phải ra ga Busan từ sớm.</p>
+      <p class="check"><b>Chỉ hợp nếu:</b> hai bạn muốn ở khách sạn nhìn ra biển và chấp nhận đánh đổi thời gian.</p>
+    </div>
+
+    <div class="move" style="margin-top:16px"><b>Cần kiểm tra khi đặt:</b> khoảng cách đi bộ thật từ ga metro (Seomyeon là ga rất lớn, có tới 13 lối ra — xem khách sạn gần lối nào); có giữ hành lý sáng 8/10 sau khi trả phòng không; và giá đã gồm thuế 10% chưa. Đặt loại huỷ miễn phí vì lịch còn có thể đổi.</div>
+  </section>
+
+  <section id="lich">
+    <h2>Lịch từng ngày</h2>
+
+    <article class="day" data-city="seoul" id="d1">
+      <div class="day-head">
+        <span class="day-date">Thứ Bảy 3/10</span>
+        <h3 class="day-title">Ngày đến, giữ nhẹ</h3>
+      </div>
+      <div class="day-body">
+        <div class="sched">
+          <div class="row"><span class="time">07:35</span><span class="what"><b>Hạ cánh Incheon</b><p>Làm thủ tục nhập cảnh. Mua thẻ T-money ngay ở cửa hàng tiện lợi trong sân bay — dùng cho metro và xe buýt cả Seoul lẫn Busan.</p><span class="links"><a href="https://www.airport.kr/ap/en/index.do" target="_blank" rel="noopener">Sân bay Incheon</a></span></span></div>
+          <div class="row"><span class="time">08:30</span><span class="what"><b>AREX về ga Seoul</b><p>Bản Express 43 phút, 11.000₩. Bản thường 59 phút, 4.500₩ và dùng được T-money.</p><span class="links"><a href="https://www.arex.or.kr/main.do" target="_blank" rel="noopener">Trang AREX</a></span></span></div>
+          <div class="row"><span class="time">09:30</span><span class="what"><b>Gửi va li, ăn sáng</b><p>Nhận phòng thường từ 15:00.</p></span></div>
+          <div class="row"><span class="time">11:00</span><span class="what"><b>Cung Deoksugung</b><p>Cung nhỏ nhất trong năm cung triều Joseon, kiến trúc pha Hàn và phương Tây. Đi hết chỉ 1 tiếng. Vé 1.000₩.</p><span class="links"><a href="https://www.google.com/search?hl=vi&amp;q=cung%20Deoksugung%20Seoul%20kinh%20nghi%E1%BB%87m%20tham%20quan" target="_blank" rel="noopener">Bài viết</a><a href="https://www.google.com/maps/search/?api=1&amp;hl=vi&amp;query=Deoksugung+Palace+Seoul" target="_blank" rel="noopener">Bản đồ</a></span></span></div>
+          <div class="row"><span class="time">13:00</span><span class="what"><b>Suối Cheonggyecheon</b><p>Suối nhân tạo dài 11km chảy xuyên trung tâm, thấp hơn mặt đường nên đi bộ rất yên tĩnh. Miễn phí.</p><span class="links"><a href="https://www.google.com/search?hl=vi&amp;q=su%E1%BB%91i%20Cheonggyecheon%20Seoul%20kinh%20nghi%E1%BB%87m" target="_blank" rel="noopener">Bài viết</a><a href="https://www.google.com/maps/search/?api=1&amp;hl=vi&amp;query=Cheonggyecheon+Stream+Seoul" target="_blank" rel="noopener">Bản đồ</a></span></span></div>
+          <div class="row"><span class="time">15:00</span><span class="what"><b>Nhận phòng, ngủ bù</b><p>Bay đêm nên sẽ đuối. Ngủ 2 tiếng trước buổi tối.</p></span></div>
+          <div class="row"><span class="time">18:30</span><span class="what"><b>Gặp bạn bè — ăn tối</b></span></div>
+        </div>
+        <div class="move"><b>Di chuyển:</b> AREX từ Incheon về ga Seoul. Nếu ở khu City Hall hoặc Myeongdong thì cả ngày đi bộ là chính.</div>
+        <div class="cost">
+          <div class="cost-head"><span>Chi phí ngày 3/10</span><span>222.000 – 322.000₩</span></div>
+          <ul>
+            <li><span>AREX Express, 2 người</span><span>22.000₩</span></li>
+            <li><span>Thẻ T-money, 2 thẻ</span><span>8.000₩</span></li>
+            <li><span>Vé Deoksugung</span><span>2.000₩</span></li>
+            <li><span>Ăn uống</span><span>90.000 – 120.000₩</span></li>
+            <li><span>Khách sạn Seoul</span><span>100.000 – 170.000₩</span></li>
+          </ul>
+        </div>
+        <details class="notes"><summary>Ghi chú</summary><textarea data-note="d1" placeholder="Tên khách sạn, giờ hẹn, chỗ ăn…"></textarea></details>
+      </div>
+    </article>
+
+    <article class="day" data-city="s2b" id="d2">
+      <div class="day-head">
+        <span class="day-date">Chủ nhật 4/10</span>
+        <h3 class="day-title">Cung điện buổi sáng, chiều xuống Busan</h3>
+      </div>
+      <div class="day-body">
+        <div class="sched">
+          <div class="row"><span class="time">08:30</span><span class="what"><b>Trả phòng, gửi va li</b><p>Gửi đồ ở khách sạn, chiều quay lại lấy trước khi ra ga.</p></span></div>
+          <div class="row"><span class="time">09:00</span><span class="what"><b>Cung Gyeongbokgung</b><p>Cung chính triều Joseon, xây năm 1395, lớn nhất trong năm cung. Vé 3.000₩/người. Lễ đổi gác lúc 10:00 ngay trước cổng Gwanghwamun.</p><span class="links"><a href="https://www.google.com/search?hl=vi&amp;q=cung%20Gyeongbokgung%20Seoul%20kinh%20nghi%E1%BB%87m%20tham%20quan" target="_blank" rel="noopener">Bài viết</a><a href="https://www.google.com/maps/search/?api=1&amp;hl=vi&amp;query=Gyeongbokgung+Palace" target="_blank" rel="noopener">Bản đồ</a></span></span></div>
+          <div class="row"><span class="time">10:45</span><span class="what"><b>Làng Bukchon Hanok</b><p>Khu nhà cổ còn người ở thật. Chỗ chụp đẹp nhất là dốc Gahoe-dong 11. Đây là khu dân cư, có biển yêu cầu giữ yên lặng.</p><span class="links"><a href="https://www.google.com/search?hl=vi&amp;q=l%C3%A0ng%20c%E1%BB%95%20Bukchon%20Hanok%20Seoul%20kinh%20nghi%E1%BB%87m" target="_blank" rel="noopener">Bài viết</a><a href="https://www.google.com/maps/search/?api=1&amp;hl=vi&amp;query=Bukchon+Hanok+Village" target="_blank" rel="noopener">Bản đồ</a></span></span></div>
+          
+          <div class="row"><span class="time">12:00</span><span class="what"><b>Ăn trưa với bạn bè</b><p>Buổi gặp cuối trước khi rời Seoul. Chọn chỗ gần Anguk hoặc Jongno cho tiện.</p></span></div>
+          <div class="row"><span class="time">14:00</span><span class="what"><b>Lấy va li, ra ga Seoul</b><p>Chừa dư 30 phút. Ga Seoul rất lớn, tìm sân ga mất thời gian hơn tưởng.</p></span></div>
+          <div class="row"><span class="time">15:00</span><span class="what"><b>KTX đi Busan</b><p>2 tiếng 40 phút. Chiều Chủ nhật giữa kỳ nghỉ lễ nên tàu đông, đặt vé sớm.</p><span class="links"><a href="https://www.letskorail.com/ebizbf/EbizBfTicketSearch.do" target="_blank" rel="noopener">Đặt vé Korail</a></span></span></div>
+          <div class="row"><span class="time">17:40</span><span class="what"><b>Tới ga Busan, nhận phòng</b></span></div>
+          <div class="row"><span class="time">19:30</span><span class="what"><b>Biển Gwangalli</b><p>Cầu treo Gwangan lên đèn buổi tối. Ăn tối ở một trong các quán dọc bờ.</p><span class="links"><a href="https://www.google.com/search?hl=vi&amp;q=bi%E1%BB%83n%20Gwangalli%20Busan%20kinh%20nghi%E1%BB%87m" target="_blank" rel="noopener">Bài viết</a><a href="https://www.google.com/maps/search/?api=1&amp;hl=vi&amp;query=Gwangalli+Beach" target="_blank" rel="noopener">Bản đồ</a></span></span></div>
+        </div>
+        <div class="move"><b>Đánh đổi:</b> buổi sáng này phải bỏ Insadong và Ikseon-dong, hai chỗ đó chuyển sang ngày 9/10. Bù lại buổi sáng không bị gấp, có thể ngồi lâu hơn ở Bukchon. Nếu bạn bè chỉ rảnh chiều Chủ nhật chứ không rảnh sáng thì nên quay lại phương án đi Busan sáng thứ Hai.</div>
+        <div class="cost">
+          <div class="cost-head"><span>Chi phí ngày 4/10</span><span>318.000 – 398.000₩</span></div>
+          <ul>
+            <li><span>Vé Gyeongbokgung, 2 người</span><span>6.000₩</span></li>
+            <li><span>KTX Seoul → Busan, 2 người</span><span>119.600₩</span></li>
+            <li><span>Metro</span><span>12.000₩</span></li>
+            <li><span>Ăn uống</span><span>100.000 – 140.000₩</span></li>
+            <li><span>Khách sạn Busan</span><span>80.000 – 120.000₩</span></li>
+          </ul>
+        </div>
+        <details class="notes"><summary>Ghi chú</summary><textarea data-note="d2" placeholder="Số toa số ghế, khách sạn Busan…"></textarea></details>
+      </div>
+    </article>
+
+    <article class="day" data-city="busan" id="d3">
+      <div class="day-head">
+        <span class="day-date">Thứ Hai 5/10</span>
+        <h3 class="day-title">Busan phía tây</h3>
+      </div>
+      <div class="day-body">
+        <div class="sched">
+          <div class="row"><span class="time">09:30</span><span class="what"><b>Làng văn hóa Gamcheon</b><p>Nhà bậc thang nhiều màu trên sườn đồi, nguyên là khu tị nạn thời chiến, cải tạo thành làng nghệ thuật năm 2009. Nhiều dốc, mang giày thoải mái. Miễn phí, bản đồ tem 2.000₩.</p><span class="links"><a href="https://www.google.com/search?hl=vi&amp;q=l%C3%A0ng%20v%C4%83n%20h%C3%B3a%20Gamcheon%20Busan%20kinh%20nghi%E1%BB%87m" target="_blank" rel="noopener">Bài viết</a><a href="https://www.visitbusan.net/en" target="_blank" rel="noopener">Visit Busan</a><a href="https://www.google.com/maps/search/?api=1&amp;hl=vi&amp;query=Gamcheon+Culture+Village" target="_blank" rel="noopener">Bản đồ</a></span></span></div>
+          <div class="row"><span class="time">13:00</span><span class="what"><b>Ăn trưa</b><p>Thử dwaeji gukbap, canh xương heo ăn với cơm — món đặc sản Busan.</p></span></div>
+          <div class="row"><span class="time">14:30</span><span class="what"><b>Làng Huinnyeoul</b><p>Làng ven biển trên vách đá ở đảo Yeongdo, từng lên phim The Attorney. Yên tĩnh hơn Gamcheon nhiều, có đường mòn ven biển và quán cà phê nhìn thẳng ra biển.</p><span class="links"><a href="https://www.google.com/search?hl=vi&amp;q=l%C3%A0ng%20Huinnyeoul%20Busan%20kinh%20nghi%E1%BB%87m" target="_blank" rel="noopener">Bài viết</a><a href="https://www.google.com/maps/search/?api=1&amp;hl=vi&amp;query=Huinnyeoul+Culture+Village" target="_blank" rel="noopener">Bản đồ</a></span></span></div>
+          <div class="row"><span class="time">17:00</span><span class="what"><b>Chợ cá Jagalchi</b><p>Chợ hải sản lớn nhất Hàn Quốc. Chọn cá sống tầng 1, mang lên tầng 2 chế biến, trả thêm phí. Hỏi giá trước khi chọn.</p><span class="links"><a href="https://www.google.com/search?hl=vi&amp;q=ch%E1%BB%A3%20c%C3%A1%20Jagalchi%20Busan%20kinh%20nghi%E1%BB%87m%20%C4%83n%20u%E1%BB%91ng" target="_blank" rel="noopener">Bài viết</a><a href="https://www.google.com/maps/search/?api=1&amp;hl=vi&amp;query=Jagalchi+Market+Busan" target="_blank" rel="noopener">Bản đồ</a></span></span></div>
+          <div class="row"><span class="time">19:00</span><span class="what"><b>BIFF Square và chợ đêm Bupyeong</b><p>Ăn vặt: bánh rán nhân hạt ssiat hotteok, chả cá eomuk. Chợ Bupyeong ngay gần, mở tới khuya.</p><span class="links"><a href="https://www.google.com/search?hl=vi&amp;q=BIFF%20Square%20Busan%20%C4%83n%20v%E1%BA%B7t" target="_blank" rel="noopener">Bài viết</a><a href="https://www.google.com/maps/search/?api=1&amp;hl=vi&amp;query=BIFF+Square+Busan" target="_blank" rel="noopener">Bản đồ</a></span></span></div>
+        </div>
+        <div class="move"><b>Di chuyển:</b> tới Gamcheon đi metro tới ga Toseong rồi xe buýt nhỏ số 2 hoặc 2-2. Cả ngày hôm nay xoay quanh khu Nampo nên đi bộ được nhiều.</div>
+        <div class="cost">
+          <div class="cost-head"><span>Chi phí ngày 5/10</span><span>219.000 – 319.000₩</span></div>
+          <ul>
+            <li><span>Bản đồ tem Gamcheon</span><span>4.000₩</span></li>
+            <li><span>Metro và xe buýt</span><span>15.000₩</span></li>
+            <li><span>Ăn uống, có hải sản Jagalchi</span><span>120.000 – 180.000₩</span></li>
+            <li><span>Khách sạn Busan</span><span>80.000 – 120.000₩</span></li>
+          </ul>
+        </div>
+        <details class="notes"><summary>Ghi chú</summary><textarea data-note="d3" placeholder="Quán ăn muốn thử…"></textarea></details>
+      </div>
+    </article>
+
+    <article class="day" data-city="busan" id="d4">
+      <div class="day-head">
+        <span class="day-date">Thứ Ba 6/10</span>
+        <h3 class="day-title">Bờ biển phía đông</h3>
+      </div>
+      <div class="day-body">
+        <div class="sched">
+          <div class="row"><span class="time">08:30</span><span class="what"><b>Chùa Haedong Yonggungsa</b><p>Chùa xây sát mép biển, rất hiếm ở Hàn vì chùa thường nằm trên núi. Dựng từ năm 1376. Khoảng 108 bậc đá dẫn xuống. Đi sớm tránh đông. Miễn phí.</p><span class="links"><a href="https://www.google.com/search?hl=vi&amp;q=ch%C3%B9a%20Haedong%20Yonggungsa%20Busan%20kinh%20nghi%E1%BB%87m" target="_blank" rel="noopener">Bài viết</a><a href="https://www.google.com/maps/search/?api=1&amp;hl=vi&amp;query=Haedong+Yonggungsa+Temple" target="_blank" rel="noopener">Bản đồ</a></span></span></div>
+          <div class="row"><span class="time">11:00</span><span class="what"><b>Blue Line Park — Sky Capsule</b><p>Đường sắt ven biển cũ cải tạo. Cabin 4 chỗ chạy trên cao, 30.000–45.000₩/cabin tùy chặng. Đặt online trước vì hay hết.</p><span class="links"><a href="https://www.bluelinepark.com" target="_blank" rel="noopener">Trang chính thức</a><a href="https://www.google.com/search?hl=vi&amp;q=Sky%20Capsule%20Haeundae%20kinh%20nghi%E1%BB%87m%20%C4%91%E1%BA%B7t%20v%C3%A9" target="_blank" rel="noopener">Bài viết</a><a href="https://www.google.com/maps/search/?api=1&amp;hl=vi&amp;query=Haeundae+Blue+Line+Park+Mipo+Station" target="_blank" rel="noopener">Bản đồ</a></span></span></div>
+          <div class="row"><span class="time">13:30</span><span class="what"><b>Ăn trưa Haeundae</b><p>Thử milmyeon, mì lạnh kiểu Busan, nhẹ hơn naengmyeon.</p><span class="links"><a href="https://www.google.com/search?hl=vi&amp;q=bi%E1%BB%83n%20Haeundae%20Busan%20kinh%20nghi%E1%BB%87m" target="_blank" rel="noopener">Bài viết</a><a href="https://www.google.com/maps/search/?api=1&amp;hl=vi&amp;query=Haeundae+Beach" target="_blank" rel="noopener">Bản đồ</a></span></span></div>
+          <div class="row"><span class="time">15:30</span><span class="what"><b>Cheongsapo</b><p>Làng chài nhỏ gần Haeundae, nhiều quán cà phê nhìn ra biển và đài quan sát Daritdol sàn kính.</p><span class="links"><a href="https://www.google.com/search?hl=vi&amp;q=Cheongsapo%20Daritdol%20Busan" target="_blank" rel="noopener">Bài viết</a><a href="https://www.google.com/maps/search/?api=1&amp;hl=vi&amp;query=Cheongsapo+Daritdol+Observatory" target="_blank" rel="noopener">Bản đồ</a></span></span></div>
+          <div class="row"><span class="time">17:00</span><span class="what"><b>Đường mòn ven biển Igidae</b><p>Lối đi trên vách đá nhìn sang cầu Gwangan, có cầu gỗ và cầu treo nhỏ. Đi 1,5–2 tiếng. Hoàng hôn rất đẹp.</p><span class="links"><a href="https://www.google.com/search?hl=vi&amp;q=%C4%91%C6%B0%E1%BB%9Dng%20m%C3%B2n%20Igidae%20Busan" target="_blank" rel="noopener">Bài viết</a><a href="https://www.google.com/maps/search/?api=1&amp;hl=vi&amp;query=Igidae+Coastal+Walk+Busan" target="_blank" rel="noopener">Bản đồ</a></span></span></div>
+        </div>
+        <div class="move"><b>Di chuyển:</b> tới Haedong Yonggungsa đi metro ga Haeundae rồi xe buýt 181, hoặc taxi khoảng 15.000₩. Ngày này nên dùng taxi vài chặng cho đỡ mất thời gian.</div>
+        <div class="cost">
+          <div class="cost-head"><span>Chi phí ngày 6/10</span><span>255.000 – 345.000₩</span></div>
+          <ul>
+            <li><span>Sky Capsule, 1 cabin</span><span>35.000 – 45.000₩</span></li>
+            <li><span>Taxi và xe buýt</span><span>40.000₩</span></li>
+            <li><span>Ăn uống</span><span>100.000 – 140.000₩</span></li>
+            <li><span>Khách sạn Busan</span><span>80.000 – 120.000₩</span></li>
+          </ul>
+        </div>
+        <details class="notes"><summary>Ghi chú</summary><textarea data-note="d4" placeholder="Vé Sky Capsule…"></textarea></details>
+      </div>
+    </article>
+
+    <article class="day" data-city="busan" id="d5">
+      <div class="day-head">
+        <span class="day-date">Thứ Tư 7/10</span>
+        <h3 class="day-title">Gyeongju trong ngày</h3>
+      </div>
+      <div class="day-body">
+        <div class="sched">
+          <div class="row"><span class="time">08:30</span><span class="what"><b>KTX đi Singyeongju</b><p>Chỉ 30 phút từ ga Busan. Từ ga Singyeongju bắt xe buýt vào trung tâm Gyeongju.</p></span></div>
+          <div class="row"><span class="time">10:00</span><span class="what"><b>Chùa Bulguksa</b><p>Di sản UNESCO, xây năm 751 thời Silla. Hai tháp đá Dabotap và Seokgatap trong sân chùa là biểu tượng kiến trúc Phật giáo Hàn Quốc. Vé khoảng 6.000₩.</p><span class="links"><a href="https://www.google.com/search?hl=vi&amp;q=ch%C3%B9a%20Bulguksa%20Gyeongju%20kinh%20nghi%E1%BB%87m" target="_blank" rel="noopener">Bài viết</a><a href="https://www.google.com/maps/search/?api=1&amp;hl=vi&amp;query=Bulguksa+Temple+Gyeongju" target="_blank" rel="noopener">Bản đồ</a></span></span></div>
+          <div class="row"><span class="time">13:00</span><span class="what"><b>Khu lăng mộ Daereungwon</b><p>Hơn 20 gò mộ hoàng gia Silla nổi lên giữa công viên, hình dáng rất lạ. Có một mộ mở cho vào trong xem. Vé 3.000₩.</p><span class="links"><a href="https://www.google.com/search?hl=vi&amp;q=khu%20l%C4%83ng%20m%E1%BB%99%20Daereungwon%20Gyeongju" target="_blank" rel="noopener">Bài viết</a><a href="https://www.google.com/maps/search/?api=1&amp;hl=vi&amp;query=Daereungwon+Tomb+Complex+Gyeongju" target="_blank" rel="noopener">Bản đồ</a></span></span></div>
+          <div class="row"><span class="time">15:00</span><span class="what"><b>Cheomseongdae</b><p>Đài thiên văn xây thế kỷ 7, được coi là công trình thiên văn còn nguyên vẹn cổ nhất Đông Á. Ngay cạnh Daereungwon.</p><span class="links"><a href="https://www.google.com/search?hl=vi&amp;q=%C4%91%C3%A0i%20thi%C3%AAn%20v%C4%83n%20Cheomseongdae%20Gyeongju" target="_blank" rel="noopener">Bài viết</a><a href="https://www.google.com/maps/search/?api=1&amp;hl=vi&amp;query=Cheomseongdae+Gyeongju" target="_blank" rel="noopener">Bản đồ</a></span></span></div>
+          <div class="row"><span class="time">17:30</span><span class="what"><b>Cung Donggung và hồ Wolji</b><p>Nền cung điện cũ bên hồ nhân tạo. Lên đèn lúc chập tối, phản chiếu xuống mặt nước — cảnh đẹp nhất Gyeongju. Vé 3.000₩.</p><span class="links"><a href="https://www.google.com/search?hl=vi&amp;q=cung%20Donggung%20h%E1%BB%93%20Wolji%20Gyeongju" target="_blank" rel="noopener">Bài viết</a><a href="https://www.google.com/maps/search/?api=1&amp;hl=vi&amp;query=Donggung+Palace+and+Wolji+Pond" target="_blank" rel="noopener">Bản đồ</a></span></span></div>
+          <div class="row"><span class="time">20:00</span><span class="what"><b>KTX về Busan</b></span></div>
+        </div>
+        <div class="move"><b>Phương án thay thế:</b> nếu thấy mệt, ở lại Busan cho thong thả — cáp treo Songdo, chợ Bupyeong, hoặc chỉ ngồi cà phê ven biển. Gyeongju đẹp nhưng là một ngày đi bộ nhiều.</div>
+        <div class="cost">
+          <div class="cost-head"><span>Chi phí ngày 7/10</span><span>252.000 – 332.000₩</span></div>
+          <ul>
+            <li><span>KTX khứ hồi Singyeongju, 2 người</span><span>44.000₩</span></li>
+            <li><span>Vé Bulguksa, Daereungwon, Wolji</span><span>24.000₩</span></li>
+            <li><span>Xe buýt trong Gyeongju</span><span>10.000₩</span></li>
+            <li><span>Ăn uống</span><span>94.000 – 134.000₩</span></li>
+            <li><span>Khách sạn Busan</span><span>80.000 – 120.000₩</span></li>
+          </ul>
+        </div>
+        <details class="notes"><summary>Ghi chú</summary><textarea data-note="d5" placeholder="Chốt Gyeongju hay ở lại Busan…"></textarea></details>
+      </div>
+    </article>
+
+    <article class="day" data-city="b2s" id="d6">
+      <div class="day-head">
+        <span class="day-date">Thứ Năm 8/10</span>
+        <h3 class="day-title">Leo núi buổi sáng, chiều về Seoul</h3>
+      </div>
+      <div class="day-body">
+        <div class="sched">
+          <div class="row"><span class="time">08:00</span><span class="what"><b>Chùa Beomeosa và Geumjeongsan</b><p>Chùa dựng năm 678, nằm trên sườn núi Geumjeongsan cao 801m. Từ chùa đi dọc tường thành Geumjeong — tường thành dài nhất Hàn Quốc. Đoạn Cổng Bắc tới Cổng Đông khoảng 2–3 tiếng. Đường đá granite trơn, cần giày có độ bám.</p><span class="links"><a href="https://www.google.com/search?hl=vi&amp;q=ch%C3%B9a%20Beomeosa%20Geumjeongsan%20Busan%20leo%20n%C3%BAi" target="_blank" rel="noopener">Bài viết</a><a href="https://www.google.com/maps/search/?api=1&amp;hl=vi&amp;query=Beomeosa+Temple+Busan" target="_blank" rel="noopener">Bản đồ</a></span></span></div>
+          <div class="row"><span class="time">12:30</span><span class="what"><b>Trả phòng, gửi đồ ở ga</b><p>Tủ khóa ga Busan khoảng 4.000₩.</p></span></div>
+          <div class="row"><span class="time">13:00</span><span class="what"><b>Chợ Gukje</b><p>Chợ truyền thống lớn nhất Busan, gần ga Nampo. Mua đồ khô, rong biển, quà.</p><span class="links"><a href="https://www.google.com/search?hl=vi&amp;q=ch%E1%BB%A3%20Gukje%20Busan%20mua%20g%C3%AC" target="_blank" rel="noopener">Bài viết</a><a href="https://www.google.com/maps/search/?api=1&amp;hl=vi&amp;query=Gukje+Market+Busan" target="_blank" rel="noopener">Bản đồ</a></span></span></div>
+          <div class="row"><span class="time">15:00</span><span class="what"><b>KTX về Seoul</b><span class="links"><a href="https://www.letskorail.com/ebizbf/EbizBfTicketSearch.do" target="_blank" rel="noopener">Đặt vé Korail</a></span></span></div>
+          <div class="row"><span class="time">18:00</span><span class="what"><b>Tới Seoul, nhận phòng</b></span></div>
+        </div>
+        <div class="move"><b>So với lịch cũ:</b> vì đã xuống Busan từ chiều Chủ nhật nên buổi sáng này không còn gấp. Leo núi xong vẫn kịp ăn trưa thong thả rồi lên tàu.</div>
+        <div class="cost">
+          <div class="cost-head"><span>Chi phí ngày 8/10</span><span>349.000 – 429.000₩</span></div>
+          <ul>
+            <li><span>KTX Busan → Seoul, 2 người</span><span>119.600₩</span></li>
+            <li><span>Tủ khóa ga</span><span>4.000₩</span></li>
+            <li><span>Metro và xe buýt</span><span>15.000₩</span></li>
+            <li><span>Ăn uống</span><span>90.000 – 120.000₩</span></li>
+            <li><span>Khách sạn Seoul</span><span>120.000 – 170.000₩</span></li>
+          </ul>
+        </div>
+        <details class="notes"><summary>Ghi chú</summary><textarea data-note="d6" placeholder="Giờ tàu, khách sạn Seoul đợt hai…"></textarea></details>
+      </div>
+    </article>
+
+    <article class="day" data-city="seoul" id="d7">
+      <div class="day-head">
+        <span class="day-date">Thứ Sáu 9/10</span>
+        <h3 class="day-title">Ngày chữ Hàn</h3>
+      </div>
+      <div class="day-body">
+        <div class="sched">
+          <div class="row"><span class="time">10:00</span><span class="what"><b>Seongsu-dong</b><p>Khu nhà máy cũ cải tạo thành quán cà phê và concept store, khu sáng tạo nhất Seoul hiện nay. Seoul Forest ngay cạnh nếu muốn đi bộ.</p><span class="links"><a href="https://www.google.com/search?hl=vi&amp;q=Seongsu-dong%20Seoul%20c%C3%A0%20ph%C3%AA%20kinh%20nghi%E1%BB%87m" target="_blank" rel="noopener">Bài viết</a><a href="https://www.google.com/maps/search/?api=1&amp;hl=vi&amp;query=Seongsu-dong+Seoul" target="_blank" rel="noopener">Bản đồ</a></span></span></div>
+          <div class="row"><span class="time">13:00</span><span class="what"><b>Insadong</b><p>Phố đồ thủ công, trà quán, gốm sứ. Trung tâm Ssamziegil thiết kế dốc xoắn ốc. Phần bị bỏ từ ngày 4/10.</p><span class="links"><a href="https://www.google.com/search?hl=vi&amp;q=ph%E1%BB%91%20Insadong%20Seoul%20kinh%20nghi%E1%BB%87m" target="_blank" rel="noopener">Bài viết</a><a href="https://www.google.com/maps/search/?api=1&amp;hl=vi&amp;query=Insadong+Seoul" target="_blank" rel="noopener">Bản đồ</a></span></span></div>
+          <div class="row"><span class="time">14:30</span><span class="what"><b>Ikseon-dong</b><p>Khu hanok cải tạo thành quán ăn và cà phê. Đi bộ từ Insadong sang.</p><span class="links"><a href="https://www.google.com/search?hl=vi&amp;q=Ikseon-dong%20Seoul%20kinh%20nghi%E1%BB%87m" target="_blank" rel="noopener">Bài viết</a><a href="https://www.google.com/maps/search/?api=1&amp;hl=vi&amp;query=Ikseon-dong+Hanok+Village" target="_blank" rel="noopener">Bản đồ</a></span></span></div>
+          <div class="row"><span class="time">16:00</span><span class="what"><b>Leo Inwangsan</b><p>Núi thấp 338m ngay cạnh Gyeongbokgung, leo 1–2 tiếng dọc tường thành cổ. Hoàng hôn khoảng 18:00, nhìn xuống khu cung điện rất đẹp. Không cần giày chuyên dụng.</p><span class="links"><a href="https://www.google.com/search?hl=vi&amp;q=leo%20n%C3%BAi%20Inwangsan%20Seoul%20kinh%20nghi%E1%BB%87m" target="_blank" rel="noopener">Bài viết</a><a href="https://www.google.com/maps/search/?api=1&amp;hl=vi&amp;query=Inwangsan+Seoul" target="_blank" rel="noopener">Bản đồ</a></span></span></div>
+          <div class="row"><span class="time">19:30</span><span class="what"><b>Ăn tối Yeonnam-dong</b><p>Phố nhỏ gần Hongdae nhưng yên tĩnh hơn, dọc công viên đường sắt cũ.</p><span class="links"><a href="https://www.google.com/search?hl=vi&amp;q=Yeonnam-dong%20Seoul%20%C4%83n%20g%C3%AC" target="_blank" rel="noopener">Bài viết</a><a href="https://www.google.com/maps/search/?api=1&amp;hl=vi&amp;query=Yeonnam-dong+Seoul" target="_blank" rel="noopener">Bản đồ</a></span></span></div>
+        </div>
+        <div class="move"><b>Bối cảnh:</b> ngày lễ kỷ niệm vua Sejong công bố bảng chữ Hangeul năm 1446. Phố xá đông vui, nhiều sự kiện quanh quảng trường Gwanghwamun.</div>
+        <div class="cost">
+          <div class="cost-head"><span>Chi phí ngày 9/10</span><span>262.000 – 362.000₩</span></div>
+          <ul>
+            <li><span>Metro</span><span>12.000₩</span></li>
+            <li><span>Ăn uống và cà phê</span><span>110.000 – 150.000₩</span></li>
+            <li><span>Khách sạn Seoul, đêm lễ</span><span>140.000 – 200.000₩</span></li>
+          </ul>
+        </div>
+        <details class="notes"><summary>Ghi chú</summary><textarea data-note="d7" placeholder="Quán cà phê muốn thử…"></textarea></details>
+      </div>
+    </article>
+
+    <article class="day" data-city="seoul" id="d8">
+      <div class="day-head">
+        <span class="day-date">Thứ Bảy 10/10</span>
+        <h3 class="day-title">Ngày về</h3>
+      </div>
+      <div class="day-body">
+        <div class="sched">
+          <div class="row"><span class="time">10:00</span><span class="what"><b>Trả phòng, gửi va li</b></span></div>
+          <div class="row"><span class="time">10:30</span><span class="what"><b>Gặp bạn bè — brunch</b><p>Cuối tuần nên gặp được lần cuối trước khi về.</p></span></div>
+          <div class="row"><span class="time">13:00</span><span class="what"><b>Mua sắm Myeongdong</b><p>Chi nhánh Olive Young Myeongdong Flagship lớn nhất, mở từ 10:00.</p><span class="links"><a href="https://www.google.com/search?hl=vi&amp;q=Myeongdong%20Seoul%20mua%20s%E1%BA%AFm%20kinh%20nghi%E1%BB%87m" target="_blank" rel="noopener">Bài viết</a><a href="https://www.google.com/maps/search/?api=1&amp;hl=vi&amp;query=Myeongdong+Seoul" target="_blank" rel="noopener">Bản đồ</a></span></span></div>
+          <div class="row"><span class="time">14:30</span><span class="what"><b>Hoàn thuế tại Lotte</b><p>Quầy trong Lotte Department Store nhanh hơn ở sân bay nhiều. Hóa đơn từ 30.000₩ tại cửa hàng có biển Tax Free, mang theo hộ chiếu.</p><span class="links"><a href="https://www.google.com/search?hl=vi&amp;q=ho%C3%A0n%20thu%E1%BA%BF%20Lotte%20Myeongdong%20tax%20refund" target="_blank" rel="noopener">Bài viết</a><a href="https://www.google.com/maps/search/?api=1&amp;hl=vi&amp;query=Lotte+Department+Store+Myeongdong" target="_blank" rel="noopener">Bản đồ</a></span></span></div>
+          <div class="row"><span class="time">16:00</span><span class="what"><b>Lấy va li, AREX ra Incheon</b></span></div>
+          <div class="row"><span class="time">17:40</span><span class="what"><b>Có mặt tại sân bay</b><p>9–11/10 là kỳ nghỉ dài của người Hàn, sân bay sẽ rất đông. Đừng rút ngắn thời gian dự phòng.</p></span></div>
+          <div class="row"><span class="time">20:40</span><span class="what"><b>Bay về Hà Nội</b></span></div>
+        </div>
+        <div class="cost">
+          <div class="cost-head"><span>Chi phí ngày 10/10</span><span>102.000 – 132.000₩</span></div>
+          <ul>
+            <li><span>AREX Express, 2 người</span><span>22.000₩</span></li>
+            <li><span>Ăn uống</span><span>80.000 – 110.000₩</span></li>
+            <li><span>Mua sắm</span><span>tùy hai bạn</span></li>
+          </ul>
+        </div>
+        <details class="notes"><summary>Ghi chú</summary><textarea data-note="d8" placeholder="Danh sách quà cần mua…"></textarea></details>
+      </div>
+    </article>
+  </section>
+
+  <section id="chi-phi">
+    <h2>Tổng chi phí cho 2 người</h2>
+    <div class="budget">
+      <div class="bline"><span class="label">Thứ Bảy 3/10<em>Seoul, ngày đến</em></span><span class="amt">222.000 – 322.000₩</span></div>
+      <div class="bline"><span class="label">Chủ nhật 4/10<em>Cung điện rồi xuống Busan</em></span><span class="amt">318.000 – 398.000₩</span></div>
+      <div class="bline"><span class="label">Thứ Hai 5/10<em>Busan phía tây</em></span><span class="amt">219.000 – 319.000₩</span></div>
+      <div class="bline"><span class="label">Thứ Ba 6/10<em>Bờ biển phía đông</em></span><span class="amt">255.000 – 345.000₩</span></div>
+      <div class="bline"><span class="label">Thứ Tư 7/10<em>Gyeongju trong ngày</em></span><span class="amt">252.000 – 332.000₩</span></div>
+      <div class="bline"><span class="label">Thứ Năm 8/10<em>Leo núi rồi về Seoul</em></span><span class="amt">349.000 – 429.000₩</span></div>
+      <div class="bline"><span class="label">Thứ Sáu 9/10<em>Ngày chữ Hàn</em></span><span class="amt">262.000 – 362.000₩</span></div>
+      <div class="bline"><span class="label">Thứ Bảy 10/10<em>Ngày về</em></span><span class="amt">102.000 – 132.000₩</span></div>
+      <div class="bline total"><span class="label">Tổng</span><span class="amt">1.979.000 – 2.639.000₩ · 37,5 – 50 triệu</span></div>
+    </div>
+    <p class="fine">Chưa tính vé máy bay (đã trả 9.070.330 VND) và mua sắm cá nhân. Tỷ giá tham khảo 1.000₩ ≈ 19.000 VND, cần kiểm tra lại trước khi đi.</p>
+  </section>
+
+  <section id="luu-y">
+    <h2>Lưu ý</h2>
+    <div class="note-item"><h3>Thời tiết</h3><p>Seoul khoảng 14–24°C, Busan ấm hơn 2–3°C. Trời khô, nắng đẹp, ít mưa. Chênh lệch sáng tối lớn nên mặc nhiều lớp.</p></div>
+    <div class="note-item"><h3>Chưa có lá đỏ</h3><p>Đầu tháng 10 không nơi nào có lá đỏ. Seoraksan phải sau 15/10, Seoul đầu tháng 11, Busan giữa tháng 11. Bù lại đây là thời tiết đi bộ và leo núi lý tưởng nhất năm.</p></div>
+    <div class="note-item"><h3>Không thuê được xe tự lái</h3><p>Bằng quốc tế do Việt Nam cấp theo Công ước Vienna 1968, Hàn Quốc chỉ công nhận Công ước Geneva 1949.</p></div>
+    <div class="note-item"><h3>Vài quy tắc ứng xử</h3><p>Nhận và đưa đồ bằng hai tay với người lớn tuổi. Không cắm đũa dựng đứng trong bát cơm. Không tip.</p></div>
+    <div class="note-item"><h3>Trang tra cứu chung</h3><p><a href="https://vietnamese.visitkorea.or.kr" target="_blank" rel="noopener">Du lịch Hàn Quốc (tiếng Việt)</a> · <a href="https://www.google.com/search?hl=vi&amp;q=kinh%20nghi%E1%BB%87m%20du%20l%E1%BB%8Bch%20H%C3%A0n%20Qu%E1%BB%91c%20t%E1%BB%B1%20t%C3%BAc%20Seoul%20Busan" target="_blank" rel="noopener">Bài viết</a> · <a href="https://english.visitseoul.net" target="_blank" rel="noopener">Visit Seoul</a> · <a href="https://www.visitbusan.net/en" target="_blank" rel="noopener">Visit Busan</a> · <a href="https://www.letskorail.com" target="_blank" rel="noopener">Korail</a></p></div>
+  </section>
+
+  <footer>
+    Nút "Bài viết" mở kết quả tìm kiếm tiếng Việt cho địa điểm đó, để bạn chọn bài review hợp ý — mình không truy cập được internet nên không trỏ thẳng vào một bài cụ thể được. Link bản đồ đã ép giao diện tiếng Việt. Giá vé và giờ mở cửa nên kiểm tra lại trước khi đi. <span id="storage-mode"></span> Trang này công khai với bất kỳ ai có link, nên đừng ghi số hộ chiếu, mã đặt phòng hay thông tin thẻ vào ô ghi chú.
+  </footer>
+</div>
+
+<div class="status" id="status"></div>
+
+<script>
+(function(){
+  var KEY = 'trip-korea-oct2026';
+  var state = { checks:{}, notes:{} };
+  var statusEl = document.getElementById('status');
+  var progressEl = document.getElementById('progress');
+  var modeEl = document.getElementById('storage-mode');
+  var boxes = Array.prototype.slice.call(document.querySelectorAll('input[data-task]'));
+  var areas = Array.prototype.slice.call(document.querySelectorAll('textarea[data-note]'));
+  var saveTimer = null, statusTimer = null;
+
+  // Chọn nơi lưu tuỳ môi trường:
+  //  1. Trong Claude  -> window.storage, hai người dùng chung dữ liệu
+  //  2. Tự host       -> localStorage, mỗi máy một bản riêng
+  //  3. Không có gì   -> chỉ giữ trong phiên
+  var store = (function(){
+    try{
+      if (window.storage && typeof window.storage.get === 'function'){
+        return {
+          mode:'shared',
+          get:function(){ return window.storage.get(KEY, true).then(function(r){ return r && r.value ? r.value : null; }); },
+          set:function(v){ return window.storage.set(KEY, v, true); }
+        };
+      }
+    }catch(e){}
+    try{
+      var probe='__probe__';
+      window.localStorage.setItem(probe,'1');
+      window.localStorage.removeItem(probe);
+      return {
+        mode:'local',
+        get:function(){ return Promise.resolve(window.localStorage.getItem(KEY)); },
+        set:function(v){ window.localStorage.setItem(KEY, v); return Promise.resolve(); }
+      };
+    }catch(e){}
+    var mem = null;
+    return {
+      mode:'memory',
+      get:function(){ return Promise.resolve(mem); },
+      set:function(v){ mem = v; return Promise.resolve(); }
+    };
+  })();
+
+  var labels = {
+    shared: 'Ghi chú và đánh dấu được lưu chung — cả hai người đều thấy cùng nội dung.',
+    local:  'Ghi chú và đánh dấu được lưu riêng trên máy này, không đồng bộ sang máy khác.',
+    memory: 'Trình duyệt đang chặn lưu trữ, ghi chú chỉ giữ tới khi đóng tab.'
+  };
+  var savedMsg = { shared:'Đã lưu', local:'Đã lưu trên máy này', memory:'Chưa lưu được' };
+
+  if (modeEl) modeEl.textContent = labels[store.mode];
+
+  function flash(msg){
+    statusEl.textContent = msg;
+    statusEl.classList.add('show');
+    clearTimeout(statusTimer);
+    statusTimer = setTimeout(function(){ statusEl.classList.remove('show'); }, 1600);
+  }
+
+  function renderProgress(){
+    var done = boxes.filter(function(b){ return b.checked; }).length;
+    progressEl.textContent = done + ' / ' + boxes.length + ' việc đã xong';
+  }
+
+  function paint(){
+    boxes.forEach(function(b){
+      b.checked = !!state.checks[b.dataset.task];
+      b.closest('.task').classList.toggle('done', b.checked);
+    });
+    areas.forEach(function(a){
+      var v = state.notes[a.dataset.note];
+      if (v){
+        a.value = v;
+        var d = a.closest('details');
+        if (d) d.open = true;
+      }
+    });
+    renderProgress();
+  }
+
+  function load(){
+    Promise.resolve()
+      .then(function(){ return store.get(); })
+      .then(function(raw){
+        if (raw){
+          var parsed = JSON.parse(raw);
+          state.checks = parsed.checks || {};
+          state.notes  = parsed.notes  || {};
+        }
+      })
+      .catch(function(){ /* chưa có dữ liệu, bỏ qua */ })
+      .then(paint, paint);
+  }
+
+  function save(){
+    Promise.resolve()
+      .then(function(){ return store.set(JSON.stringify(state)); })
+      .then(function(){ flash(savedMsg[store.mode]); })
+      .catch(function(){ flash('Không lưu được'); });
+  }
+
+  function queueSave(){
+    clearTimeout(saveTimer);
+    saveTimer = setTimeout(save, 600);
+  }
+
+  boxes.forEach(function(b){
+    b.addEventListener('change', function(){
+      state.checks[b.dataset.task] = b.checked;
+      b.closest('.task').classList.toggle('done', b.checked);
+      renderProgress();
+      queueSave();
+    });
+  });
+
+  areas.forEach(function(a){
+    a.addEventListener('input', function(){
+      state.notes[a.dataset.note] = a.value;
+      queueSave();
+    });
+  });
+
+  load();
+})();
+</script>
