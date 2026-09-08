@@ -10,6 +10,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;800&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
 
+
 <style>
   :root{
     --paper:#EFF0EA;
@@ -219,6 +220,48 @@
   .hotel .check{background:var(--paper);border-radius:5px;padding:10px 12px;font-size:13.5px}
   .hotel .check b{color:var(--ink);font-weight:600}
 
+  .gmaps-btn{
+    display:block;text-align:center;
+    background:var(--ink);color:#fff;text-decoration:none;
+    font-size:14px;font-weight:600;letter-spacing:-.01em;
+    padding:13px 16px;border-radius:6px;margin-bottom:12px;
+  }
+  .gmaps-btn:hover{opacity:.9}
+  .gmaps-btn:focus-visible{outline:2px solid var(--ink);outline-offset:2px}
+  .day-gmaps{
+    display:inline-block;margin-top:12px;
+    font-size:13px;font-weight:600;text-decoration:none;
+    color:var(--seoul);border:1px solid var(--rule);
+    padding:8px 13px;border-radius:5px;
+  }
+  .day[data-city="busan"] .day-gmaps,
+  .day[data-city="s2b"] .day-gmaps{color:var(--busan)}
+  .day-gmaps:focus-visible{outline:2px solid var(--ink);outline-offset:2px}
+  .map-tabs{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:12px}
+  .map-tab{
+    font-family:var(--sans);font-size:13px;font-weight:500;
+    padding:7px 13px;border-radius:20px;border:1px solid var(--rule);
+    background:var(--card);color:var(--ink-soft);cursor:pointer;
+    display:inline-flex;align-items:center;gap:7px;
+  }
+  .map-tab i{width:9px;height:9px;border-radius:50%;display:inline-block}
+  .map-tab[aria-pressed="true"]{background:var(--ink);color:#fff;border-color:var(--ink)}
+  .map-tab:focus-visible{outline:2px solid var(--ink);outline-offset:2px}
+  .map-frame{
+    position:relative;
+    border:1px solid var(--rule);
+    border-radius:6px;
+    overflow:hidden;
+    background:var(--card);
+    height:480px;
+  }
+  .map-frame iframe{
+    position:absolute;inset:0;
+    width:100%;height:100%;border:0;
+  }
+
+  @media (max-width:560px){ .map-frame{height:400px} }
+
   .status{
     position:fixed;left:50%;bottom:18px;transform:translateX(-50%) translateY(70px);
     background:var(--ink);color:#fff;font-family:var(--mono);font-size:12px;
@@ -404,6 +447,32 @@
     <div class="move" style="margin-top:16px"><b>Cần kiểm tra khi đặt:</b> khoảng cách đi bộ thật từ ga metro (Seomyeon là ga rất lớn, có tới 13 lối ra — xem khách sạn gần lối nào); có giữ hành lý sáng 8/10 sau khi trả phòng không; và giá đã gồm thuế 10% chưa. Đặt loại huỷ miễn phí vì lịch còn có thể đổi.</div>
   </section>
 
+  <section id="ban-do">
+    <h2>Bản đồ cả hành trình</h2>
+    <p class="lead">Bản đồ Google, tám ngày chia thành tám lớp. Bấm biểu tượng ở góc trái trong bản đồ để bật tắt từng ngày, bấm vào điểm để xem giờ và ghi chú. Hàng nút dưới đây chọn ngày cho nút mở Google Maps — bấm vào đó sẽ ra app với đủ các điểm dừng và chỉ đường.</p>
+
+    <div class="map-tabs" id="map-tabs">
+      <button class="map-tab" data-day="all" aria-pressed="true">Cả chuyến</button>
+      <button class="map-tab" data-day="1" aria-pressed="false"><i style="background:#27406E"></i>3/10 Seoul</button>
+      <button class="map-tab" data-day="2" aria-pressed="false"><i style="background:#7A5AA8"></i>4/10 → Busan</button>
+      <button class="map-tab" data-day="3" aria-pressed="false"><i style="background:#C25A28"></i>5/10 Busan</button>
+      <button class="map-tab" data-day="4" aria-pressed="false"><i style="background:#0E6A61"></i>6/10 Busan</button>
+      <button class="map-tab" data-day="5" aria-pressed="false"><i style="background:#8A6D1F"></i>7/10 Gyeongju</button>
+      <button class="map-tab" data-day="6" aria-pressed="false"><i style="background:#7A5AA8"></i>8/10 → Seoul</button>
+      <button class="map-tab" data-day="7" aria-pressed="false"><i style="background:#27406E"></i>9/10 Seoul</button>
+      <button class="map-tab" data-day="8" aria-pressed="false"><i style="background:#27406E"></i>10/10 về</button>
+    </div>
+
+    <a id="gmaps-link" class="gmaps-btn" href="#" target="_blank" rel="noopener">Mở lộ trình cả chuyến trong Google Maps</a>
+
+    <div class="map-frame">
+      <iframe src="https://www.google.com/maps/d/u/0/embed?mid=1xY7Qpo45TSRrp7X1FBXJlCGiAtgBgUY&amp;ehbc=2E312F"
+              title="Bản đồ hành trình Hàn Quốc" loading="lazy"
+              referrerpolicy="no-referrer-when-downgrade"></iframe>
+    </div>
+    <p class="fine">Bấm biểu tượng mở rộng ở góc phải trên bản đồ để xem toàn màn hình. Vị trí Beewon Guest House là gần đúng theo địa chỉ, chưa xác minh trên thực địa; các điểm còn lại là toạ độ thật.</p>
+  </section>
+
   <section id="lich">
     <h2>Lịch từng ngày</h2>
 
@@ -433,6 +502,7 @@
             <li><span>Beewon Guest House, đã đặt</span><span>2.900.000 VND</span></li>
           </ul>
         </div>
+        <a class="day-gmaps" href="#" data-gmaps-day="1" target="_blank" rel="noopener">Mở ngày này trong Google Maps</a>
         <details class="notes"><summary>Ghi chú</summary><textarea data-note="d1" placeholder="Tên khách sạn, giờ hẹn, chỗ ăn…"></textarea></details>
       </div>
     </article>
@@ -465,6 +535,7 @@
             <li><span>Khách sạn Busan</span><span>80.000 – 120.000₩</span></li>
           </ul>
         </div>
+        <a class="day-gmaps" href="#" data-gmaps-day="2" target="_blank" rel="noopener">Mở ngày này trong Google Maps</a>
         <details class="notes"><summary>Ghi chú</summary><textarea data-note="d2" placeholder="Số toa số ghế, khách sạn Busan…"></textarea></details>
       </div>
     </article>
@@ -492,6 +563,7 @@
             <li><span>Khách sạn Busan</span><span>80.000 – 120.000₩</span></li>
           </ul>
         </div>
+        <a class="day-gmaps" href="#" data-gmaps-day="3" target="_blank" rel="noopener">Mở ngày này trong Google Maps</a>
         <details class="notes"><summary>Ghi chú</summary><textarea data-note="d3" placeholder="Quán ăn muốn thử…"></textarea></details>
       </div>
     </article>
@@ -519,6 +591,7 @@
             <li><span>Khách sạn Busan</span><span>80.000 – 120.000₩</span></li>
           </ul>
         </div>
+        <a class="day-gmaps" href="#" data-gmaps-day="4" target="_blank" rel="noopener">Mở ngày này trong Google Maps</a>
         <details class="notes"><summary>Ghi chú</summary><textarea data-note="d4" placeholder="Vé Sky Capsule…"></textarea></details>
       </div>
     </article>
@@ -548,6 +621,7 @@
             <li><span>Khách sạn Busan</span><span>80.000 – 120.000₩</span></li>
           </ul>
         </div>
+        <a class="day-gmaps" href="#" data-gmaps-day="5" target="_blank" rel="noopener">Mở ngày này trong Google Maps</a>
         <details class="notes"><summary>Ghi chú</summary><textarea data-note="d5" placeholder="Chốt Gyeongju hay ở lại Busan…"></textarea></details>
       </div>
     </article>
@@ -576,6 +650,7 @@
             <li><span>Khách sạn Seoul</span><span>120.000 – 170.000₩</span></li>
           </ul>
         </div>
+        <a class="day-gmaps" href="#" data-gmaps-day="6" target="_blank" rel="noopener">Mở ngày này trong Google Maps</a>
         <details class="notes"><summary>Ghi chú</summary><textarea data-note="d6" placeholder="Giờ tàu, khách sạn Seoul đợt hai…"></textarea></details>
       </div>
     </article>
@@ -603,6 +678,7 @@
             <li><span>Khách sạn Seoul, đêm lễ</span><span>140.000 – 200.000₩</span></li>
           </ul>
         </div>
+        <a class="day-gmaps" href="#" data-gmaps-day="7" target="_blank" rel="noopener">Mở ngày này trong Google Maps</a>
         <details class="notes"><summary>Ghi chú</summary><textarea data-note="d7" placeholder="Quán cà phê, chỗ mua đồ ăn mang ra sông…"></textarea></details>
       </div>
     </article>
@@ -630,6 +706,7 @@
             <li><span>Mua sắm</span><span>tùy hai bạn</span></li>
           </ul>
         </div>
+        <a class="day-gmaps" href="#" data-gmaps-day="8" target="_blank" rel="noopener">Mở ngày này trong Google Maps</a>
         <details class="notes"><summary>Ghi chú</summary><textarea data-note="d8" placeholder="Danh sách quà cần mua…"></textarea></details>
       </div>
     </article>
@@ -667,6 +744,109 @@
 
 <div class="status" id="status"></div>
 
+<script>
+(function(){
+  var STOPS = [
+    // 3/10 — Seoul, ngày đến
+    {d:1,n:1,name:'Sân bay Incheon',    t:'07:35', lat:37.458666,  lng:126.4419679, note:'Hạ cánh. Mua thẻ T-money ngay ở cửa hàng tiện lợi trong sân bay.'},
+    {d:1,n:2,name:'Ga Seoul',           t:'08:30', lat:37.555946,  lng:126.972317,  note:'AREX từ Incheon. Đổi sang metro tuyến 1 đi Jongno 3-ga.'},
+    {d:1,n:3,name:'Beewon Guest House', t:'09:30', lat:37.5748,    lng:126.9906,    note:'Vị trí gần đúng — 77-4 Donhwamun-ro 11ga-gil. Gửi va li, nhận phòng từ 15:00.'},
+    {d:1,n:4,name:'Cung Deoksugung',    t:'11:00', lat:37.5658862, lng:126.9749017, note:'Đóng cửa thứ Hai. Vé 1.000₩. Đi hết chỉ 1 tiếng.'},
+    {d:1,n:5,name:'Suối Cheonggyecheon',t:'13:00', lat:37.5690744, lng:126.9775921, note:'Đi bộ dọc suối, miễn phí. Tối gặp bạn bè quanh khu này.'},
+
+    // 4/10 — Seoul sáng, chiều xuống Busan
+    {d:2,n:1,name:'Cung Gyeongbokgung', t:'09:00', lat:37.579617,  lng:126.977041,  note:'Đóng cửa thứ Ba. Vé 3.000₩. Lễ đổi gác 10:00.'},
+    {d:2,n:2,name:'Làng Bukchon',       t:'10:45', lat:37.5814696, lng:126.9849519, note:'Mở 10:00–17:00, khu dân cư nên giữ yên lặng. Đi bộ từ cung sang.'},
+    {d:2,n:3,name:'Ga Seoul',           t:'14:00', lat:37.555946,  lng:126.972317,  note:'Lấy va li rồi ra ga. Chừa dư 30 phút, ga rất lớn.'},
+    {d:2,n:4,name:'Ga Busan',           t:'17:40', lat:35.115225,  lng:129.042243,  note:'KTX 2 tiếng 40 phút. Nhận phòng rồi mới đi chơi.'},
+    {d:2,n:5,name:'Biển Gwangalli',     t:'19:30', lat:35.1531696, lng:129.118666,  note:'Ăn tối dọc bờ, ngắm cầu Gwangan lên đèn.'},
+
+    // 5/10 — Busan phía tây
+    {d:3,n:1,name:'Làng Gamcheon',      t:'09:30', lat:35.0973935, lng:129.0105921, note:'Metro tới ga Toseong rồi xe buýt số 2 hoặc 2-2. Đóng cửa 18:00. Nên đi xe buýt lên thay vì leo dốc.'},
+    {d:3,n:2,name:'Làng Huinnyeoul',    t:'14:30', lat:35.0782798, lng:129.0453198, note:'Đảo Yeongdo, yên tĩnh hơn Gamcheon. Quán cà phê nhìn thẳng ra biển.'},
+    {d:3,n:3,name:'Chợ cá Jagalchi',    t:'17:00', lat:35.0966339, lng:129.0307965, note:'Chọn cá tầng 1, mang lên tầng 2 chế biến. Hỏi giá trước.'},
+    {d:3,n:4,name:'BIFF Square',        t:'19:00', lat:35.098243,  lng:129.029212,  note:'Ssiat hotteok, eomuk. Chợ đêm Bupyeong ngay cạnh.'},
+
+    // 6/10 — bờ biển phía đông
+    {d:4,n:1,name:'Haedong Yonggungsa', t:'08:30', lat:35.1884543, lng:129.2231109, note:'Mở từ 4:00 sáng. Đi sớm tránh đông. Taxi từ ga Haeundae khoảng 15.000₩.'},
+    {d:4,n:2,name:'Cheongsapo Daritdol',t:'11:00', lat:35.1640365, lng:129.1967173, note:'Đài quan sát sàn kính, miễn phí. Cũng là ga đầu của Sky Capsule.'},
+    {d:4,n:3,name:'Blue Line Park',     t:'12:00', lat:35.158284,  lng:129.1727672, note:'Sky Capsule hay hết vé trước cả tuần. Hết thì đi Beach Train, rẻ hơn mà vẫn ngắm được biển.'},
+    {d:4,n:4,name:'Biển Haeundae',      t:'13:30', lat:35.1586975, lng:129.1603842, note:'Ăn trưa milmyeon hoặc dwaeji gukbap.'},
+    {d:4,n:5,name:'Đường mòn Igidae',   t:'16:00', lat:35.1322108, lng:129.1210029, note:'Tuyến đầy đủ khoảng 5km, nhiều bậc thang. Không cần đi hết. Mang nước.'},
+
+    // 7/10 — Gyeongju trong ngày
+    {d:5,n:1,name:'Ga Busan',           t:'08:30', lat:35.115225,  lng:129.042243,  note:'KTX đi Singyeongju, chỉ 30 phút.'},
+    {d:5,n:2,name:'Ga Singyeongju',     t:'09:10', lat:35.798365,  lng:129.138955,  note:'Ga nằm xa trung tâm Gyeongju. Bắt xe buýt 50, 51, 60, 61 hoặc 70, mất 35–40 phút.'},
+    {d:5,n:3,name:'Chùa Bulguksa',      t:'10:00', lat:35.7898804, lng:129.3318909, note:'Di sản UNESCO, xây năm 751. Hai tháp đá Dabotap và Seokgatap. Khoảng 2 tiếng là đủ.'},
+    {d:5,n:4,name:'Daereungwon',        t:'13:00', lat:35.8381282, lng:129.2108206, note:'23 gò mộ hoàng gia Silla. Một mộ mở cho vào trong xem. Vé 3.000₩.'},
+    {d:5,n:5,name:'Cheomseongdae',      t:'15:00', lat:35.8347306, lng:129.2190014, note:'Đài thiên văn thế kỷ 7. Đi bộ từ Daereungwon sang. Tháng 10–11 có cánh đồng cỏ hồng muhly.'},
+    {d:5,n:6,name:'Donggung & Wolji',   t:'17:30', lat:35.8348173, lng:129.2265645, note:'Đẹp nhất lúc lên đèn chập tối. Vé 3.000₩, mở tới 22:00. Xem khoảng 30 phút.'},
+
+    // 8/10 — leo núi rồi về Seoul
+    {d:6,n:1,name:'Chùa Beomeosa',      t:'08:00', lat:35.2839899, lng:129.0687639, note:'Metro tuyến 1 tới ga Beomeosa rồi xe buýt 90. Leo vừa phải rồi quay xuống, đừng cố lên đỉnh.'},
+    {d:6,n:2,name:'Chợ Gukje',          t:'13:00', lat:35.1013575, lng:129.0281978, note:'Mua quà, đồ khô. Ăn trưa luôn ở đây.'},
+    {d:6,n:3,name:'Ga Busan',           t:'15:00', lat:35.115225,  lng:129.042243,  note:'Gửi hành lý ở tủ khóa tại ga từ sáng, khoảng 4.000₩.'},
+    {d:6,n:4,name:'Ga Seoul',           t:'18:00', lat:37.555946,  lng:126.972317,  note:'Về tới nơi, nhận phòng khách sạn Seoul đợt hai.'},
+
+    // 9/10 — Ngày chữ Hàn
+    {d:7,n:1,name:'Seongsu-dong',       t:'10:00', lat:37.5446148, lng:127.0580149, note:'Nhà máy cũ cải tạo thành quán cà phê và concept store. Seoul Forest ngay cạnh.'},
+    {d:7,n:2,name:'Insadong',           t:'13:00', lat:37.5743024, lng:126.9849036, note:'Ssamziegil mở 10:30–20:30. Đồ thủ công, trà quán, gốm sứ.'},
+    {d:7,n:3,name:'Ikseon-dong',        t:'14:30', lat:37.5737132, lng:126.9901271, note:'Đi bộ từ Insadong sang. Hanok cải tạo thành quán ăn và cà phê.'},
+    {d:7,n:4,name:'Inwangsan',          t:'16:00', lat:37.5849489, lng:126.9593042, note:'338m, leo 1,5 tiếng cả lên lẫn xuống, ba phần tư là bậc thang. Hoàng hôn khoảng 18:00.'},
+    {d:7,n:5,name:'Hangang Yeouido',    t:'19:30', lat:37.5267106, lng:126.9347112, note:'Ga Yeouinaru tuyến 5, lối ra 2 hoặc 3. Thuê chiếu khoảng 5.000₩. Gọi gà rán giao thẳng ra bãi cỏ được.'},
+
+    // 10/10 — ngày về
+    {d:8,n:1,name:'Myeongdong',         t:'13:00', lat:37.5641885, lng:126.986118,  note:'Olive Young flagship mở từ 10:00. Hoàn thuế tại Lotte ngay cạnh.'},
+    {d:8,n:2,name:'Ga Seoul',           t:'16:00', lat:37.555946,  lng:126.972317,  note:'Lấy va li rồi bắt AREX.'},
+    {d:8,n:3,name:'Sân bay Incheon',    t:'17:40', lat:37.458666,  lng:126.4419679, note:'Bay 20:40. Cuối tuần lễ nên sân bay rất đông.'}
+  ];
+
+  var DAYS = [1,2,3,4,5,6,7,8];
+
+  // Link chỉ đường Google Maps: mở thẳng app với đủ các điểm dừng trong ngày
+  function gmapsUrl(days){
+    var pts = STOPS.filter(function(s){ return days.indexOf(s.d) !== -1; });
+    if (!pts.length) return '#';
+    var co = function(s){ return s.lat + ',' + s.lng; };
+    var url = 'https://www.google.com/maps/dir/?api=1&hl=vi'
+            + '&origin=' + co(pts[0])
+            + '&destination=' + co(pts[pts.length - 1])
+            + '&travelmode=transit';
+    var mid = pts.slice(1, -1);
+    // Google giới hạn số điểm trung gian, lấy tối đa 9
+    if (mid.length){
+      url += '&waypoints=' + mid.slice(0, 9).map(co).join('|');
+    }
+    return url;
+  }
+
+  var gbtn = document.getElementById('gmaps-link');
+  function setBtn(sel){
+    var days = (sel === 'all') ? DAYS : [parseInt(sel, 10)];
+    gbtn.href = gmapsUrl(days);
+    gbtn.textContent = (sel === 'all')
+      ? 'Mở lộ trình cả chuyến trong Google Maps'
+      : 'Mở lộ trình ngày này trong Google Maps';
+  }
+  setBtn('all');
+
+  Array.prototype.forEach.call(document.querySelectorAll('[data-gmaps-day]'), function(a){
+    a.href = gmapsUrl([parseInt(a.dataset.gmapsDay, 10)]);
+  });
+
+  document.getElementById('map-tabs').addEventListener('click', function(e){
+    var btn = e.target.closest('.map-tab');
+    if (!btn) return;
+    var sel = btn.dataset.day;
+
+    Array.prototype.forEach.call(this.querySelectorAll('.map-tab'), function(b){
+      b.setAttribute('aria-pressed', b === btn ? 'true' : 'false');
+    });
+
+    setBtn(sel);
+  });
+})();
+</script>
 <script>
 (function(){
   var KEY = 'trip-korea-oct2026';
