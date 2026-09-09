@@ -98,6 +98,46 @@
   .mapfoot a{color:var(--ink-soft);text-decoration:none;border-bottom:1px solid var(--rule)}
   .mapfoot a:hover{color:var(--ink);border-bottom-color:var(--ink)}
 
+  .layerbar{
+    position:absolute;top:46px;left:0;right:0;z-index:5;
+    display:flex;gap:6px;padding:0 12px;pointer-events:none;
+  }
+  .layerbar button{
+    pointer-events:auto;background:var(--card);border:1px solid var(--rule);border-radius:20px;
+    padding:4px 11px;font-size:12px;cursor:pointer;box-shadow:var(--shadow);color:var(--ink-faint);
+    display:inline-flex;align-items:center;gap:6px;
+  }
+  .layerbar button::before{
+    content:"";width:9px;height:9px;border-radius:2px;border:1.5px solid currentColor;flex:0 0 auto;
+  }
+  .layerbar button[aria-pressed="true"]{background:var(--ink);color:#fff;border-color:var(--ink)}
+  .layerbar button[aria-pressed="true"]::before{background:currentColor}
+  .layerbar button:focus-visible{outline:2px solid var(--ink);outline-offset:2px}
+
+  .stn{
+    min-width:19px;height:19px;padding:0 4px;border-radius:5px;background:#2F3B4A;color:#fff;cursor:pointer;
+    display:flex;align-items:center;justify-content:center;white-space:nowrap;
+    font-family:var(--mono);font-size:9.5px;font-weight:500;letter-spacing:-.02em;
+    border:2px solid #fff;box-shadow:0 1px 4px rgba(0,0,0,.35);
+  }
+  .stn:hover{transform:scale(1.2)}
+  .plc{
+    width:22px;height:22px;border-radius:50%;background:#C2761F;cursor:pointer;
+    display:flex;align-items:center;justify-content:center;color:#fff;font-size:12px;line-height:1;
+    border:2px solid #fff;box-shadow:0 1px 5px rgba(0,0,0,.4);transition:transform .14s ease;
+  }
+  .plc:hover{transform:scale(1.22)}
+
+  .htl{
+    width:27px;height:27px;border-radius:7px;background:#A32E44;cursor:pointer;
+    display:flex;align-items:center;justify-content:center;
+    border:2.5px solid #fff;box-shadow:0 2px 7px rgba(0,0,0,.45);transition:transform .14s ease;
+  }
+  .htl:hover{transform:scale(1.18)}
+  .htl svg{width:15px;height:15px;display:block}
+  .htl.soon{background:#fff;border:2.5px dashed #A32E44}
+  .htl.soon svg{fill:#A32E44}
+
   .tiles-warn{
     position:absolute;top:60px;left:50%;transform:translateX(-50%);z-index:6;
     background:var(--warn-wash);color:var(--warn);border:1px solid #E2D5AE;
@@ -321,6 +361,10 @@
 
   <main class="stage">
     <div class="daybar" id="daybar"></div>
+    <div class="layerbar" id="layerbar">
+      <button data-layer="stations" aria-pressed="false">Ga metro</button>
+      <button data-layer="places" aria-pressed="false">Địa điểm khác</button>
+    </div>
     <div id="map"></div>
     <div class="tiles-warn" id="tiles-warn">Bản đồ vector không tải được — đang dùng bản dự phòng</div>
     <div class="mapfoot"><span id="mapsum"></span><span id="mapout"></span></div>
@@ -404,8 +448,8 @@ const TRIP = {
       t:'Đặt vé KTX Busan → Seoul chiều 8/10',
       d:'Chuyến khoảng 15:00. Dự phòng nếu hết vé: bay Gimhae → Gimpo, 55 phút.' },
     { id:'ks-seoul',
-      t:'Đặt khách sạn Seoul — 2 đêm cuối',
-      d:'Đêm 8 và 9/10. Đêm 3/10 đã đặt Beewon. Lần này nên chọn Myeongdong: sáng 10/10 mua sắm và hoàn thuế đều ở đó. Đêm 9/10 là đêm lễ nên giá cao hơn 30–40%, thử đặt tách từng đêm.' },
+      t:'Đặt L3 Guesthouse — 2 đêm cuối',
+      d:'Đêm 8 và 9/10, khu Hongdae. Đã chốt chỗ này (xem mục dưới). Agoda báo đã bán hết 2 loại phòng cho đúng ngày này, và đêm 9/10 là đêm lễ Hangeul nên giá cao hơn — đặt loại huỷ miễn phí để giữ chỗ trước.' },
     { id:'ks-busan',
       t:'Đặt Busan Station Prince — 4 đêm',
       d:'Đêm 4, 5, 6, 7/10. Đã chốt chỗ này (xem mục dưới). Agoda báo đã bán hết vài loại phòng cho đúng ngày này — đặt loại huỷ miễn phí để giữ chỗ trước. Kiểm tra giá đã gồm thuế 10% chưa.' },
@@ -459,6 +503,104 @@ const TRIP = {
     after:'<b>Thời gian di chuyển từ Busan Station Prince</b> (ước lượng theo số ga, chưa đối chiếu Naver): ga Busan 5 phút đi bộ · chợ Gukje và Jagalchi 11–13 phút · Gamcheon 13 phút · Beomeosa 39 phút · Haeundae và bờ đông 54 phút · Gwangalli 44 phút. Tổng bốn ngày ít hơn phương án Seomyeon khoảng 30 phút và ít hơn phương án Gaegeum hơn 2 tiếng.<br><br><b>Còn phải hỏi khách sạn:</b> có giữ hành lý sáng 8/10 sau khi trả phòng không — nếu có thì bỏ được khoản tủ khoá 4.000₩ ở ga.'
   },
 
+
+  /* ================================================================
+     GA METRO — chỉ những ga lịch này thật sự dùng.
+     Toạ độ lấy từ OpenStreetMap. line: tuyến, tip: lối ra / xe buýt nối.
+     ================================================================ */
+  stations: [
+    // --- Seoul ---
+    { name:'Ga Seoul',        ko:'서울역',   line:'Tuyến 1 · 4 · AREX · KTX', lat:37.552853, lng:126.972572,
+      tip:'Đầu mối của cả chuyến: AREX từ Incheon, KTX đi và về Busan. Ga rất lớn, chừa dư 30 phút tìm sân ga.' },
+    { name:'Jongno 3-ga',     ko:'종로3가',  line:'Tuyến 1 · 3 · 5', lat:37.571499, lng:126.991906,
+      tip:'Ga gần Beewon nhất — đi bộ khoảng 7 phút. Từ ga Seoul đi tuyến 1 ba ga, không đổi tàu.' },
+    { name:'Anguk',           ko:'안국',     line:'Tuyến 3', lat:37.576828, lng:126.986171,
+      tip:'Xuống đây cho Bukchon và Insadong. Lối ra 2 đi Bukchon, lối ra 6 đi Insadong.' },
+    { name:'Gyeongbokgung',   ko:'경복궁',   line:'Tuyến 3', lat:37.575787, lng:126.973526,
+      tip:'Lối ra 5 lên thẳng cung. Lễ đổi gác 10:00 ở cổng Gwanghwamun.' },
+    { name:'City Hall',       ko:'시청',     line:'Tuyến 1 · 2', lat:37.565480, lng:126.977114,
+      tip:'Ga cho cung Deoksugung, ngay cạnh cổng.' },
+    { name:'Myeongdong',      ko:'명동',     line:'Tuyến 4', lat:37.560898, lng:126.986376,
+      tip:'Mua sắm ngày 10/10. Olive Young flagship và quầy hoàn thuế Lotte đều quanh đây.' },
+    { name:'Dongnimmun',      ko:'독립문',   line:'Tuyến 3', lat:37.574558, lng:126.957836,
+      tip:'Ga gần chân núi Inwangsan nhất, ngày 9/10.' },
+    { name:'Seongsu',         ko:'성수',     line:'Tuyến 2', lat:37.544569, lng:127.056102,
+      tip:'Khu cà phê nhà máy cũ, sáng 9/10.' },
+    { name:'Yeouinaru',       ko:'여의나루', line:'Tuyến 5', lat:37.526853, lng:126.932529,
+      tip:'Ra sông Hàn tối 9/10 — LỐI RA 2 hoặc 3 là xuống thẳng công viên.' },
+    { name:'Sân bay Incheon T1', ko:'인천공항1터미널', line:'AREX', lat:37.447159, lng:126.452781,
+      tip:'AREX Express 43 phút 11.000₩, bản thường 59 phút 4.500₩ dùng được T-money. Kiểm tra kỹ T1 hay T2.' },
+
+    // --- Busan ---
+    { name:'Ga Busan',        ko:'부산역',   line:'Tuyến 1 · KTX', lat:35.115726, lng:129.039903,
+      tip:'Khách sạn cách đây 250 m. Lịch dùng ga này bốn lần. Có tủ khoá gửi hành lý khoảng 4.000₩.' },
+    { name:'Seomyeon',        ko:'서면',     line:'Tuyến 1 · 2', lat:35.157774, lng:129.059259,
+      tip:'Ga đổi tuyến duy nhất giữa tuyến 1 và 2 — mọi chuyến đi bờ đông đều qua đây. Ga rất lớn, 13 lối ra.' },
+    { name:'Beomnaegol',      ko:'범내골',   line:'Tuyến 1', lat:35.147401, lng:129.059202,
+      tip:'Ga tuyến 1 gần khu Jeonpo.' },
+    { name:'Jeonpo',          ko:'전포',     line:'Tuyến 2', lat:35.152817, lng:129.065343,
+      tip:'Phố cà phê Jeonpo ngay trên mặt đất.' },
+    { name:'Toseong',         ko:'토성',     line:'Tuyến 1', lat:35.100764, lng:129.019844,
+      tip:'Xuống đây rồi bắt XE BUÝT NHỎ SỐ 2 hoặc 2-2 lên làng Gamcheon. Đi buýt lên, đi bộ xuống.' },
+    { name:'Jagalchi',        ko:'자갈치',   line:'Tuyến 1', lat:35.097346, lng:129.026768,
+      tip:'Chợ cá Jagalchi và BIFF Square đều đi bộ từ đây.' },
+    { name:'Nampo',           ko:'남포',     line:'Tuyến 1', lat:35.097924, lng:129.034947,
+      tip:'Chợ Gukje, BIFF Square, công viên Yongdusan đều quanh đây.' },
+    { name:'Beomeosa',        ko:'범어사',   line:'Tuyến 1', lat:35.273102, lng:129.092668,
+      tip:'Xuống ga rồi bắt XE BUÝT SỐ 90 lên chùa. Đầu bắc tuyến 1, từ ga Busan đi 17 ga.' },
+    { name:'Haeundae',        ko:'해운대',   line:'Tuyến 2', lat:35.163753, lng:129.158747,
+      tip:'Đi chùa Haedong Yonggungsa: từ đây bắt xe buýt 181, hoặc taxi khoảng 15.000₩.' },
+    { name:'Gwangan',         ko:'광안',     line:'Tuyến 2', lat:35.157914, lng:129.113118,
+      tip:'Biển Gwangalli, tối 4/10.' },
+    { name:'Kyungsung Univ · Pukyong', ko:'경성대·부경대', line:'Tuyến 2', lat:35.137539, lng:129.100524,
+      tip:'Ga gần đường mòn Igidae nhất, ngày 6/10.' },
+    { name:'Ga Singyeongju',  ko:'신경주역', line:'KTX', lat:35.798365, lng:129.138955,
+      tip:'Ga KTX của Gyeongju, nằm xa trung tâm. Bắt xe buýt 50, 51, 60, 61 hoặc 70, mất 35–40 phút.' }
+  ],
+
+  /* ================================================================
+     KHÁCH SẠN — luôn hiện trên bản đồ, icon riêng.
+     booked:false = chưa đặt, hiện dạng viền đứt.
+     ================================================================ */
+  hotels: [
+    { name:'Beewon Guest House', city:'Seoul', nights:'đêm 3/10 · 1 đêm', booked:true,
+      lat:37.5748, lng:126.9906, q:'77-4 Donhwamun-ro 11ga-gil Jongno-gu Seoul',
+      tip:'Đã đặt, 2.900.000₫. Ngay cổng Donhwamun của cung Changdeokgung. Ga Jongno 3-ga đi bộ 7 phút. <b>Vị trí gần đúng theo địa chỉ.</b>' },
+    { name:'Busan Station Prince', city:'Busan', nights:'đêm 4–7/10 · 4 đêm', booked:true,
+      lat:35.1165, lng:129.0377, q:'19 Jungang-daero 229beon-gil Dong-gu Busan',
+      tip:'8,9/10 · 2.956 đánh giá. Cách ga metro Busan 250 m, ga KTX 340 m. <b>Chấm này là vị trí gần đúng theo địa chỉ — chưa có trên OpenStreetMap.</b>' },
+    { name:'L3 Guesthouse', city:'Seoul · Hongdae', nights:'đêm 8 và 9/10 · 2 đêm', booked:true,
+      lat:37.553183, lng:126.920648, q:'30-6 Yanghwa-ro 16-gil Mapo-gu Seoul',
+      tip:'<b>9,0/10 · 892 đánh giá</b> — điểm cao nhất trong 10 chỗ đã so. Sạch 9,2 · phục vụ 9,3 · đáng tiền 9,3 · cơ sở vật chất 8,8. Cách ga <b>Hongik Univ 490 m</b> (tuyến 2 + AREX) và <b>Hapjeong 500 m</b> (tuyến 2 + 6). <b>Vị trí gần đúng theo tên đường.</b>' }
+  ],
+
+  /* ================================================================
+     ĐỊA ĐIỂM NỔI TIẾNG KHÔNG CÓ TRONG LỊCH — để dư giờ thì biết đi đâu
+     ================================================================ */
+  places: [
+    { name:'Tháp N Seoul (Namsan)', city:'Seoul', lat:37.551270, lng:126.988281,
+      tip:'Biểu tượng Seoul, lên bằng cáp treo Namsan. Đẹp nhất lúc chập tối.', read:'tháp N Seoul Namsan kinh nghiệm' },
+    { name:'Quảng trường Gwanghwamun', city:'Seoul', lat:37.572648, lng:126.976825,
+      tip:'Ngay trước cung Gyeongbokgung. Ngày 9/10 là ngày chữ Hàn, quanh đây nhiều sự kiện.', read:'quảng trường Gwanghwamun Seoul' },
+    { name:'Chợ Gwangjang', city:'Seoul', lat:37.570220, lng:126.999506,
+      tip:'Chợ ăn vặt nổi tiếng nhất Seoul — bindaetteok, mayak gimbap. Đi bộ từ Jongno 3-ga.', read:'chợ Gwangjang Seoul ăn gì' },
+    { name:'DDP Dongdaemun', city:'Seoul', lat:37.567067, lng:127.009672,
+      tip:'Kiến trúc Zaha Hadid, lên đèn buổi tối. Khu Dongdaemun mở tới khuya.', read:'DDP Dongdaemun Design Plaza kinh nghiệm' },
+    { name:'Hongdae', city:'Seoul', lat:37.557349, lng:126.926908,
+      tip:'Khu trẻ, nhạc đường phố, quán xá tới khuya. Cùng tuyến 2 với Seongsu.', read:'Hongdae Seoul kinh nghiệm chơi gì' },
+    { name:'Lotte World Tower', city:'Seoul', lat:37.512554, lng:127.102679,
+      tip:'Toà cao nhất Hàn Quốc, 555 m, có đài quan sát Seoul Sky. Nằm xa về phía đông nam.', read:'Lotte World Tower Seoul Sky kinh nghiệm' },
+    { name:'CV sông Hàn Mangwon · chợ Mangwon', city:'Seoul', lat:37.550193, lng:126.902161,
+      tip:'Bờ sông Hàn gần L3 nhất — ga Hapjeong đi bộ 9 phút rồi tuyến 6 một ga tới Mangwon. Chợ Mangwon ngay lối ra ga: gà rán, tteokbokki, chả cá, mua mang ra bờ sông ngồi. Ít khách du lịch hơn Yeouido nhiều.',
+      read:'chợ Mangwon công viên sông Hàn Mangwon kinh nghiệm' },
+    { name:'Công viên Yongdusan · tháp Busan', city:'Busan', lat:35.100495, lng:129.032788,
+      tip:'Ngay trên chợ Gukje và BIFF Square — leo thang cuốn lên là tới. Nhìn xuống cảng Busan.', read:'công viên Yongdusan tháp Busan kinh nghiệm' },
+    { name:'Cáp treo biển Songdo', city:'Busan', lat:35.068932, lng:129.021990,
+      tip:'Busan Air Cruise, cabin đáy kính bay trên biển. Gần Gamcheon, ghép được vào ngày 5/10.', read:'cáp treo Songdo Busan Air Cruise kinh nghiệm' },
+    { name:'Taejongdae', city:'Busan', lat:35.058510, lng:129.087686,
+      tip:'Vách đá và hải đăng ở mũi đảo Yeongdo. Cùng đảo với làng Huinnyeoul ngày 5/10.', read:'Taejongdae Busan kinh nghiệm' }
+  ],
+
   /* ================================================================
      LỊCH TỪNG NGÀY
      ================================================================ */
@@ -474,18 +616,21 @@ const TRIP = {
         { t:'07:35', name:'Hạ cánh Incheon',
           desc:'Làm thủ tục nhập cảnh. Mua thẻ T-money ngay ở cửa hàng tiện lợi trong sân bay — dùng cho metro và xe buýt cả Seoul lẫn Busan.',
           lat:37.458666, lng:126.4419679, q:'Incheon International Airport',
+          read:'sân bay Incheon nhập cảnh kinh nghiệm tự túc',
           tip:'Hạ cánh. Mua thẻ T-money ngay ở cửa hàng tiện lợi trong sân bay.',
           links:[{t:'Sân bay Incheon', u:'https://www.airport.kr/ap/en/index.do'}] },
 
         { t:'08:30', name:'AREX về ga Seoul',
           desc:'Bản Express 43 phút, 11.000₩. Bản thường 59 phút, 4.500₩ và dùng được T-money.',
           lat:37.555946, lng:126.972317, q:'Seoul Station',
+          read:'tàu AREX từ sân bay Incheon về ga Seoul kinh nghiệm',
           tip:'AREX từ Incheon. Đổi sang metro tuyến 1 đi Jongno 3-ga.',
           links:[{t:'Trang AREX', u:'https://www.arex.or.kr/main.do'}] },
 
         { t:'09:30', name:'Tới Beewon, gửi va li',
           desc:'Nhận phòng thường từ 15:00 nên gửi đồ trước rồi đi ăn sáng.',
           lat:37.5748, lng:126.9906, q:'77-4 Donhwamun-ro 11ga-gil Jongno-gu Seoul',
+          read:'Beewon Guest House Seoul đánh giá',
           tip:'Vị trí gần đúng theo địa chỉ. Gửi va li, nhận phòng từ 15:00.' },
 
         { t:'11:00', name:'Cung Deoksugung',
@@ -545,14 +690,17 @@ const TRIP = {
         { t:'14:00', name:'Lấy va li, ra ga Seoul',
           desc:'Chừa dư 30 phút. Ga Seoul rất lớn, tìm sân ga mất thời gian hơn tưởng.',
           lat:37.555946, lng:126.972317, q:'Seoul Station',
+          read:'ga Seoul Station đi tàu KTX kinh nghiệm',
           tip:'Lấy va li rồi ra ga. Chừa dư 30 phút, ga rất lớn.' },
 
         { t:'15:00', name:'KTX đi Busan',
+          read:'KTX Seoul đi Busan đặt vé kinh nghiệm',
           desc:'2 tiếng 40 phút. Chiều Chủ nhật giữa kỳ nghỉ lễ nên tàu đông, đặt vé sớm.',
           links:[{t:'Đặt vé Korail', u:'https://www.letskorail.com/ebizbf/EbizBfTicketSearch.do'}] },
 
         { t:'17:40', name:'Tới ga Busan, nhận phòng',
           lat:35.115225, lng:129.042243, q:'Busan Station',
+          read:'ga Busan station kinh nghiệm đi lại',
           tip:'KTX 2 tiếng 40 phút. Nhận phòng rồi mới đi chơi.' },
 
         { t:'19:30', name:'Biển Gwangalli',
@@ -682,11 +830,13 @@ const TRIP = {
         { t:'08:30', name:'KTX đi Singyeongju',
           desc:'Chỉ 30 phút từ ga Busan.',
           lat:35.115225, lng:129.042243, q:'Busan Station',
+          read:'KTX Busan đi Gyeongju ga Singyeongju kinh nghiệm',
           tip:'KTX đi Singyeongju, chỉ 30 phút.' },
 
         { t:'09:10', name:'Tới ga Singyeongju',
           desc:'Ga nằm xa trung tâm Gyeongju. Bắt xe buýt 50, 51, 60, 61 hoặc 70 vào trung tâm, mất 35–40 phút.',
           lat:35.798365, lng:129.138955, q:'Singyeongju Station',
+          read:'ga Singyeongju đi trung tâm Gyeongju xe buýt',
           tip:'Ga xa trung tâm. Xe buýt 50/51/60/61/70, mất 35–40 phút.' },
 
         { t:'10:00', name:'Chùa Bulguksa',
@@ -714,6 +864,7 @@ const TRIP = {
           tip:'Đẹp nhất lúc lên đèn chập tối. Mở tới 22:00.' },
 
         { t:'20:00', name:'KTX về Busan',
+          read:'KTX Gyeongju về Busan giờ tàu cuối',
           desc:'Về tới ga Busan khoảng 20:30. Khách sạn cách ga 5 phút đi bộ.' },
 
         { t:'20:45', name:'Công viên Bắc Cảng — tuỳ chọn',
@@ -747,6 +898,7 @@ const TRIP = {
           tip:'Metro tuyến 1 tới ga Beomeosa rồi xe buýt 90. Leo vừa phải rồi quay xuống, đừng cố lên đỉnh.' },
 
         { t:'12:30', name:'Trả phòng, gửi đồ ở ga',
+          read:'tủ khoá gửi hành lý ga Busan kinh nghiệm',
           desc:'Tủ khóa ga Busan khoảng 4.000₩.' },
 
         { t:'13:00', name:'Chợ Gukje',
@@ -757,15 +909,25 @@ const TRIP = {
 
         { t:'15:00', name:'KTX về Seoul',
           lat:35.115225, lng:129.042243, q:'Busan Station',
+          read:'KTX Busan về Seoul đặt vé kinh nghiệm',
           tip:'Gửi hành lý ở tủ khóa tại ga từ sáng, khoảng 4.000₩.',
           links:[{t:'Đặt vé Korail', u:'https://www.letskorail.com/ebizbf/EbizBfTicketSearch.do'}] },
 
-        { t:'18:00', name:'Tới Seoul, nhận phòng',
+        { t:'18:00', name:'Tới ga Seoul',
+          desc:'KTX về tới nơi. Từ đây đi tiếp về Hongdae.',
           lat:37.555946, lng:126.972317, q:'Seoul Station',
-          tip:'Về tới nơi, nhận phòng khách sạn Seoul đợt hai.' }
+          read:'ga Seoul Station kinh nghiệm đi lại',
+          tip:'Đổi sang AREX hoặc Gyeongui–Jungang, 2 ga là tới Hongik Univ.' },
+
+        { t:'18:35', name:'Nhận phòng L3 Guesthouse',
+          desc:'Ga Seoul → Hongik Univ chỉ <b>2 ga trên AREX</b> (hoặc Gyeongui–Jungang), khoảng 7 phút chạy tàu, không đổi tàu. Nhưng cộng cả đi bộ sang ke AREX ở ga Seoul (ke nằm sâu, kéo va li mất thời gian), chờ tàu, ra khỏi ga Hongik Univ và đi bộ 490 m thì tính khoảng <b>35 phút</b> cho chắc.',
+          lat:37.553183, lng:126.920648, q:'30-6 Yanghwa-ro 16-gil Mapo-gu Seoul',
+          read:'L3 Guesthouse Hongdae Seoul đánh giá',
+          tip:'Vị trí gần đúng theo tên đường. Ga Hongik Univ 490 m, ga Hapjeong 500 m.' }
       ],
       notes:[
         { title:'Từ khách sạn', text:'lên Beomeosa đi tuyến 1 một mạch 17 ga từ ga Busan, khoảng 39 phút, không phải đổi tàu. Muốn có mặt lúc 08:00 thì rời phòng khoảng 07:15. Chiều về, chợ Gukje cách ga Busan 2,0 km và khách sạn cách ga 5 phút — hỏi khách sạn có giữ hành lý sau khi trả phòng không, nếu có thì khỏi cần tủ khoá ở ga.' },
+        { title:'Tối nay chưa xếp gì', text:'nhận phòng xong khoảng 18:20 là còn trống cả buổi tối. Ở Hongdae thì đi bộ ra phố là có ăn uống tới khuya. Một lựa chọn nhẹ nhàng hơn: <b>chợ Mangwon</b> (ga Hapjeong đi bộ 9 phút rồi tuyến 6 một ga) mua đồ ăn rồi ra <b>công viên sông Hàn Mangwon</b> ngồi — chỗ người Seoul hay ra, ít khách du lịch. Cả hai đều đã có trên bản đồ, bật lớp “Địa điểm khác”.' },
         { title:'So với lịch cũ', text:'vì đã xuống Busan từ chiều Chủ nhật nên buổi sáng này không còn gấp. Leo núi xong vẫn kịp ăn trưa thong thả rồi lên tàu.' }
       ],
       costs:[
@@ -773,7 +935,7 @@ const TRIP = {
         { label:'Tủ khóa ga',       krw:4000 },
         { label:'Metro và xe buýt', krw:15000 },
         { label:'Ăn uống',          krw:[90000,120000] },
-        { label:'Khách sạn Seoul',  krw:[120000,170000] }
+        { label:'L3 Guesthouse, 1 đêm', vnd:[1727552,2100000] }
       ]
     },
 
@@ -809,6 +971,7 @@ const TRIP = {
           tip:'338m, leo 1,5 tiếng cả lên lẫn xuống. Hoàng hôn khoảng 18:00.' },
 
         { t:'18:30', name:'Mua đồ ăn mang ra sông',
+          read:'gọi gà rán giao ra công viên sông Hàn kinh nghiệm',
           desc:'Ghé cửa hàng tiện lợi hoặc quán gà rán gần ga. Người Hàn hay gọi gà rán giao thẳng ra công viên — nhiều hàng nhận giao tận nơi trên bãi cỏ.' },
 
         { t:'19:30', name:'Công viên Hangang Yeouido',
@@ -818,6 +981,7 @@ const TRIP = {
           tip:'Ga Yeouinaru tuyến 5, lối ra 2 hoặc 3. Thuê chiếu khoảng 5.000₩.' }
       ],
       notes:[
+        { title:'Từ khách sạn', text:'Hongdae hợp ngày này. Sáng đi <b>Seongsu bằng tuyến 2 đi thẳng</b> từ ga Hongik Univ, khoảng 32 phút, không phải đổi tàu. Tối về từ sông Hàn: Yeouinaru → tuyến 5 tới Gongdeok → đổi tuyến 6 về Hapjeong, hoặc đổi AREX về Hongik Univ — khoảng <b>25–27 phút</b>, nhanh hơn từ Myeongdong (~35 phút). Về tới Hongdae lúc muộn vẫn còn nhiều chỗ ăn.' },
         { title:'Bối cảnh', text:'ngày lễ kỷ niệm vua Sejong công bố bảng chữ Hangeul năm 1446. Phố xá đông vui, nhiều sự kiện quanh quảng trường Gwanghwamun.' },
         { title:'Ra sông Hàn', text:'đi metro tới ga <b>Yeouinaru tuyến 5</b>, lối ra số 2 hoặc 3 là xuống thẳng công viên. Từ khu Inwangsan mất khoảng 30 phút. Mang theo áo khoác — tối bên sông lạnh hơn trong phố vài độ, và có gió.' }
       ],
@@ -825,7 +989,7 @@ const TRIP = {
         { label:'Metro', krw:15000 },
         { label:'Ăn uống và cà phê', krw:[90000,130000] },
         { label:'Thuê chiếu ở công viên', krw:5000 },
-        { label:'Khách sạn Seoul, đêm lễ', krw:[140000,200000] }
+        { label:'L3 Guesthouse, 1 đêm (đêm lễ)', vnd:[1727552,2300000] }
       ]
     },
 
@@ -836,7 +1000,8 @@ const TRIP = {
       title:'Ngày về',
       notePlaceholder:'Danh sách quà cần mua…',
       stops:[
-        { t:'10:00', name:'Trả phòng, gửi va li' },
+        { t:'10:00', name:'Trả phòng, gửi va li',
+          desc:'Ở Hongdae nên hôm nay có hai cách. <b>Cách 1 (gọn nhất):</b> mang va li ra <b>tủ khoá ga Seoul</b> — AREX 2 ga, ~7 phút — rồi từ đó tuyến 4 hai ga vào Myeongdong; chiều quay lại lấy đồ và đi <b>AREX Express 43 phút</b> ra Incheon. <b>Cách 2:</b> gửi đồ ở khách sạn, đi Myeongdong rồi về Hongdae lấy, đi thẳng <b>AREX thường từ ga Hongik Univ (~52 phút)</b>, không cần ghé ga Seoul. Nhớ hỏi khách sạn có giữ hành lý sau khi trả phòng không.' },
 
         { t:'10:30', name:'Gặp bạn bè — brunch',
           desc:'Cuối tuần nên gặp được lần cuối trước khi về.' },
@@ -855,11 +1020,13 @@ const TRIP = {
 
         { t:'16:00', name:'Lấy va li, AREX ra Incheon',
           lat:37.555946, lng:126.972317, q:'Seoul Station',
+          read:'AREX từ ga Seoul ra sân bay Incheon kinh nghiệm',
           tip:'Lấy va li rồi bắt AREX.' },
 
         { t:'17:40', name:'Có mặt tại sân bay',
           desc:'9–11/10 là kỳ nghỉ dài của người Hàn, sân bay sẽ rất đông. Đừng rút ngắn thời gian dự phòng.',
           lat:37.458666, lng:126.4419679, q:'Incheon International Airport',
+          read:'sân bay Incheon hoàn thuế làm thủ tục kinh nghiệm',
           tip:'Bay 20:40. Cuối tuần lễ nên sân bay rất đông.' },
 
         { t:'20:40', name:'Bay về Hà Nội' }
@@ -980,7 +1147,7 @@ const $$ = q => Array.prototype.slice.call(document.querySelectorAll(q));
    TRẠNG THÁI LƯU
    ===================================================================== */
 const KEY = 'trip-korea-oct2026';
-const state = { checks:{}, notes:{}, spend:{}, rate:TRIP.rate };
+const state = { checks:{}, notes:{}, spend:{}, rate:TRIP.rate, layers:{ stations:false, places:false } };
 
 const store = (function(){
   try{
@@ -1024,9 +1191,18 @@ function queueSave(){ clearTimeout(saveTimer); saveTimer = setTimeout(save, 600)
 /* =====================================================================
    SIDEBAR — TAB LỊCH TRÌNH
    ===================================================================== */
+// Truy vấn cho nút "Bài viết": ưu tiên read đã soạn tay, không có thì suy ra từ
+// q (từ khoá bản đồ) — nhờ vậy điểm mới thêm sau này luôn có link, không phải nhớ.
+function readQ(s){
+  if (s.read) return s.read;
+  if (s.q) return s.q + ' kinh nghiệm du lịch';
+  return null;
+}
+
 function stopLinks(day, s, mi){
   const out = [];
-  if (s.read) out.push('<a href="' + uRead(s.read) + '" target="_blank" rel="noopener">Bài viết</a>');
+  const rq = readQ(s);
+  if (rq) out.push('<a href="' + uRead(rq) + '" target="_blank" rel="noopener">Bài viết</a>');
   if (mi >= 0){
     out.push('<a href="' + uNaver(s) + '" target="_blank" rel="noopener">Naver</a>');
     out.push('<a href="' + uKakaoTo(s) + '" target="_blank" rel="noopener">Chỉ đường</a>');
@@ -1288,6 +1464,96 @@ function clearMarkers(){
   Object.keys(markers).forEach(k => { markers[k].remove(); delete markers[k]; });
 }
 
+const BED = '<svg viewBox="0 0 24 24" fill="#fff" aria-hidden="true">'
+  + '<path d="M3 8a1 1 0 0 0-1 1v10h2.2v-2.4h15.6V19H22v-5.6a3 3 0 0 0-3-3h-7.6v4.2H4.2V9a1 1 0 0 0-1.2-1z"/>'
+  + '<circle cx="7.6" cy="11.9" r="2.3"/></svg>';
+
+/* Nhãn ngắn trên chấm ga: rút số tuyến ra để nhìn là biết đi tuyến nào.
+   'Tuyến 1 · 2' -> "1·2"   'Tuyến 3' -> "3"   'AREX' -> "A"   'KTX' -> "K" */
+function lineBadge(line){
+  const nums = (line.match(/\d+/g) || []).slice(0, 2);
+  if (nums.length) return nums.join('·');
+  if (/AREX/i.test(line)) return 'A';
+  if (/KTX/i.test(line))  return 'K';
+  return 'M';
+}
+
+/* ---- lớp phụ: ga metro + địa điểm ngoài lịch (bật/tắt riêng) ---- */
+let extra = [];
+function clearExtra(){ extra.forEach(m => m.remove()); extra = []; }
+
+function drawExtra(){
+  clearExtra();
+  if (!map || !styleReady) return;
+
+  if (state.layers.stations){
+    (TRIP.stations || []).forEach(st => {
+      const d = document.createElement('div');
+      d.className = 'stn';
+      d.textContent = lineBadge(st.line);
+      d.title = st.name + ' · ' + st.line;
+      const html = '<div class="pop"><b>' + st.name + ' <span style="font-weight:400;color:var(--ink-faint)">' + st.ko + '</span></b>'
+        + '<span class="pt">' + st.line + '</span>'
+        + (st.tip ? '<p>' + st.tip + '</p>' : '')
+        + '<span class="pl"><a href="' + uNaver(st) + '" target="_blank" rel="noopener">Naver</a>'
+        + '<a href="' + uKakaoTo(st) + '" target="_blank" rel="noopener">Chỉ đường</a></span></div>';
+      extra.push(new maplibregl.Marker({ element:d })
+        .setLngLat([st.lng, st.lat])
+        .setPopup(new maplibregl.Popup({ offset:15, closeButton:false, maxWidth:'270px' }).setHTML(html))
+        .addTo(map));
+    });
+  }
+
+  if (state.layers.places){
+    (TRIP.places || []).forEach(pl => {
+      const d = document.createElement('div');
+      d.className = 'plc';
+      d.textContent = '\u2605';
+      d.title = pl.name;
+      const html = '<div class="pop"><b>' + pl.name + '</b>'
+        + '<span class="pt">' + pl.city + ' · không có trong lịch</span>'
+        + (pl.tip ? '<p>' + pl.tip + '</p>' : '')
+        + '<span class="pl"><a href="' + uNaver(pl) + '" target="_blank" rel="noopener">Naver</a>'
+        + '<a href="' + uKakaoTo(pl) + '" target="_blank" rel="noopener">Chỉ đường</a>'
+        + (pl.read ? '<a href="' + uRead(pl.read) + '" target="_blank" rel="noopener">Bài viết</a>' : '')
+        + '</span></div>';
+      extra.push(new maplibregl.Marker({ element:d })
+        .setLngLat([pl.lng, pl.lat])
+        .setPopup(new maplibregl.Popup({ offset:13, closeButton:false, maxWidth:'270px' }).setHTML(html))
+        .addTo(map));
+    });
+  }
+  // Khách sạn luôn hiện — không có nút bật/tắt, vì đây là chỗ ngủ mỗi đêm.
+  (TRIP.hotels || []).forEach(h => {
+    const d = document.createElement('div');
+    d.className = 'htl' + (h.booked ? '' : ' soon');
+    d.innerHTML = BED;
+    d.title = h.name + ' · ' + h.nights;
+    const html = '<div class="pop"><b>' + h.name + '</b>'
+      + '<span class="pt">' + h.city + ' · ' + h.nights + '</span>'
+      + (h.tip ? '<p>' + h.tip + '</p>' : '')
+      + '<span class="pl"><a href="' + uNaver(h) + '" target="_blank" rel="noopener">Naver</a>'
+      + '<a href="' + uKakaoTo(h) + '" target="_blank" rel="noopener">Chỉ đường</a></span></div>';
+    extra.push(new maplibregl.Marker({ element:d })
+      .setLngLat([h.lng, h.lat])
+      .setPopup(new maplibregl.Popup({ offset:18, closeButton:false, maxWidth:'280px' }).setHTML(html))
+      .addTo(map));
+  });
+
+  poiZoom();
+  $$('#layerbar button').forEach(b => b.setAttribute('aria-pressed', state.layers[b.dataset.layer] ? 'true' : 'false'));
+}
+
+/* Bật "Địa điểm khác" thì hạ luôn ngưỡng zoom nhãn POI của nền,
+   để chợ, chùa, quán hiện sớm hơn thay vì phải zoom sát z15-17. */
+function poiZoom(){
+  if (!map || !styleReady) return;
+  const on = state.layers.places;
+  [['poi_r1', on ? 13 : 15], ['poi_r7', on ? 15 : 16], ['poi_r20', on ? 16 : 17]].forEach(([id, z]) => {
+    try{ if (map.getLayer(id)) map.setLayerZoomRange(id, z, 24); }catch(e){}
+  });
+}
+
 function draw(which, opts){
   sel = which;
   if (!map || !styleReady) return;
@@ -1312,10 +1578,13 @@ function draw(which, opts){
   });
 
   if (!b.isEmpty()){
+    // duration phải > 0: fitBounds tức thời không kích hoạt chu trình xin tile,
+    // nền sẽ trắng cho tới khi người dùng tự zoom. 200ms vẫn cho cảm giác tức thì.
     map.fitBounds(b, { padding: fitPad(), maxZoom: sel === 'all' ? 8.5 : 14,
-                       duration: opts && opts.jump ? 0 : 700 });
+                       duration: opts && opts.jump ? 200 : 700 });
   }
   $$('#daybar button').forEach(x => x.setAttribute('aria-pressed', x.dataset.day === String(sel) ? 'true' : 'false'));
+  drawExtra();
   mapFoot();
 }
 
@@ -1343,6 +1612,7 @@ function popHtml(day, s, i){
     + '<span class="pl">'
     +   '<a href="' + uNaver(s) + '" target="_blank" rel="noopener">Naver</a>'
     +   '<a href="' + uKakaoTo(s) + '" target="_blank" rel="noopener">Chỉ đường</a>'
+    +   (readQ(s) ? '<a href="' + uRead(readQ(s)) + '" target="_blank" rel="noopener">Bài viết</a>' : '')
     + '</span></div>';
 }
 
@@ -1458,6 +1728,15 @@ function bind(){
     if (!b) return;
     switchTab(b.dataset.tab);
     if (isMobile() && sheet === 'peek') setSheet('half');
+  });
+
+  el('layerbar').addEventListener('click', e => {
+    const b = e.target.closest('button[data-layer]');
+    if (!b) return;
+    const k = b.dataset.layer;
+    state.layers[k] = !state.layers[k];
+    drawExtra();
+    queueSave();
   });
 
   el('daybar').addEventListener('click', e => {
@@ -1578,8 +1857,15 @@ if (window.maplibregl){
   const boot = () => {
     if (styleReady) return;
     styleReady = true;
+    map.resize();
     addRouteLayer();
-    draw(sel === 'all' ? defaultDay() : sel, { jump:true });
+    // Đặt camera NGAY trong style.load thì MapLibre không kích hoạt chu trình xin
+    // tile — nền trắng cho tới khi người dùng tự zoom. Đợi map vẽ xong khung hình
+    // đầu tiên rồi mới fitBounds thì tile tải bình thường.
+    requestAnimationFrame(() => requestAnimationFrame(() => {
+      draw(sel === 'all' ? defaultDay() : sel, { jump:true });
+      setTimeout(() => { if (map) map.resize(); }, 400);
+    }));
   };
   map.on('style.load', boot);
 
@@ -1614,6 +1900,7 @@ Promise.resolve().then(() => store.get())
     state.notes  = p.notes  || {};
     state.spend  = p.spend  || {};
     if (p.rate > 0) state.rate = p.rate;
+    if (p.layers) state.layers = { stations:!!p.layers.stations, places:!!p.layers.places };
   })
   .catch(() => {})
   .then(() => { renderLich(); renderTien(); paintAll(); if (dd !== 'all') openDay(+dd); },
