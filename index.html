@@ -1,474 +1,359 @@
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Hàn Quốc 3–10/10/2026</title>
 <meta name="robots" content="noindex, nofollow">
 <meta name="description" content="Lịch trình Seoul và Busan, 3–10/10/2026, 2 người.">
 <meta property="og:title" content="Seoul / Busan — 3–10/10/2026">
-<meta property="og:description" content="Lịch trình 7 đêm, chi phí theo ngày, gợi ý khách sạn.">
+<meta property="og:description" content="Lịch trình 7 đêm trên bản đồ, chi phí theo ngày, quãng đường.">
 <meta property="og:type" content="website">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preconnect" href="https://tiles.openfreemap.org" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;800&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/maplibre-gl/5.9.0/maplibre-gl.css">
 
 <style>
   :root{
-    --paper:#EFF0EA;
-    --card:#FFFFFF;
-    --ink:#18222E;
-    --ink-soft:#5C6674;
-    --ink-faint:#8B95A1;
-    --seoul:#27406E;
-    --seoul-wash:#DEE3EE;
-    --busan:#0E6A61;
-    --busan-wash:#D6E6E2;
-    --alert:#A32E44;
-    --alert-wash:#F4DFE3;
-    --warn:#8A6D1F;
-    --warn-wash:#F5EEDA;
-    --ok:#2A6B45;
-    --rule:#D5D7CF;
+    --paper:#EFF0EA; --card:#FFFFFF; --ink:#18222E; --ink-soft:#5C6674; --ink-faint:#8B95A1;
+    --seoul:#27406E; --seoul-wash:#DEE3EE; --busan:#0E6A61; --busan-wash:#D6E6E2;
+    --alert:#A32E44; --alert-wash:#F4DFE3; --warn:#8A6D1F; --warn-wash:#F5EEDA; --ok:#2A6B45;
+    --rule:#D5D7CF; --rule-soft:#E6E7E1;
     --mono:"IBM Plex Mono",ui-monospace,SFMono-Regular,Menlo,monospace;
     --sans:"Be Vietnam Pro",system-ui,-apple-system,"Segoe UI",sans-serif;
+    --side:400px;
+    --shadow:0 2px 10px rgba(24,34,46,.13);
+    --shadow-lg:0 -6px 28px rgba(24,34,46,.18);
   }
-
   *{box-sizing:border-box}
-
+  html,body{height:100%;margin:0;overflow:hidden;overscroll-behavior:none}
   body{
-    margin:0;background:var(--paper);color:var(--ink);
-    font-family:var(--sans);font-size:16px;line-height:1.6;
-    -webkit-font-smoothing:antialiased;
+    background:var(--paper);color:var(--ink);font-family:var(--sans);
+    font-size:15px;line-height:1.55;-webkit-font-smoothing:antialiased;
   }
+  button{font-family:inherit;color:inherit}
 
-  .wrap{max-width:780px;margin:0 auto;padding:0 20px 90px}
+  /* =============== KHUNG =============== */
+  .app{display:grid;grid-template-columns:var(--side) 1fr;height:100dvh}
+  .side{grid-column:1;grid-row:1}
+  .stage{grid-column:2;grid-row:1}
 
-  .hero{padding:44px 0 28px}
-
-  .kicker{font-family:var(--mono);font-size:12px;letter-spacing:.04em;color:var(--ink-faint);margin:0 0 14px}
-
-  h1{font-size:clamp(34px,9vw,52px);line-height:1.02;font-weight:800;letter-spacing:-.03em;margin:0 0 6px}
-  h1 .sep{color:var(--ink-faint);font-weight:400}
-
-  .subtitle{font-size:17px;color:var(--ink-soft);margin:0 0 30px;max-width:46ch}
-
-  .spine{display:flex;gap:3px;margin-bottom:12px}
-  .seg{flex:1;min-width:0;text-decoration:none;color:inherit;display:block}
-  .seg .bar{height:34px;border-radius:3px;display:flex;align-items:center;justify-content:center}
-  .seg[data-city="seoul"] .bar{background:var(--seoul)}
-  .seg[data-city="busan"] .bar{background:var(--busan)}
-  .seg[data-city="s2b"] .bar{background:linear-gradient(100deg,var(--seoul) 12%,var(--busan) 88%)}
-  .seg[data-city="b2s"] .bar{background:linear-gradient(100deg,var(--busan) 12%,var(--seoul) 88%)}
-  .seg .bar span{font-family:var(--mono);font-size:12px;font-weight:500;color:#fff}
-  .seg .dow{display:block;text-align:center;font-family:var(--mono);font-size:10px;color:var(--ink-faint);margin-top:5px}
-  .seg:focus-visible .bar{outline:2px solid var(--ink);outline-offset:2px}
-
-  .legend{display:flex;flex-wrap:wrap;gap:16px;font-size:13px;color:var(--ink-soft);margin-bottom:34px}
-  .legend i{width:10px;height:10px;border-radius:2px;display:inline-block;margin-right:6px;vertical-align:-1px}
-  .legend .s{background:var(--seoul)}
-  .legend .b{background:var(--busan)}
-
-  .flights{background:var(--card);border:1px solid var(--rule);border-radius:6px;overflow:hidden;margin-bottom:44px}
-  .flight{display:flex;align-items:baseline;gap:14px;padding:15px 18px;flex-wrap:wrap}
-  .flight + .flight{border-top:1px solid var(--rule)}
-  .flight .route{font-weight:600;font-size:16px;letter-spacing:-.01em}
-  .flight .when{font-family:var(--mono);font-size:13px;color:var(--ink-soft)}
-  .flight .tag{font-size:12px;color:var(--ink-faint);margin-left:auto}
-
-  section{margin-bottom:46px;scroll-margin-top:64px}
-
-  h2{
-    font-size:13px;font-weight:600;letter-spacing:.02em;color:var(--ink-soft);
-    margin:0 0 16px;padding-bottom:9px;border-bottom:1px solid var(--rule);
-    display:flex;align-items:baseline;gap:10px;
+  .side{
+    display:flex;flex-direction:column;min-height:0;min-width:0;
+    background:var(--paper);border-right:1px solid var(--rule);z-index:10;
   }
-  h2 .h2-note{margin-left:auto;font-weight:400;font-family:var(--mono);font-size:12px;color:var(--ink-faint)}
+  .grip{display:none}
 
-  .lead{font-size:15px;color:var(--ink-soft);margin:0 0 16px}
+  .brand{padding:16px 18px 12px;border-bottom:1px solid var(--rule)}
+  .brand h1{font-size:23px;font-weight:800;letter-spacing:-.03em;margin:0;line-height:1.05}
+  .brand h1 .sep{color:var(--ink-faint);font-weight:400}
+  .brand .kick{font-family:var(--mono);font-size:11px;color:var(--ink-faint);margin:5px 0 0}
 
-  /* ---------- việc cần làm ---------- */
-  .task{
-    display:flex;gap:13px;align-items:flex-start;background:var(--card);
-    border:1px solid var(--rule);border-radius:6px;padding:14px 16px;
-    margin-bottom:9px;cursor:pointer;transition:opacity .18s ease;
+  .tabs{display:flex;gap:2px;padding:8px 10px 0;border-bottom:1px solid var(--rule);background:var(--paper)}
+  .tabs button{
+    flex:1;min-width:0;background:none;border:0;border-bottom:2px solid transparent;
+    font-size:13px;padding:7px 2px 8px;cursor:pointer;color:var(--ink-faint);
+    white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
   }
-  .task.urgent{border-left:3px solid var(--alert)}
-  .task input{
-    appearance:none;width:19px;height:19px;flex:0 0 19px;margin:3px 0 0;
-    border:1.5px solid var(--ink-faint);border-radius:4px;background:#fff;
-    cursor:pointer;position:relative;
-  }
-  .task input:checked{background:var(--ink);border-color:var(--ink)}
-  .task input:checked::after{
-    content:"";position:absolute;left:6px;top:2px;width:4px;height:9px;
-    border:solid #fff;border-width:0 2px 2px 0;transform:rotate(42deg);
-  }
-  .task input:focus-visible{outline:2px solid var(--ink);outline-offset:2px}
-  .task .body{flex:1;min-width:0}
-  .task .t{font-weight:600;font-size:15px;display:block;letter-spacing:-.01em}
-  .task .d{font-size:14px;color:var(--ink-soft);display:block;margin-top:3px}
-  .task .due{
-    font-family:var(--mono);font-size:11px;color:var(--alert);background:var(--alert-wash);
-    padding:2px 7px;border-radius:3px;display:inline-block;margin-top:7px;
-  }
-  .task.done{opacity:.45}
-  .task.done .t{text-decoration:line-through}
-  .progress{font-family:var(--mono);font-size:12px;color:var(--ink-faint);margin:12px 0 0}
+  .tabs button[aria-selected="true"]{color:var(--ink);font-weight:600;border-bottom-color:var(--ink)}
+  .tabs button:focus-visible{outline:2px solid var(--ink);outline-offset:-2px}
 
-  /* ---------- khách sạn ---------- */
-  .hotel{background:var(--card);border:1px solid var(--rule);border-radius:6px;padding:16px 18px;margin-bottom:10px}
-  .hotel.best{border-left:3px solid var(--busan)}
-  .hotel-head{display:flex;justify-content:space-between;align-items:baseline;gap:12px;flex-wrap:wrap;margin-bottom:8px}
-  .hotel-name{font-weight:700;font-size:17px;letter-spacing:-.02em}
-  .hotel-area{font-family:var(--mono);font-size:12px;color:var(--ink-faint)}
-  .hotel p{margin:0 0 8px;font-size:14.5px;color:var(--ink-soft)}
-  .hotel p:last-child{margin-bottom:0}
-  .hotel .check{font-size:14px}
+  .panes{flex:1;overflow-y:auto;overscroll-behavior:contain;-webkit-overflow-scrolling:touch;min-height:0}
+  .pane{display:none;padding:12px 12px 40px}
+  .pane.on{display:block}
+  .pane h2{
+    font-size:11px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-faint);
+    margin:20px 4px 8px;
+  }
+  .pane h2:first-child{margin-top:4px}
 
-  .move{
-    background:var(--seoul-wash);border-radius:5px;padding:11px 14px;
-    font-size:14px;color:var(--ink-soft);
-  }
+  /* =============== SÂN KHẤU BẢN ĐỒ =============== */
+  .stage{position:relative;min-width:0;background:#E8EAE4}
+  #map{position:absolute;inset:0}
+  .maplibregl-ctrl-attrib{font-size:10px}
 
-  /* ---------- lịch từng ngày ---------- */
-  .day{background:var(--card);border:1px solid var(--rule);border-radius:6px;margin-bottom:14px;overflow:hidden}
-  .day-head{padding:16px 18px 14px;border-left:4px solid var(--seoul);background:var(--seoul-wash)}
-  .day[data-city="busan"] .day-head{border-left-color:var(--busan);background:var(--busan-wash)}
-  .day[data-city="s2b"] .day-head{border-left-color:var(--busan);background:linear-gradient(100deg,var(--seoul-wash),var(--busan-wash))}
-  .day[data-city="b2s"] .day-head{border-left-color:var(--seoul);background:linear-gradient(100deg,var(--busan-wash),var(--seoul-wash))}
-  .day-date{font-family:var(--mono);font-size:12px;color:var(--ink-soft);display:block;margin-bottom:3px}
-  .day-title{font-size:21px;font-weight:700;letter-spacing:-.02em;margin:0;line-height:1.2}
+  .daybar{
+    position:absolute;top:0;left:0;right:0;z-index:5;
+    display:flex;gap:6px;padding:12px 12px 22px;overflow-x:auto;
+    scrollbar-width:none;-webkit-overflow-scrolling:touch;
+    background:linear-gradient(180deg,rgba(239,240,234,.92) 0%,rgba(239,240,234,.72) 55%,transparent 100%);
+  }
+  .daybar::-webkit-scrollbar{display:none}
+  .daybar button{
+    flex:0 0 auto;background:var(--card);border:1px solid var(--rule);border-radius:20px;
+    padding:6px 13px;font-size:12.5px;cursor:pointer;box-shadow:var(--shadow);
+    display:inline-flex;align-items:center;gap:6px;color:var(--ink-soft);
+  }
+  .daybar button i{width:8px;height:8px;border-radius:50%;flex:0 0 auto}
+  .daybar button[aria-pressed="true"]{background:var(--ink);color:#fff;border-color:var(--ink)}
+  .daybar button:focus-visible{outline:2px solid var(--ink);outline-offset:2px}
 
-  .chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}
-  .chip{
-    font-family:var(--mono);font-size:11px;color:var(--ink-soft);
-    background:rgba(255,255,255,.72);border:1px solid rgba(24,34,46,.10);
-    padding:3px 8px;border-radius:20px;white-space:nowrap;
+  .mapfoot{
+    position:absolute;left:12px;bottom:12px;z-index:5;max-width:calc(100% - 24px);
+    background:var(--card);border:1px solid var(--rule);border-radius:8px;
+    box-shadow:var(--shadow);padding:9px 13px;
+    font-family:var(--mono);font-size:11.5px;color:var(--ink-soft);
+    display:flex;gap:14px;align-items:baseline;flex-wrap:wrap;
   }
-  .chip b{font-weight:500;color:var(--ink)}
-  .chip.act{cursor:pointer;font-family:var(--sans);font-size:12px}
-  .chip.act:hover{background:#fff;border-color:rgba(24,34,46,.3)}
-  .chip.act:focus-visible{outline:2px solid var(--ink);outline-offset:1px}
+  .mapfoot b{font-weight:500;color:var(--ink)}
+  .mapfoot a{color:var(--ink-soft);text-decoration:none;border-bottom:1px solid var(--rule)}
+  .mapfoot a:hover{color:var(--ink);border-bottom-color:var(--ink)}
 
-  .day-body{padding:6px 18px 18px}
+  .tiles-warn{
+    position:absolute;top:60px;left:50%;transform:translateX(-50%);z-index:6;
+    background:var(--warn-wash);color:var(--warn);border:1px solid #E2D5AE;
+    border-radius:20px;padding:5px 14px;font-size:12px;box-shadow:var(--shadow);display:none;
+  }
+  .tiles-warn.on{display:block}
 
-  .sched{margin:12px 0 0}
-  .row{display:flex;gap:14px;padding:11px 0;border-top:1px solid var(--rule);scroll-margin-top:70px;border-radius:4px}
-  .row:first-child{border-top:0}
-  .row.hit{background:var(--warn-wash);box-shadow:0 0 0 6px var(--warn-wash)}
-  .row .time{
-    font-family:var(--mono);font-size:13px;color:var(--ink-soft);
-    flex:0 0 46px;padding-top:2px;
-  }
-  .row .what{flex:1;min-width:0}
-  .row .what b{font-weight:600;font-size:15.5px;letter-spacing:-.01em;display:block}
-  .row .what p{margin:4px 0 0;font-size:14px;color:var(--ink-soft)}
-  .row .pin{
-    display:inline-flex;align-items:center;justify-content:center;
-    width:17px;height:17px;border-radius:50%;color:#fff;
-    font-family:var(--mono);font-size:10px;font-weight:500;
-    margin-right:7px;vertical-align:1px;flex:0 0 auto;
-  }
-
-  .links{display:flex;flex-wrap:wrap;gap:12px;margin-top:8px}
-  .links a{
-    font-size:12.5px;color:var(--seoul);text-decoration:none;
-    border-bottom:1px solid rgba(39,64,110,.35);padding-bottom:1px;
-  }
-  .day[data-city="busan"] .links a,
-  .day[data-city="s2b"] .links a{color:var(--busan);border-bottom-color:rgba(14,106,97,.35)}
-  .links a:hover{border-bottom-color:currentColor}
-  .links button{
-    font-family:inherit;font-size:12.5px;color:var(--ink-soft);background:none;
-    border:0;border-bottom:1px solid var(--ink-faint);padding:0 0 1px;cursor:pointer;
-  }
-  .links button:hover{color:var(--ink);border-bottom-color:var(--ink)}
-
-  /* khoảng cách giữa hai điểm */
-  .leg{
-    display:flex;gap:14px;align-items:center;
-    font-family:var(--mono);font-size:11.5px;color:var(--ink-faint);
-    padding:0 0 0 0;margin:-2px 0 -2px;
-  }
-  .leg .bar{flex:0 0 46px;display:flex;justify-content:center}
-  .leg .bar i{width:1px;height:22px;background:var(--rule);display:block}
-  .leg .txt{flex:1;min-width:0}
-  .leg.tight .txt{color:var(--alert)}
-
-  /* ---------- chi phí trong ngày ---------- */
-  .cost{margin-top:14px;border:1px solid var(--rule);border-radius:5px;overflow:hidden}
-  .cost .cost-head{
-    display:flex;justify-content:space-between;gap:12px;align-items:baseline;
-    background:#F7F8F4;padding:9px 14px;border-bottom:1px solid var(--rule);
-  }
-  .cost .cost-head span:first-child{font-size:13px;font-weight:600}
-  .cost .cost-head span:last-child{font-family:var(--mono);font-size:13px}
-  .cost ul{margin:0;padding:8px 14px 11px;list-style:none}
-  .cost li{
-    display:flex;justify-content:space-between;gap:14px;
-    font-size:13.5px;color:var(--ink-soft);padding:2.5px 0;
-  }
-  .cost li span:last-child{font-family:var(--mono);white-space:nowrap}
-  .spend{
-    display:flex;align-items:center;gap:10px;flex-wrap:wrap;
-    padding:10px 14px;border-top:1px solid var(--rule);background:#FCFDFB;
-  }
-  .spend label{font-size:13px;font-weight:600}
-  .spend input{
-    font-family:var(--mono);font-size:13px;width:120px;text-align:right;
-    padding:5px 8px;border:1px solid var(--rule);border-radius:4px;background:#fff;color:inherit;
-  }
-  .spend input:focus{outline:2px solid var(--ink);outline-offset:-1px;border-color:var(--ink)}
-  .spend .verdict{font-family:var(--mono);font-size:12px;color:var(--ink-faint);margin-left:auto;text-align:right}
-  .spend .verdict.over{color:var(--alert)}
-  .spend .verdict.under{color:var(--ok)}
-
-  .notes{margin-top:12px}
-  .notes summary{
-    font-size:13px;color:var(--ink-faint);cursor:pointer;list-style:none;
-    padding:5px 0;user-select:none;
-  }
-  .notes summary::-webkit-details-marker{display:none}
-  .notes summary::before{content:"+ ";font-family:var(--mono)}
-  .notes[open] summary::before{content:"− "}
-  .notes textarea{
-    width:100%;min-height:74px;font-family:inherit;font-size:14px;line-height:1.5;
-    padding:10px 12px;border:1px solid var(--rule);border-radius:5px;
-    background:#FCFDFB;color:inherit;resize:vertical;
-  }
-  .notes textarea:focus{outline:2px solid var(--ink);outline-offset:-1px;border-color:var(--ink)}
-
-  /* ---------- bản đồ ---------- */
-  .map-tabs{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:12px}
-  .map-tab{
-    font-family:inherit;font-size:12.5px;color:var(--ink-soft);background:var(--card);
-    border:1px solid var(--rule);border-radius:20px;padding:5px 12px;cursor:pointer;
-    display:inline-flex;align-items:center;gap:6px;
-  }
-  .map-tab i{width:9px;height:9px;border-radius:50%;display:inline-block;flex:0 0 auto}
-  .map-tab[aria-pressed="true"]{background:var(--ink);color:#fff;border-color:var(--ink)}
-  .map-tab:focus-visible{outline:2px solid var(--ink);outline-offset:1px}
-
-  .map-frame{
-    border:1px solid var(--rule);border-radius:6px;overflow:hidden;
-    height:460px;background:var(--card);position:relative;
-  }
-  #map{width:100%;height:100%}
-  .map-bar{
-    display:flex;flex-wrap:wrap;gap:10px;align-items:baseline;
-    margin-top:10px;font-family:var(--mono);font-size:12px;color:var(--ink-soft);
-  }
-  .map-bar .sum b{font-weight:500;color:var(--ink)}
-  .map-bar .out{margin-left:auto;display:flex;gap:10px;flex-wrap:wrap}
-  .map-bar .out a{color:var(--ink-soft);text-decoration:none;border-bottom:1px solid var(--rule)}
-  .map-bar .out a:hover{color:var(--ink);border-bottom-color:var(--ink)}
-
-  .pin-ico{background:none;border:0}
-  .pin-ico span{
+  /* =============== ĐIỂM TRÊN BẢN ĐỒ =============== */
+  .pin{
+    width:25px;height:25px;border-radius:50%;color:#fff;cursor:pointer;
     display:flex;align-items:center;justify-content:center;
-    width:24px;height:24px;border-radius:50%;color:#fff;
     font-family:var(--mono);font-size:11px;font-weight:500;
-    border:2px solid #fff;box-shadow:0 1px 4px rgba(0,0,0,.35);
+    border:2px solid #fff;box-shadow:0 1px 5px rgba(0,0,0,.4);
+    transition:transform .14s ease;
   }
-  .leaflet-container{font-family:var(--sans);font-size:14px}
-  .pop b{display:block;font-size:15px;letter-spacing:-.01em;margin-bottom:2px}
-  .pop .pt{font-family:var(--mono);font-size:11.5px;color:var(--ink-faint);display:block;margin-bottom:5px}
-  .pop p{margin:0 0 8px;font-size:13.5px;color:var(--ink-soft)}
+  .pin:hover{transform:scale(1.18)}
+  .pin.sel{transform:scale(1.3);box-shadow:0 0 0 4px rgba(24,34,46,.22),0 1px 5px rgba(0,0,0,.4)}
+
+  .maplibregl-popup-content{
+    border-radius:8px;padding:12px 14px;box-shadow:var(--shadow);font-family:var(--sans);
+  }
+  .pop b{display:block;font-size:14.5px;letter-spacing:-.01em;margin-bottom:2px}
+  .pop .pt{font-family:var(--mono);font-size:11px;color:var(--ink-faint);display:block;margin-bottom:6px}
+  .pop p{margin:0 0 8px;font-size:13px;color:var(--ink-soft)}
   .pop .pl{display:flex;flex-wrap:wrap;gap:9px;font-size:12.5px}
   .pop .pl a,.pop .pl button{
     color:var(--seoul);text-decoration:none;border:0;border-bottom:1px solid rgba(39,64,110,.4);
-    background:none;font-family:inherit;font-size:12.5px;padding:0 0 1px;cursor:pointer;
+    background:none;font-size:12.5px;padding:0 0 1px;cursor:pointer;
   }
 
-  /* ---------- tổng chi phí ---------- */
-  .rate-bar{
-    display:flex;align-items:center;gap:10px;flex-wrap:wrap;
-    background:var(--card);border:1px solid var(--rule);border-radius:6px;
-    padding:11px 14px;margin-bottom:12px;font-size:13.5px;color:var(--ink-soft);
+  /* =============== LỊCH TRONG SIDEBAR =============== */
+  .day{background:var(--card);border:1px solid var(--rule);border-radius:7px;margin-bottom:8px;overflow:hidden}
+  .day.sel{border-color:var(--ink);box-shadow:0 0 0 1px var(--ink)}
+  .dhead{
+    width:100%;display:block;text-align:left;background:none;border:0;cursor:pointer;
+    padding:11px 13px;border-left:4px solid var(--seoul);
   }
-  .rate-bar input{
-    font-family:var(--mono);font-size:13px;width:96px;text-align:right;
-    padding:4px 8px;border:1px solid var(--rule);border-radius:4px;background:#fff;color:inherit;
+  .day[data-city="busan"] .dhead{border-left-color:var(--busan)}
+  .day[data-city="s2b"] .dhead,.day[data-city="b2s"] .dhead{border-left-color:#7A5AA8}
+  .dhead:hover{background:#FAFBF8}
+  .dhead:focus-visible{outline:2px solid var(--ink);outline-offset:-2px}
+  .dhead .dt{font-family:var(--mono);font-size:11px;color:var(--ink-faint);display:block}
+  .dhead .dn{font-size:15.5px;font-weight:700;letter-spacing:-.02em;display:block;margin:1px 0 0}
+  .dhead .dc{
+    display:flex;gap:5px;flex-wrap:wrap;margin-top:6px;
+    font-family:var(--mono);font-size:10.5px;color:var(--ink-faint);
   }
-  .rate-bar input:focus{outline:2px solid var(--ink);outline-offset:-1px;border-color:var(--ink)}
-  .rate-bar .reset{
-    margin-left:auto;font-family:inherit;font-size:12.5px;color:var(--ink-faint);
-    background:none;border:0;border-bottom:1px solid var(--rule);cursor:pointer;padding:0 0 1px;
-  }
-  .rate-bar .reset:hover{color:var(--ink);border-bottom-color:var(--ink)}
+  .dhead .dc span{background:#F2F3EE;border-radius:12px;padding:2px 7px}
+  .dhead .ar{float:right;color:var(--ink-faint);font-size:11px;margin-top:2px}
 
-  .budget{background:var(--card);border:1px solid var(--rule);border-radius:6px;overflow:hidden}
-  .btable{width:100%;border-collapse:collapse;font-size:14px}
-  .btable th{
-    font-size:11px;font-weight:500;text-transform:uppercase;letter-spacing:.05em;
-    color:var(--ink-faint);text-align:right;padding:9px 14px;border-bottom:1px solid var(--rule);
-    background:#F7F8F4;white-space:nowrap;
-  }
-  .btable th:first-child{text-align:left}
-  .btable td{padding:9px 14px;border-bottom:1px solid var(--rule);text-align:right;font-family:var(--mono);font-size:12.5px;white-space:nowrap}
-  .btable td:first-child{text-align:left;font-family:var(--sans);font-size:14px;white-space:normal}
-  .btable td em{display:block;font-style:normal;font-size:12.5px;color:var(--ink-faint)}
-  .btable tr:last-child td{border-bottom:0}
-  .btable tr.tot td{background:#F7F8F4;font-weight:600;border-top:2px solid var(--ink)}
-  .btable tr.tot td:first-child{font-weight:700}
-  .btable .over{color:var(--alert)}
-  .btable .under{color:var(--ok)}
-  .btable input{
-    font-family:var(--mono);font-size:12.5px;width:96px;text-align:right;
-    padding:4px 7px;border:1px solid var(--rule);border-radius:4px;background:#fff;color:inherit;
-  }
-  .btable input:focus{outline:2px solid var(--ink);outline-offset:-1px;border-color:var(--ink)}
-  .btable a{color:inherit;text-decoration:none;border-bottom:1px solid var(--rule)}
-  .btable a:hover{border-bottom-color:var(--ink)}
-  .tscroll{overflow-x:auto}
+  .dbody{display:none;padding:0 13px 13px;border-top:1px solid var(--rule-soft)}
+  .day.open .dbody{display:block}
 
-  /* ---------- kiểm tra lịch ---------- */
-  .check-box{background:var(--card);border:1px solid var(--rule);border-radius:6px;overflow:hidden}
-  .check-box > summary{
-    font-size:13.5px;padding:11px 14px;cursor:pointer;list-style:none;user-select:none;
-    display:flex;align-items:center;gap:9px;
+  .stop{
+    display:flex;gap:10px;padding:9px 0;border-top:1px solid var(--rule-soft);cursor:pointer;
+    scroll-margin-top:10px;
   }
-  .check-box > summary::-webkit-details-marker{display:none}
-  .check-box > summary::before{content:"+";font-family:var(--mono);color:var(--ink-faint)}
-  .check-box[open] > summary::before{content:"−"}
-  .check-box[open] > summary{border-bottom:1px solid var(--rule)}
-  .check-box .n{
-    font-family:var(--mono);font-size:11px;padding:2px 7px;border-radius:20px;
-    background:var(--warn-wash);color:var(--warn);
+  .stop:first-child{border-top:0}
+  .stop .tm{font-family:var(--mono);font-size:11.5px;color:var(--ink-faint);flex:0 0 40px;padding-top:2px}
+  .stop .bd{flex:1;min-width:0}
+  .stop .nm{font-size:14px;font-weight:600;letter-spacing:-.01em;display:flex;gap:7px;align-items:baseline}
+  .stop .num{
+    flex:0 0 auto;width:16px;height:16px;border-radius:50%;color:#fff;
+    font-family:var(--mono);font-size:9.5px;font-weight:500;
+    display:inline-flex;align-items:center;justify-content:center;align-self:center;
   }
-  .check-box .n.zero{background:#E4EFE8;color:var(--ok)}
-  .check-list{margin:0;padding:6px 14px 12px;list-style:none}
-  .check-list li{font-size:13.5px;color:var(--ink-soft);padding:6px 0;border-bottom:1px solid var(--rule);display:flex;gap:10px}
-  .check-list li:last-child{border-bottom:0}
-  .check-list .w{font-family:var(--mono);font-size:11px;flex:0 0 auto;padding-top:3px}
-  .check-list .lv-warn{color:var(--warn)}
-  .check-list .lv-err{color:var(--alert)}
-  .check-list a{color:var(--ink);text-decoration:none;border-bottom:1px solid var(--rule)}
-  .check-list a:hover{border-bottom-color:var(--ink)}
-
-  /* ---------- lưu ý ---------- */
-  .note-item{padding:13px 0;border-top:1px solid var(--rule)}
-  .note-item:first-child{border-top:0;padding-top:0}
-  .note-item h3{font-size:14.5px;font-weight:600;margin:0 0 3px;letter-spacing:-.01em}
-  .note-item p{margin:0;font-size:14px;color:var(--ink-soft)}
-  .note-item a{color:var(--seoul)}
-
-  .fine{font-size:12.5px;color:var(--ink-faint);margin:10px 0 0}
-
-  footer{
-    border-top:1px solid var(--rule);padding-top:18px;
-    font-size:12.5px;color:var(--ink-faint);line-height:1.7;
+  .stop .ds{display:none;font-size:13px;color:var(--ink-soft);margin:5px 0 0}
+  .stop.open .ds{display:block}
+  .stop.hit{background:var(--warn-wash);border-radius:5px;box-shadow:0 0 0 5px var(--warn-wash)}
+  .stop .lk{display:none;flex-wrap:wrap;gap:11px;margin-top:7px}
+  .stop.open .lk{display:flex}
+  .stop .lk a,.stop .lk button{
+    font-size:12px;color:var(--seoul);text-decoration:none;background:none;border:0;
+    border-bottom:1px solid rgba(39,64,110,.35);padding:0 0 1px;cursor:pointer;
   }
+  .day[data-city="busan"] .stop .lk a,.day[data-city="busan"] .stop .lk button{color:var(--busan);border-bottom-color:rgba(14,106,97,.35)}
+
+  .leg{
+    display:flex;gap:10px;font-family:var(--mono);font-size:10.5px;color:var(--ink-faint);
+    padding:1px 0;
+  }
+  .leg .sp{flex:0 0 40px;text-align:right}
+  .leg.tight{color:var(--alert)}
+
+  .note{background:var(--seoul-wash);border-radius:5px;padding:9px 11px;font-size:12.5px;color:var(--ink-soft);margin-top:9px}
+
+  /* =============== KHỐI CHUNG =============== */
+  .box{background:var(--card);border:1px solid var(--rule);border-radius:7px;padding:12px 14px;margin-bottom:8px}
+  .box p{margin:0 0 7px;font-size:13.5px;color:var(--ink-soft)}
+  .box p:last-child{margin-bottom:0}
+  .box .hd{display:flex;justify-content:space-between;align-items:baseline;gap:10px;flex-wrap:wrap;margin-bottom:6px}
+  .box .hd b{font-size:15px;letter-spacing:-.02em}
+  .box .hd span{font-family:var(--mono);font-size:11px;color:var(--ink-faint)}
+  .box.best{border-left:3px solid var(--busan)}
+  .lk-row{display:flex;flex-wrap:wrap;gap:11px;margin-top:9px}
+  .lk-row a{font-size:12px;color:var(--seoul);text-decoration:none;border-bottom:1px solid rgba(39,64,110,.35);padding-bottom:1px}
+
+  .task{
+    display:flex;gap:11px;align-items:flex-start;background:var(--card);
+    border:1px solid var(--rule);border-radius:7px;padding:11px 13px;margin-bottom:7px;cursor:pointer;
+  }
+  .task.urgent{border-left:3px solid var(--alert)}
+  .task input{
+    appearance:none;width:18px;height:18px;flex:0 0 18px;margin:2px 0 0;
+    border:1.5px solid var(--ink-faint);border-radius:4px;background:#fff;cursor:pointer;position:relative;
+  }
+  .task input:checked{background:var(--ink);border-color:var(--ink)}
+  .task input:checked::after{
+    content:"";position:absolute;left:5.5px;top:2px;width:4px;height:9px;
+    border:solid #fff;border-width:0 2px 2px 0;transform:rotate(42deg);
+  }
+  .task .t{font-weight:600;font-size:14px;display:block;letter-spacing:-.01em}
+  .task .d{font-size:12.5px;color:var(--ink-soft);display:block;margin-top:2px}
+  .task .due{
+    font-family:var(--mono);font-size:10px;color:var(--alert);background:var(--alert-wash);
+    padding:2px 7px;border-radius:3px;display:inline-block;margin-top:6px;
+  }
+  .task.done{opacity:.45}
+  .task.done .t{text-decoration:line-through}
+  .prog{font-family:var(--mono);font-size:11px;color:var(--ink-faint);margin:10px 4px 0}
+
+  /* =============== TIỀN =============== */
+  .rate{
+    display:flex;align-items:center;gap:8px;flex-wrap:wrap;background:var(--card);
+    border:1px solid var(--rule);border-radius:7px;padding:10px 13px;margin-bottom:9px;
+    font-size:12.5px;color:var(--ink-soft);
+  }
+  .rate input{
+    font-family:var(--mono);font-size:12.5px;width:84px;text-align:right;padding:4px 7px;
+    border:1px solid var(--rule);border-radius:4px;background:#fff;color:inherit;
+  }
+  .rate button{
+    margin-left:auto;font-size:12px;color:var(--ink-faint);background:none;border:0;
+    border-bottom:1px solid var(--rule);cursor:pointer;padding:0 0 1px;
+  }
+  .brow{background:var(--card);border:1px solid var(--rule);border-radius:7px;padding:10px 13px;margin-bottom:7px}
+  .brow.tot{border:2px solid var(--ink);background:#F7F8F4}
+  .brow .r1{display:flex;justify-content:space-between;gap:10px;align-items:baseline}
+  .brow .r1 b{font-size:14px;letter-spacing:-.01em}
+  .brow .r1 .est{font-family:var(--mono);font-size:12px;color:var(--ink-soft);white-space:nowrap}
+  .brow .sub{font-size:12px;color:var(--ink-faint);margin-top:1px}
+  .brow .r2{display:flex;align-items:center;gap:8px;margin-top:8px;flex-wrap:wrap}
+  .brow .r2 label{font-size:12.5px;color:var(--ink-soft)}
+  .brow .r2 input{
+    font-family:var(--mono);font-size:12.5px;width:100px;text-align:right;padding:4px 7px;
+    border:1px solid var(--rule);border-radius:4px;background:#fff;color:inherit;
+  }
+  .brow .vd{font-family:var(--mono);font-size:11.5px;margin-left:auto;color:var(--ink-faint)}
+  .brow .vd.over{color:var(--alert)} .brow .vd.under{color:var(--ok)}
+  .cost{margin-top:10px;border:1px solid var(--rule-soft);border-radius:5px;overflow:hidden}
+  .cost .ch{display:flex;justify-content:space-between;gap:10px;background:#F7F8F4;padding:7px 11px;font-size:12.5px;font-weight:600}
+  .cost .ch span:last-child{font-family:var(--mono);font-weight:400}
+  .cost ul{margin:0;padding:6px 11px 9px;list-style:none}
+  .cost li{display:flex;justify-content:space-between;gap:10px;font-size:12.5px;color:var(--ink-soft);padding:2px 0}
+  .cost li span:last-child{font-family:var(--mono);white-space:nowrap}
+
+  details.nt{margin-top:9px}
+  details.nt summary{font-size:12px;color:var(--ink-faint);cursor:pointer;list-style:none;padding:4px 0}
+  details.nt summary::-webkit-details-marker{display:none}
+  details.nt summary::before{content:"+ ";font-family:var(--mono)}
+  details.nt[open] summary::before{content:"− "}
+  details.nt textarea{
+    width:100%;min-height:64px;font-family:inherit;font-size:13px;line-height:1.5;padding:9px 10px;
+    border:1px solid var(--rule);border-radius:5px;background:#FCFDFB;color:inherit;resize:vertical;
+  }
+
+  /* =============== KIỂM TRA + LƯU Ý =============== */
+  .chk{background:var(--card);border:1px solid var(--rule);border-radius:7px;padding:11px 13px;margin-bottom:8px}
+  .chk .w{font-family:var(--mono);font-size:10px;padding:2px 6px;border-radius:10px;margin-right:7px}
+  .chk .lv-err{background:var(--alert-wash);color:var(--alert)}
+  .chk .lv-warn{background:var(--warn-wash);color:var(--warn)}
+  .chk .lv-ok{background:#E4EFE8;color:var(--ok)}
+  .chk p{margin:6px 0 0;font-size:13px;color:var(--ink-soft)}
+  .ni{padding:11px 0;border-top:1px solid var(--rule)}
+  .ni:first-child{border-top:0;padding-top:0}
+  .ni h3{font-size:13.5px;font-weight:600;margin:0 0 2px;letter-spacing:-.01em}
+  .ni p{margin:0;font-size:13px;color:var(--ink-soft)}
+  .ni a,.fine a{color:var(--seoul)}
+  .fine{font-size:11.5px;color:var(--ink-faint);margin:10px 4px 0;line-height:1.6}
 
   .status{
-    position:fixed;left:50%;bottom:20px;transform:translate(-50%,14px);
+    position:fixed;left:50%;bottom:22px;transform:translate(-50%,14px);
     background:var(--ink);color:#fff;font-family:var(--mono);font-size:12px;
     padding:7px 15px;border-radius:20px;opacity:0;pointer-events:none;
     transition:opacity .18s ease,transform .18s ease;z-index:9999;
   }
   .status.show{opacity:1;transform:translate(-50%,0)}
 
-  @media (max-width:560px){
-    .map-frame{height:380px}
-    .row .time{flex:0 0 42px}
-    .leg .bar{flex:0 0 42px}
-    .btable td:first-child,.btable th:first-child{position:sticky;left:0;background:var(--card)}
-    .btable tr.tot td:first-child{background:#F7F8F4}
-  }
+  /* =============== MOBILE: TẤM KÉO =============== */
+  @media (max-width:820px){
+    .app{display:block;position:relative;height:100dvh}
+    .side,.stage{grid-column:auto;grid-row:auto}
+    .stage{position:absolute;inset:0}
+    .daybar{padding:10px 10px 26px}
+    .mapfoot{left:10px;bottom:auto;top:56px;font-size:11px;padding:7px 11px}
 
-  @media print{
-    .map-tabs,.status,.notes,.spend,.rate-bar,.check-box{display:none}
-    .map-frame{height:300px}
-    body{background:#fff}
+    .side{
+      position:absolute;left:0;right:0;bottom:0;top:auto;height:88dvh;
+      border-right:0;border-radius:15px 15px 0 0;box-shadow:var(--shadow-lg);
+      z-index:20;transition:transform .3s cubic-bezier(.32,.72,0,1);
+      transform:translateY(calc(88dvh - 132px));
+      touch-action:none;
+    }
+    .side.half{transform:translateY(46dvh)}
+    .side.full{transform:translateY(0)}
+    .side.drag{transition:none}
+    .grip{
+      display:block;padding:9px 0 5px;cursor:grab;flex:0 0 auto;
+      touch-action:none;background:var(--paper);border-radius:15px 15px 0 0;
+    }
+    .grip i{display:block;width:38px;height:4px;border-radius:3px;background:var(--ink-faint);opacity:.45;margin:0 auto}
+    .brand{padding:2px 16px 10px}
+    .brand h1{font-size:19px}
+    .panes{touch-action:pan-y}
+    .side:not(.full) .panes{overflow:hidden}
+    .status{bottom:auto;top:64px}
   }
 </style>
 
-<div class="wrap">
+<div class="app">
 
-  <header class="hero">
-    <p class="kicker" id="kicker"></p>
-    <h1 id="h1"></h1>
-    <p class="subtitle" id="subtitle"></p>
+  <main class="stage">
+    <div class="daybar" id="daybar"></div>
+    <div id="map"></div>
+    <div class="tiles-warn" id="tiles-warn">Bản đồ vector không tải được — đang dùng bản dự phòng</div>
+    <div class="mapfoot"><span id="mapsum"></span><span id="mapout"></span></div>
+  </main>
 
-    <div class="spine" id="spine"></div>
-    <div class="legend">
-      <span><i class="s"></i>Seoul</span>
-      <span><i class="b"></i>Busan</span>
-      <span>Ngày chuyển màu là ngày đi tàu</span>
+  <aside class="side" id="side">
+    <div class="grip" id="grip"><i></i></div>
+
+    <div class="brand">
+      <h1 id="h1"></h1>
+      <p class="kick" id="kick"></p>
     </div>
 
-    <div class="flights" id="flights"></div>
-  </header>
+    <nav class="tabs" id="tabs" role="tablist">
+      <button role="tab" data-tab="lich"    aria-selected="true">Lịch trình</button>
+      <button role="tab" data-tab="chuanbi" aria-selected="false">Chuẩn bị</button>
+      <button role="tab" data-tab="tien"    aria-selected="false">Tiền</button>
+      <button role="tab" data-tab="luuy"    aria-selected="false">Lưu ý</button>
+    </nav>
 
-  <section id="chuan-bi">
-    <h2>Cần làm trước khi đi</h2>
-    <div id="prep"></div>
-    <p class="progress" id="progress">Đang tải…</p>
-  </section>
-
-  <section id="khach-san">
-    <h2 id="hotel-booked-h"></h2>
-    <div id="hotel-booked"></div>
-  </section>
-
-  <section id="khach-san-busan">
-    <h2 id="hotel-busan-h"></h2>
-    <div id="hotel-busan"></div>
-  </section>
-
-  <section id="ban-do">
-    <h2>Bản đồ cả hành trình <span class="h2-note" id="map-note"></span></h2>
-    <p class="lead">Bấm một ngày để bản đồ nhảy tới đúng khu vực đó và vẽ đường nối các điểm theo thứ tự. Bấm một điểm trên bản đồ để xem ghi chú và mở chỉ đường; bấm “Xem trong lịch” để nhảy xuống đúng dòng giờ.</p>
-
-    <div class="map-tabs" id="map-tabs"></div>
-
-    <div class="map-frame"><div id="map"></div></div>
-
-    <div class="map-bar">
-      <span class="sum" id="map-sum"></span>
-      <span class="out" id="map-out"></span>
+    <div class="panes" id="panes">
+      <section class="pane on" data-pane="lich"    id="pane-lich"></section>
+      <section class="pane"    data-pane="chuanbi" id="pane-chuanbi"></section>
+      <section class="pane"    data-pane="tien"    id="pane-tien"></section>
+      <section class="pane"    data-pane="luuy"    id="pane-luuy"></section>
     </div>
-    <p class="fine">Quãng đường là đường chim bay nhân hệ số 1,3 — đủ để so sánh ngày nào đi nhiều, không phải số kilômét thật trên đường. Thời gian là ước lượng thô, cần chỉ đường thật thì bấm nút Naver hoặc Kakao ở từng điểm. Vị trí Beewon Guest House là gần đúng theo địa chỉ, các điểm còn lại là toạ độ thật.</p>
-  </section>
+  </aside>
 
-  <section id="lich">
-    <h2>Lịch từng ngày <span class="h2-note" id="lich-note"></span></h2>
-    <div id="days"></div>
-  </section>
-
-  <section id="chi-phi">
-    <h2>Tiền <span class="h2-note" id="tien-note"></span></h2>
-    <div class="rate-bar">
-      <span>Tỷ giá: 1.000₩ =</span>
-      <input type="number" id="rate" min="1" step="100" inputmode="numeric">
-      <span>VND</span>
-      <button class="reset" id="spend-reset" type="button">Xoá hết số thực chi</button>
-    </div>
-    <div class="budget tscroll"><table class="btable" id="budget"></table></div>
-    <p class="fine" id="chi-phi-fine"></p>
-  </section>
-
-  <section id="kiem-tra">
-    <h2>Kiểm tra lịch</h2>
-    <details class="check-box" id="check-box">
-      <summary><span id="check-title">Đang kiểm tra…</span><span class="n" id="check-n">—</span></summary>
-      <ul class="check-list" id="check-list"></ul>
-    </details>
-    <p class="fine">Chạy tự động mỗi lần mở trang, đọc thẳng từ dữ liệu lịch. Sửa giờ hay thêm điểm xong mở lại trang là biết ngay có chỗ nào chồng giờ hoặc sát giờ không.</p>
-  </section>
-
-  <section id="luu-y">
-    <h2>Lưu ý</h2>
-    <div id="tips"></div>
-  </section>
-
-  <footer>
-    Nút “Bài viết” mở kết quả tìm kiếm tiếng Việt cho địa điểm đó, để bạn tự chọn bài review hợp ý. Chỉ đường ở Hàn Quốc nên dùng nút <b>Naver</b> hoặc <b>Kakao</b> — Google Maps không có chỉ đường đi bộ và ô tô trong nước Hàn. Giá vé và giờ mở cửa nên kiểm tra lại trước khi đi. <span id="storage-mode"></span> Trang này công khai với bất kỳ ai có link, nên đừng ghi số hộ chiếu, mã đặt phòng hay thông tin thẻ vào ô ghi chú.
-  </footer>
 </div>
 
 <div class="status" id="status"></div>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/maplibre-gl/5.9.0/maplibre-gl.js"></script>
 <script>
 /* =====================================================================
    NGUỒN DỮ LIỆU DUY NHẤT CỦA CẢ TRANG
@@ -1001,46 +886,37 @@ const TRIP = {
 
 <script>
 /* =====================================================================
-   BỘ DỰNG TRANG — đọc TRIP ở trên và vẽ ra toàn bộ giao diện.
+   BỘ DỰNG TRANG — đọc TRIP ở trên, dựng sidebar và bản đồ MapLibre.
    Không có dữ liệu chuyến đi nào nằm trong file này.
    ===================================================================== */
 (function(){
 'use strict';
 
-/* ---------------------------------------------------------------- số */
-const nf = n => Math.round(n).toLocaleString('vi-VN');
-const krw = n => nf(n) + '₩';
-const krwR = r => r[0] === r[1] ? krw(r[0]) : nf(r[0]) + ' – ' + krw(r[1]);
-const trieu = n => (n/1e6).toFixed(1).replace('.', ',') + ' triệu';
+/* ------------------------------------------------------- tiện ích số */
+const nf   = n => Math.round(n).toLocaleString('vi-VN');
+const krw  = n => nf(n) + '₩';
+const krwR = r => r[0] === r[1] ? krw(r[0]) : nf(r[0]) + '–' + krw(r[1]);
+const trieu= n => (n/1e6).toFixed(1).replace('.', ',') + ' triệu';
+const toMin= t => { const [h,m] = t.split(':').map(Number); return h*60 + m; };
+const fmtMin=m => m < 60 ? Math.round(m) + "'" : Math.floor(m/60) + 'h' + String(Math.round(m%60)).padStart(2,'0');
+const km1  = k => k.toFixed(1).replace('.', ',') + ' km';
 
-/* --------------------------------------------------------------- giờ */
-const toMin = t => { const [h,m] = t.split(':').map(Number); return h*60 + m; };
-const fmtMin = m => m < 60 ? Math.round(m) + ' phút'
-                           : Math.floor(m/60) + 'h' + String(Math.round(m%60)).padStart(2,'0');
-
-/* --------------------------------------------------------- quãng đường */
-const DETOUR = 1.3;                      // đường thật dài hơn đường chim bay chừng này
+/* --------------------------------------------------- quãng đường/giờ */
+const DETOUR = 1.3;
 function hav(a, b){
   const R = 6371, rad = d => d*Math.PI/180;
   const dLat = rad(b.lat - a.lat), dLng = rad(b.lng - a.lng);
-  const s = Math.sin(dLat/2)**2
-          + Math.cos(rad(a.lat))*Math.cos(rad(b.lat))*Math.sin(dLng/2)**2;
+  const s = Math.sin(dLat/2)**2 + Math.cos(rad(a.lat))*Math.cos(rad(b.lat))*Math.sin(dLng/2)**2;
   return 2*R*Math.asin(Math.sqrt(s));
 }
-// Ước lượng thời gian di chuyển. Trả null với chặng dài (tàu/máy bay) —
-// giờ trong lịch đã là giờ thật, không cần đoán.
 function estMin(straightKm){
   if (straightKm > 40) return null;
   const km = straightKm*DETOUR;
-  if (km < 1.5)  return km/4.5*60;             // đi bộ
-  if (km <= 8)   return km/14*60 + 8;          // metro/buýt trong phố, cộng chờ và đi bộ
-  return km/25*60 + 10;                        // ngoại ô, chặng dài hơn
+  if (km < 1.5) return km/4.5*60;
+  if (km <= 8)  return km/14*60 + 8;
+  return km/25*60 + 10;
 }
-const km1 = k => k.toFixed(1).replace('.', ',') + ' km';
-
-/* ------------------------------------------------------------- điểm */
 const mapped = day => day.stops.filter(s => typeof s.lat === 'number' && typeof s.lng === 'number');
-
 function dayLegs(day){
   const p = mapped(day), out = [];
   for (let i = 0; i < p.length - 1; i++){
@@ -1049,8 +925,8 @@ function dayLegs(day){
   }
   return out;
 }
-const dayKm     = day => dayLegs(day).reduce((s,l) => s + l.km, 0);
-const dayMoveMin= day => dayLegs(day).reduce((s,l) => s + (l.min || 0), 0);
+const dayKm      = day => dayLegs(day).reduce((s,l) => s + l.km, 0);
+const dayMoveMin = day => dayLegs(day).reduce((s,l) => s + (l.min || 0), 0);
 
 /* -------------------------------------------------------------- tiền */
 function costRange(c, rate){
@@ -1068,7 +944,8 @@ function costText(c, rate){
   if (c.vnd != null){
     const v = Array.isArray(c.vnd) ? c.vnd : [c.vnd, c.vnd];
     const r = costRange(c, rate);
-    return (v[0] === v[1] ? nf(v[0]) : nf(v[0]) + ' – ' + nf(v[1])) + ' VND ≈ ' + krwR([Math.round(r[0]/1000)*1000, Math.round(r[1]/1000)*1000]);
+    return (v[0] === v[1] ? nf(v[0]) : nf(v[0]) + '–' + nf(v[1])) + '₫ ≈ '
+         + krwR([Math.round(r[0]/1000)*1000, Math.round(r[1]/1000)*1000]);
   }
   const k = Array.isArray(c.krw) ? c.krw : [c.krw, c.krw];
   return krwR(k);
@@ -1081,11 +958,10 @@ function dayBudget(day, rate){
 
 /* -------------------------------------------------------------- link */
 const enc = encodeURIComponent;
-const term    = s => s.q || s.name;
-const uNaver  = s => 'https://map.naver.com/p/search/' + enc(term(s));
-const uKakao  = s => 'https://map.kakao.com/link/map/' + enc(term(s)) + ',' + s.lat + ',' + s.lng;
-const uKakaoTo= s => 'https://map.kakao.com/link/to/'  + enc(term(s)) + ',' + s.lat + ',' + s.lng;
-const uRead   = q => 'https://www.google.com/search?hl=vi&q=' + enc(q);
+const term     = s => s.q || s.name;
+const uNaver   = s => 'https://map.naver.com/p/search/' + enc(term(s));
+const uKakaoTo = s => 'https://map.kakao.com/link/to/' + enc(term(s)) + ',' + s.lat + ',' + s.lng;
+const uRead    = q => 'https://www.google.com/search?hl=vi&q=' + enc(q);
 function uGoogleDay(day){
   const p = mapped(day);
   if (p.length < 2) return null;
@@ -1098,7 +974,7 @@ function uGoogleDay(day){
 }
 
 const el = id => document.getElementById(id);
-const $$ = sel => Array.prototype.slice.call(document.querySelectorAll(sel));
+const $$ = q => Array.prototype.slice.call(document.querySelectorAll(q));
 
 /* =====================================================================
    TRẠNG THÁI LƯU
@@ -1141,394 +1017,482 @@ function flash(msg){
 }
 function save(){
   Promise.resolve().then(() => store.set(JSON.stringify(state)))
-    .then(() => flash(SAVED[store.mode]))
-    .catch(() => flash('Không lưu được'));
+    .then(() => flash(SAVED[store.mode])).catch(() => flash('Không lưu được'));
 }
 function queueSave(){ clearTimeout(saveTimer); saveTimer = setTimeout(save, 600); }
 
 /* =====================================================================
-   DỰNG GIAO DIỆN
+   SIDEBAR — TAB LỊCH TRÌNH
    ===================================================================== */
-function renderHero(){
-  el('kicker').textContent = TRIP.kicker;
-  el('h1').innerHTML = TRIP.city1 + ' <span class="sep">/</span> ' + TRIP.city2;
-  el('subtitle').textContent = TRIP.subtitle;
-
-  el('spine').innerHTML = TRIP.days.map(d =>
-    '<a class="seg" data-city="' + d.city + '" href="#d' + d.d + '" title="' + d.dowFull + ' ' + d.date + ' — ' + d.title + '">'
-    + '<span class="bar"><span>' + d.date.split('/')[0] + '</span></span>'
-    + '<span class="dow">' + d.dow + '</span></a>').join('');
-
-  el('flights').innerHTML = TRIP.flights.map(f =>
-    '<div class="flight"><span class="route">' + f.route + '</span>'
-    + '<span class="when">' + f.when + '</span>'
-    + '<span class="tag">' + f.tag + '</span></div>').join('');
-}
-
-function renderPrep(){
-  el('prep').innerHTML = TRIP.prep.map(p =>
-    '<label class="task' + (p.urgent ? ' urgent' : '') + '">'
-    + '<input type="checkbox" data-task="' + p.id + '">'
-    + '<span class="body"><span class="t">' + p.t + '</span>'
-    + '<span class="d">' + p.d + '</span>'
-    + (p.due ? '<span class="due">' + p.due + '</span>' : '')
-    + '</span></label>').join('');
-}
-
-function renderHotels(){
-  const a = TRIP.hotelBooked;
-  el('hotel-booked-h').textContent = a.heading;
-  el('hotel-booked').innerHTML =
-      '<div class="hotel best">'
-    + '<div class="hotel-head"><span class="hotel-name">' + a.name + '</span><span class="hotel-area">' + a.meta + '</span></div>'
-    + a.body.map((t,i) => '<p' + (i ? ' class="check"' : '') + '>' + t + '</p>').join('')
-    + '<span class="links" style="margin-top:10px">'
-    + '<a href="' + uNaver(a) + '" target="_blank" rel="noopener">Naver Map</a>'
-    + '<a href="' + uKakao(a) + '" target="_blank" rel="noopener">Kakao Map</a>'
-    + '<a href="' + uRead(a.name + ' Seoul review') + '" target="_blank" rel="noopener">Đánh giá</a>'
-    + '</span></div>'
-    + a.after.map(t => '<div class="move" style="margin-top:12px">' + t + '</div>').join('');
-
-  const b = TRIP.hotelBusan;
-  el('hotel-busan-h').textContent = b.heading;
-  el('hotel-busan').innerHTML =
-      '<p class="lead">' + b.lead + '</p>'
-    + b.options.map(o =>
-        '<div class="hotel' + (o.best ? ' best' : '') + '">'
-      + '<div class="hotel-head"><span class="hotel-name">' + o.name + '</span><span class="hotel-area">' + o.meta + '</span></div>'
-      + '<p>' + o.body + '</p><p class="check">' + o.check + '</p>'
-      + (o.q ? '<span class="links" style="margin-top:10px">'
-             + '<a href="' + uNaver(o) + '" target="_blank" rel="noopener">Naver Map</a>'
-             + '<a href="' + uRead(o.name + ' Busan review') + '" target="_blank" rel="noopener">Đánh giá</a>'
-             + (o.book ? '<a href="' + o.book + '" target="_blank" rel="noopener">Trang đặt phòng</a>' : '')
-             + '</span>' : '')
-      + '</div>').join('')
-    + '<div class="move" style="margin-top:16px">' + b.after + '</div>';
-}
-
-/* ---------------------------------------------------------- lịch ngày */
 function stopLinks(day, s, mi){
   const out = [];
   if (s.read) out.push('<a href="' + uRead(s.read) + '" target="_blank" rel="noopener">Bài viết</a>');
   if (mi >= 0){
     out.push('<a href="' + uNaver(s) + '" target="_blank" rel="noopener">Naver</a>');
     out.push('<a href="' + uKakaoTo(s) + '" target="_blank" rel="noopener">Chỉ đường</a>');
-    out.push('<button type="button" data-go="' + day.d + ':' + mi + '">Bản đồ ↑</button>');
   } else if (s.q){
     out.push('<a href="' + uNaver(s) + '" target="_blank" rel="noopener">Naver</a>');
   }
   (s.links || []).forEach(l => out.push('<a href="' + l.u + '" target="_blank" rel="noopener">' + l.t + '</a>'));
-  return out.length ? '<span class="links">' + out.join('') + '</span>' : '';
+  return out.length ? '<span class="lk">' + out.join('') + '</span>' : '';
 }
 
-function renderDays(){
-  el('days').innerHTML = TRIP.days.map(day => {
-    const legs = dayLegs(day);
-    const pts  = mapped(day);
-    const bud  = dayBudget(day, state.rate);
+function renderLich(){
+  el('pane-lich').innerHTML = TRIP.days.map(day => {
+    const pts = mapped(day), legs = dayLegs(day), bud = dayBudget(day, state.rate);
     let legI = 0;
 
-    const rows = day.stops.map(s => {
+    const rows = day.stops.map((s, si) => {
       const mi = pts.indexOf(s);
-      let html = '<div class="row" id="s' + day.d + '-' + (mi >= 0 ? mi : 'x' + day.stops.indexOf(s)) + '">'
-        + '<span class="time">' + s.t + '</span>'
-        + '<span class="what"><b>'
-        + (mi >= 0 ? '<i class="pin" style="background:' + day.color + '">' + (mi+1) + '</i>' : '')
-        + s.name + '</b>'
-        + (s.desc ? '<p>' + s.desc + '</p>' : '')
+      let h = '<div class="stop" data-day="' + day.d + '" data-si="' + si + '"'
+            + (mi >= 0 ? ' data-mi="' + mi + '"' : '') + ' id="s' + day.d + '-' + si + '">'
+        + '<span class="tm">' + s.t + '</span><span class="bd">'
+        + '<span class="nm">'
+        + (mi >= 0 ? '<i class="num" style="background:' + day.color + '">' + (mi+1) + '</i>' : '')
+        + '<span>' + s.name + '</span></span>'
+        + (s.desc ? '<p class="ds">' + s.desc + '</p>' : '')
         + stopLinks(day, s, mi)
         + '</span></div>';
 
-      // chèn khoảng cách tới điểm có toạ độ kế tiếp
       if (mi >= 0 && mi < pts.length - 1){
         const l = legs[legI++];
         const gap = toMin(l.to.t) - toMin(l.from.t);
         const tight = l.min != null && gap < l.min;
-        html += '<div class="leg' + (tight ? ' tight' : '') + '">'
-          + '<span class="bar"><i></i></span><span class="txt">↓ '
-          + km1(l.km)
-          + (l.min != null ? ' · ~' + fmtMin(l.min) : ' · chặng dài, xem giờ tàu')
-          + ' · tới ' + l.to.name
-          + (tight ? ' — chỉ có ' + fmtMin(gap) : '')
-          + '</span></div>';
+        h += '<div class="leg' + (tight ? ' tight' : '') + '"><span class="sp">↓</span><span>'
+           + km1(l.km) + (l.min != null ? ' · ~' + fmtMin(l.min) : ' · chặng dài')
+           + (tight ? ' — chỉ có ' + fmtMin(gap) : '') + '</span></div>';
       }
-      return html;
+      return h;
     }).join('');
 
-    const gday = uGoogleDay(day);
-
-    return '<article class="day" data-city="' + day.city + '" id="d' + day.d + '">'
-      + '<div class="day-head">'
-      +   '<span class="day-date">' + day.dowFull + ' ' + day.date + '</span>'
-      +   '<h3 class="day-title">' + day.title + '</h3>'
-      +   '<div class="chips">'
-      +     '<span class="chip"><b>' + pts.length + '</b> điểm</span>'
-      +     '<span class="chip"><b>' + km1(dayKm(day)) + '</b> di chuyển</span>'
-      +     '<span class="chip">dự kiến <b>' + krwR(bud) + '</b></span>'
-      +     (pts.length ? '<button class="chip act" type="button" data-go="' + day.d + ':0">Xem trên bản đồ</button>' : '')
-      +   '</div>'
-      + '</div>'
-      + '<div class="day-body">'
-      +   '<div class="sched">' + rows + '</div>'
-      +   (day.notes || []).map(n => '<div class="move" style="margin-top:14px"><b>' + n.title + ':</b> ' + n.text + '</div>').join('')
-      +   '<div class="cost">'
-      +     '<div class="cost-head"><span>Chi phí ngày ' + day.date + '</span><span>' + krwR(bud) + '</span></div>'
+    const g = uGoogleDay(day);
+    return '<article class="day" data-city="' + day.city + '" data-day="' + day.d + '" id="d' + day.d + '">'
+      + '<button class="dhead" type="button" data-dayhead="' + day.d + '">'
+      +   '<span class="ar">▾</span>'
+      +   '<span class="dt">' + day.dowFull + ' ' + day.date + '</span>'
+      +   '<span class="dn">' + day.title + '</span>'
+      +   '<span class="dc"><span>' + pts.length + ' điểm</span><span>' + km1(dayKm(day)) + '</span>'
+      +     '<span>' + krwR(bud) + '</span></span>'
+      + '</button>'
+      + '<div class="dbody">'
+      +   rows
+      +   (day.notes || []).map(nt => '<div class="note"><b>' + nt.title + ':</b> ' + nt.text + '</div>').join('')
+      +   '<div class="cost"><div class="ch"><span>Chi phí ngày ' + day.date + '</span><span>' + krwR(bud) + '</span></div>'
       +     '<ul>' + (day.costs || []).map(c =>
-                '<li><span>' + c.label + '</span><span>' + costText(c, state.rate) + '</span></li>').join('') + '</ul>'
-      +     '<div class="spend">'
-      +       '<label for="sp' + day.d + '">Thực chi</label>'
-      +       '<input type="number" id="sp' + day.d + '" data-spend="' + day.d + '" min="0" step="1000" inputmode="numeric" placeholder="—">'
-      +       '<span>₩</span><span class="verdict" data-verdict="' + day.d + '"></span>'
-      +     '</div>'
-      +   '</div>'
-      +   (gday ? '<span class="links" style="margin-top:12px"><a href="' + gday + '" target="_blank" rel="noopener">Xem cả ngày trên Google Maps</a></span>' : '')
-      +   '<details class="notes"><summary>Ghi chú</summary>'
+              '<li><span>' + c.label + '</span><span>' + costText(c, state.rate) + '</span></li>').join('') + '</ul></div>'
+      +   (g ? '<div class="lk-row"><a href="' + g + '" target="_blank" rel="noopener">Chỉ đường cả ngày (Google)</a></div>' : '')
+      +   '<details class="nt"><summary>Ghi chú</summary>'
       +     '<textarea data-note="d' + day.d + '" placeholder="' + (day.notePlaceholder || '') + '"></textarea></details>'
       + '</div></article>';
   }).join('');
-
-  const totKm = TRIP.days.reduce((s,d) => s + dayKm(d), 0);
-  el('lich-note').textContent = TRIP.days.length + ' ngày · ' + km1(totKm);
 }
 
-function renderTips(){
-  el('tips').innerHTML = TRIP.tips.map(t =>
-    '<div class="note-item"><h3>' + t.h + '</h3><p>' + t.p + '</p></div>').join('');
+/* ------------------------------------------------ TAB CHUẨN BỊ ------ */
+function renderChuanBi(){
+  const a = TRIP.hotelBooked, b = TRIP.hotelBusan;
+  el('pane-chuanbi').innerHTML =
+      '<h2>Chuyến bay</h2>'
+    + TRIP.flights.map(f => '<div class="box"><div class="hd"><b>' + f.route + '</b>'
+        + '<span>' + f.tag + '</span></div><p style="font-family:var(--mono);font-size:12.5px">' + f.when + '</p></div>').join('')
+
+    + '<h2>Cần làm trước khi đi</h2>'
+    + TRIP.prep.map(p =>
+        '<label class="task' + (p.urgent ? ' urgent' : '') + '">'
+      + '<input type="checkbox" data-task="' + p.id + '"><span>'
+      + '<span class="t">' + p.t + '</span><span class="d">' + p.d + '</span>'
+      + (p.due ? '<span class="due">' + p.due + '</span>' : '') + '</span></label>').join('')
+    + '<p class="prog" id="prog">Đang tải…</p>'
+
+    + '<h2>' + a.heading + '</h2>'
+    + '<div class="box best"><div class="hd"><b>' + a.name + '</b><span>' + a.meta + '</span></div>'
+    +   a.body.map(t => '<p>' + t + '</p>').join('')
+    +   '<div class="lk-row"><a href="' + uNaver(a) + '" target="_blank" rel="noopener">Naver Map</a>'
+    +   '<a href="' + uRead(a.name + ' Seoul review') + '" target="_blank" rel="noopener">Đánh giá</a></div></div>'
+    + a.after.map(t => '<div class="note">' + t + '</div>').join('')
+
+    + '<h2>' + b.heading + '</h2>'
+    + '<p class="fine" style="margin:0 4px 9px">' + b.lead + '</p>'
+    + b.options.map(o => '<div class="box' + (o.best ? ' best' : '') + '">'
+      + '<div class="hd"><b>' + o.name + '</b><span>' + o.meta + '</span></div>'
+      + '<p>' + o.body + '</p><p>' + o.check + '</p>'
+      + (o.q ? '<div class="lk-row"><a href="' + uNaver(o) + '" target="_blank" rel="noopener">Naver Map</a>'
+             + '<a href="' + uRead(o.name + ' Busan review') + '" target="_blank" rel="noopener">Đánh giá</a>'
+             + (o.book ? '<a href="' + o.book + '" target="_blank" rel="noopener">Trang đặt phòng</a>' : '')
+             + '</div>' : '')
+      + '</div>').join('')
+    + '<div class="note">' + b.after + '</div>';
 }
 
-/* ------------------------------------------------------------- bản đồ */
-let map = null, layer = null, sel = 'all';
-const markers = {};
-
-function numIcon(n, color){
-  return L.divIcon({
-    className:'pin-ico', iconSize:[24,24], iconAnchor:[12,12], popupAnchor:[0,-13],
-    html:'<span style="background:' + color + '">' + n + '</span>'
-  });
-}
-function popHtml(day, s, i){
-  const links = [
-    '<a href="' + uNaver(s) + '" target="_blank" rel="noopener">Naver</a>',
-    '<a href="' + uKakaoTo(s) + '" target="_blank" rel="noopener">Chỉ đường</a>',
-    '<button type="button" onclick="window.__toSched(' + day.d + ',' + i + ')">Xem trong lịch</button>'
-  ];
-  return '<div class="pop"><b>' + s.name + '</b>'
-    + '<span class="pt">' + day.dowFull + ' ' + day.date + ' · ' + s.t + ' · điểm ' + (i+1) + '</span>'
-    + (s.tip ? '<p>' + s.tip + '</p>' : '')
-    + '<span class="pl">' + links.join('') + '</span></div>';
-}
-
-function renderMapTabs(){
-  el('map-tabs').innerHTML =
-      '<button class="map-tab" data-day="all" aria-pressed="true">Cả chuyến</button>'
-    + TRIP.days.map(d =>
-        '<button class="map-tab" data-day="' + d.d + '" aria-pressed="false">'
-      + '<i style="background:' + d.color + '"></i>' + d.date + ' ' + d.short
-      + '</button>').join('');
-}
-
-function initMap(){
-  map = L.map('map', { scrollWheelZoom:false, zoomControl:true });
-  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-    maxZoom:19, attribution:'&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
-  }).addTo(map);
-  layer = L.layerGroup().addTo(map);
-  draw('all');
-}
-
-function draw(which){
-  sel = which;
-  layer.clearLayers();
-  Object.keys(markers).forEach(k => delete markers[k]);
-
-  const days = which === 'all' ? TRIP.days : TRIP.days.filter(d => d.d === +which);
-  const all = [];
-
-  days.forEach(day => {
-    const pts = mapped(day);
-    if (pts.length > 1){
-      L.polyline(pts.map(p => [p.lat, p.lng]), {
-        color:day.color, weight: which === 'all' ? 2 : 3.5,
-        opacity: which === 'all' ? .45 : .7, dashArray:'5,7'
-      }).addTo(layer);
-    }
-    pts.forEach((p, i) => {
-      const m = L.marker([p.lat, p.lng], { icon:numIcon(i+1, day.color), title:p.t + ' ' + p.name })
-                 .bindPopup(popHtml(day, p, i)).addTo(layer);
-      markers[day.d + ':' + i] = m;
-      all.push([p.lat, p.lng]);
-    });
-  });
-
-  if (all.length) map.fitBounds(all, { padding:[40,40], maxZoom: which === 'all' ? 8 : 14 });
-
-  $$('.map-tab').forEach(b => b.setAttribute('aria-pressed', b.dataset.day === String(which) ? 'true' : 'false'));
-  mapBar();
-}
-
-function mapBar(){
-  const days = sel === 'all' ? TRIP.days : TRIP.days.filter(d => d.d === +sel);
-  const pts  = days.reduce((s,d) => s + mapped(d).length, 0);
-  const km   = days.reduce((s,d) => s + dayKm(d), 0);
-  const mv   = days.reduce((s,d) => s + dayMoveMin(d), 0);
-
-  el('map-sum').innerHTML = (sel === 'all'
-      ? 'Cả chuyến · <b>' + pts + '</b> điểm · <b>' + km1(km) + '</b>'
-      : 'Ngày ' + days[0].date + ' · <b>' + pts + '</b> điểm · <b>' + km1(km) + '</b> · ~<b>' + fmtMin(mv) + '</b> di chuyển');
-
-  const out = [];
-  if (sel !== 'all'){
-    const g = uGoogleDay(days[0]);
-    if (g) out.push('<a href="' + g + '" target="_blank" rel="noopener">Chỉ đường cả ngày (Google)</a>');
-    out.push('<a href="#d' + days[0].d + '">Xuống lịch ngày này</a>');
-  } else {
-    out.push('<a href="#lich">Xuống lịch chi tiết</a>');
-  }
-  el('map-out').innerHTML = out.join('');
-  el('map-note').textContent = km1(TRIP.days.reduce((s,d) => s + dayKm(d), 0)) + ' cả chuyến';
-}
-
-// bấm từ lịch → lên bản đồ
-function goMap(d, i){
-  if (sel !== String(d)) draw(String(d));
-  document.getElementById('ban-do').scrollIntoView({ behavior:'smooth', block:'start' });
-  setTimeout(() => {
-    map.invalidateSize();
-    const m = markers[d + ':' + i];
-    if (m){ map.setView(m.getLatLng(), Math.max(map.getZoom(), 13), { animate:true }); m.openPopup(); }
-  }, 420);
-}
-// bấm từ bản đồ → xuống lịch
-window.__toSched = function(d, i){
-  const row = document.getElementById('s' + d + '-' + i);
-  if (!row) return;
-  map.closePopup();
-  row.scrollIntoView({ behavior:'smooth', block:'center' });
-  row.classList.add('hit');
-  setTimeout(() => row.classList.remove('hit'), 2200);
-};
-
-/* --------------------------------------------------------- bảng tiền */
-function renderBudget(){
+/* ---------------------------------------------------- TAB TIỀN ------ */
+function renderTien(){
   const rate = state.rate;
   let lo = 0, hi = 0, act = 0, nAct = 0;
 
   const rows = TRIP.days.map(day => {
-    const b = dayBudget(day, rate);
-    lo += b[0]; hi += b[1];
+    const bud = dayBudget(day, rate); lo += bud[0]; hi += bud[1];
     const sp = state.spend[day.d];
-    const has = typeof sp === 'number' && !isNaN(sp);
-    if (has){ act += sp; nAct++; }
-
-    let diff = '—', cls = '';
-    if (has){
-      if (sp > b[1]){ diff = '+' + krw(sp - b[1]); cls = 'over'; }
-      else if (sp < b[0]){ diff = '−' + krw(b[0] - sp); cls = 'under'; }
-      else { diff = 'trong dự kiến'; cls = 'under'; }
-    }
-    return '<tr><td><a href="#d' + day.d + '">' + day.dowFull + ' ' + day.date + '</a><em>' + day.title + '</em></td>'
-      + '<td>' + krwR(b) + '</td>'
-      + '<td><input type="number" data-spend="' + day.d + '" min="0" step="1000" inputmode="numeric" placeholder="—"></td>'
-      + '<td class="' + cls + '">' + diff + '</td></tr>';
+    if (typeof sp === 'number' && !isNaN(sp)){ act += sp; nAct++; }
+    return '<div class="brow" data-brow="' + day.d + '">'
+      + '<div class="r1"><b>' + day.dowFull + ' ' + day.date + '</b><span class="est">' + krwR(bud) + '</span></div>'
+      + '<div class="sub">' + day.title + '</div>'
+      + '<div class="r2"><label for="sp' + day.d + '">Thực chi</label>'
+      +   '<input type="number" id="sp' + day.d + '" data-spend="' + day.d + '" min="0" step="1000" inputmode="numeric" placeholder="—">'
+      +   '<span style="font-family:var(--mono);font-size:12px">₩</span>'
+      +   '<span class="vd" data-verdict="' + day.d + '"></span></div>'
+      + '</div>';
   }).join('');
 
-  const restLo = Math.max(0, lo - act), restHi = Math.max(0, hi - act);
-  const totRow =
-      '<tr class="tot"><td>Tổng ' + TRIP.days.length + ' ngày<em>' + trieu(lo*rate/1000) + ' – ' + trieu(hi*rate/1000) + ' VND</em></td>'
-    + '<td>' + krwR([lo,hi]) + '</td>'
-    + '<td>' + (nAct ? krw(act) + '<em style="font-family:var(--sans);font-weight:400">' + nAct + '/' + TRIP.days.length + ' ngày đã ghi</em>' : '—') + '</td>'
-    + '<td>' + (nAct ? 'còn ' + krwR([restLo,restHi]) : '—') + '</td></tr>';
+  el('pane-tien').innerHTML =
+      '<div class="rate"><span>Tỷ giá 1.000₩ =</span>'
+    +   '<input type="number" id="rate" min="1" step="100" inputmode="numeric"><span>₫</span>'
+    +   '<button type="button" id="spend-reset">Xoá thực chi</button></div>'
+    + rows
+    + '<div class="brow tot" id="brow-tot"></div>'
+    + '<p class="fine">Chưa tính vé máy bay (đã trả ' + nf(TRIP.flightsPaidVnd) + '₫) và mua sắm cá nhân. '
+    + 'Cột dự kiến tự cộng từ các khoản trong từng ngày — sửa một khoản là tổng đổi theo. '
+    + 'Khoản trả bằng ₫ được quy ra ₩ theo tỷ giá ở trên.</p>';
 
-  el('budget').innerHTML =
-      '<thead><tr><th>Ngày</th><th>Dự kiến</th><th>Thực chi ₩</th><th>Chênh</th></tr></thead>'
-    + '<tbody>' + rows + totRow + '</tbody>';
-
-  el('tien-note').textContent = krwR([lo,hi]);
-  el('chi-phi-fine').innerHTML =
-      'Chưa tính vé máy bay (đã trả ' + nf(TRIP.flightsPaidVnd) + ' VND) và mua sắm cá nhân. '
-    + 'Cột “Dự kiến” tự cộng từ các khoản trong từng ngày, không gõ tay — sửa một khoản là tổng đổi theo. '
-    + 'Khoản trả bằng VND được quy ra ₩ theo tỷ giá ở trên.';
-
-  // đổ lại giá trị đã lưu vào mọi ô nhập (bảng tổng và trong từng ngày)
-  paintSpend();
+  paintTot(); paintSpend();
 }
-
+function paintTot(){
+  const rate = state.rate;
+  let lo = 0, hi = 0, act = 0, nAct = 0;
+  TRIP.days.forEach(day => {
+    const b = dayBudget(day, rate); lo += b[0]; hi += b[1];
+    const sp = state.spend[day.d];
+    if (typeof sp === 'number' && !isNaN(sp)){ act += sp; nAct++; }
+  });
+  const box = el('brow-tot'); if (!box) return;
+  box.innerHTML =
+      '<div class="r1"><b>Tổng ' + TRIP.days.length + ' ngày</b><span class="est">' + krwR([lo,hi]) + '</span></div>'
+    + '<div class="sub">' + trieu(lo*rate/1000) + ' – ' + trieu(hi*rate/1000) + ' ₫</div>'
+    + (nAct ? '<div class="r2"><label>Đã tiêu</label>'
+            + '<span style="font-family:var(--mono);font-size:13px;font-weight:600">' + krw(act) + '</span>'
+            + '<span class="vd">' + nAct + '/' + TRIP.days.length + ' ngày · còn '
+            + krwR([Math.max(0,lo-act), Math.max(0,hi-act)]) + '</span></div>'
+          : '<div class="r2"><span class="vd" style="margin-left:0">chưa ghi ngày nào</span></div>');
+}
 function paintSpend(){
-  $$('input[data-spend]').forEach(inp => {
-    const d = +inp.dataset.spend, v = state.spend[d];
-    inp.value = (typeof v === 'number' && !isNaN(v)) ? v : '';
+  $$('input[data-spend]').forEach(i => {
+    const v = state.spend[+i.dataset.spend];
+    if (document.activeElement !== i) i.value = (typeof v === 'number' && !isNaN(v)) ? v : '';
   });
   TRIP.days.forEach(day => {
-    const b = dayBudget(day, state.rate);
-    const v = state.spend[day.d];
+    const b = dayBudget(day, state.rate), v = state.spend[day.d];
     $$('[data-verdict="' + day.d + '"]').forEach(sp => {
-      if (typeof v !== 'number' || isNaN(v)){ sp.textContent = 'dự kiến ' + krwR(b); sp.className = 'verdict'; return; }
-      if (v > b[1]){ sp.textContent = 'vượt ' + krw(v - b[1]); sp.className = 'verdict over'; }
-      else if (v < b[0]){ sp.textContent = 'dưới dự kiến ' + krw(b[0] - v); sp.className = 'verdict under'; }
-      else { sp.textContent = 'trong dự kiến'; sp.className = 'verdict under'; }
+      if (typeof v !== 'number' || isNaN(v)){ sp.textContent = ''; sp.className = 'vd'; return; }
+      if (v > b[1]){ sp.textContent = 'vượt ' + krw(v - b[1]); sp.className = 'vd over'; }
+      else if (v < b[0]){ sp.textContent = 'dưới ' + krw(b[0] - v); sp.className = 'vd under'; }
+      else { sp.textContent = 'trong dự kiến'; sp.className = 'vd under'; }
     });
   });
 }
 
-/* ----------------------------------------------------- kiểm tra lịch */
+/* ---------------------------------------------------- TAB LƯU Ý ----- */
+function renderLuuY(){
+  el('pane-luuy').innerHTML =
+      '<h2>Kiểm tra lịch</h2><div id="checks"></div>'
+    + '<h2>Lưu ý</h2>'
+    + TRIP.tips.map(t => '<div class="ni"><h3>' + t.h + '</h3><p>' + t.p + '</p></div>').join('')
+    + '<h2>Về trang này</h2>'
+    + '<p class="fine">Nút “Bài viết” mở kết quả tìm kiếm tiếng Việt cho địa điểm đó. Chỉ đường ở Hàn Quốc nên dùng '
+    + '<b>Naver</b> hoặc <b>Kakao</b> — Google Maps không có chỉ đường đi bộ và ô tô trong nước Hàn. '
+    + 'Quãng đường là đường chim bay nhân 1,3; thời gian là ước lượng thô. '
+    + 'Nền bản đồ là OpenFreeMap (dữ liệu OpenStreetMap), tự chuyển sang bản dự phòng nếu không tải được. '
+    + '<span id="storage-mode"></span> Trang này công khai với bất kỳ ai có link, nên đừng ghi số hộ chiếu, '
+    + 'mã đặt phòng hay thông tin thẻ vào ô ghi chú.</p>';
+  runChecks();
+}
+
 function runChecks(){
   const out = [];
   const add = (lv, d, text) => out.push({ lv, d, text });
-
   TRIP.days.forEach(day => {
     const s = day.stops;
-
     for (let i = 1; i < s.length; i++){
       const a = toMin(s[i-1].t), b = toMin(s[i].t);
-      if (b < a)  add('err',  day, 'giờ đi lùi — <b>' + s[i].t + ' ' + s[i].name + '</b> đứng sau <b>' + s[i-1].t + ' ' + s[i-1].name + '</b>.');
+      if (b < a)   add('err',  day, 'giờ đi lùi — <b>' + s[i].t + ' ' + s[i].name + '</b> đứng sau <b>' + s[i-1].t + ' ' + s[i-1].name + '</b>.');
       if (b === a) add('warn', day, 'hai việc trùng giờ <b>' + s[i].t + '</b>: ' + s[i-1].name + ' và ' + s[i].name + '.');
     }
-
     dayLegs(day).forEach(l => {
       if (l.min == null) return;
       const gap = toMin(l.to.t) - toMin(l.from.t);
       if (gap <= 0) return;
       if (gap < l.min*0.7)
         add('err', day, '<b>' + l.from.name + ' → ' + l.to.name + '</b> khoảng ' + km1(l.km)
-          + ', ước lượng mất ~' + fmtMin(l.min) + ' nhưng lịch chỉ chừa ' + fmtMin(gap) + '. Nhiều khả năng không kịp.');
+          + ', ước lượng ~' + fmtMin(l.min) + ' nhưng lịch chỉ chừa ' + fmtMin(gap) + '. Nhiều khả năng không kịp.');
       else if (gap < l.min)
         add('warn', day, '<b>' + l.from.name + ' → ' + l.to.name + '</b> khoảng ' + km1(l.km)
-          + ', ước lượng ~' + fmtMin(l.min) + ' mà chỉ chừa ' + fmtMin(gap) + '. Sát giờ, gần như không có thời gian dừng lại.');
+          + ', ước lượng ~' + fmtMin(l.min) + ' mà chỉ chừa ' + fmtMin(gap) + '. Sát giờ.');
     });
-
     s.forEach(st => {
-      const hasLat = typeof st.lat === 'number', hasLng = typeof st.lng === 'number';
-      if (hasLat !== hasLng) add('err', day, '<b>' + st.name + '</b> chỉ có một nửa toạ độ, sẽ không hiện trên bản đồ.');
-      if (hasLat && hasLng && !st.q) add('warn', day, '<b>' + st.name + '</b> chưa có từ khoá <code>q</code>, nút Naver/Kakao sẽ tìm bằng tên tiếng Việt nên dễ trượt.');
-      if (!/^\d{1,2}:\d{2}$/.test(st.t)) add('err', day, '<b>' + st.name + '</b> có giờ không hợp lệ: “' + st.t + '”.');
+      const hl = typeof st.lat === 'number', hg = typeof st.lng === 'number';
+      if (hl !== hg) add('err', day, '<b>' + st.name + '</b> chỉ có một nửa toạ độ.');
+      if (!/^\d{1,2}:\d{2}$/.test(st.t)) add('err', day, '<b>' + st.name + '</b> giờ không hợp lệ: “' + st.t + '”.');
     });
-
-    if (!day.costs || !day.costs.length) add('warn', day, 'chưa có khoản chi nào, ngày này sẽ tính là 0₩ trong bảng tổng.');
-    if (mapped(day).length < 2) add('warn', day, 'chỉ có ' + mapped(day).length + ' điểm có toạ độ, bản đồ ngày này gần như trống.');
+    if (!day.costs || !day.costs.length) add('warn', day, 'chưa có khoản chi nào.');
   });
 
-  const box = el('check-box'), n = el('check-n'), title = el('check-title'), list = el('check-list');
-  const errs = out.filter(o => o.lv === 'err').length;
-
+  const box = el('checks'); if (!box) return;
   if (!out.length){
-    title.textContent = 'Không thấy vấn đề gì trong lịch';
-    n.textContent = '0'; n.className = 'n zero';
-    list.innerHTML = '<li><span class="w">✓</span><span>Giờ giấc tăng dần, không trùng, mọi chặng đều đủ thời gian di chuyển theo ước lượng.</span></li>';
+    box.innerHTML = '<div class="chk"><span class="w lv-ok">OK</span>Không thấy vấn đề gì'
+      + '<p>Giờ giấc tăng dần, không trùng, mọi chặng đều đủ thời gian di chuyển theo ước lượng.</p></div>';
     return;
   }
-  title.textContent = errs ? errs + ' chỗ nên sửa, ' + (out.length - errs) + ' chỗ nên xem lại'
-                           : out.length + ' chỗ nên xem lại';
-  n.textContent = out.length; n.className = 'n';
-  if (errs) box.open = true;
-  list.innerHTML = out.map(o =>
-      '<li><span class="w lv-' + o.lv + '">' + (o.lv === 'err' ? 'SỬA' : 'XEM') + '</span>'
-    + '<span><a href="#d' + o.d.d + '">' + o.d.date + '</a> — ' + o.text + '</span></li>').join('');
+  box.innerHTML = out.map(o =>
+      '<div class="chk"><span class="w lv-' + o.lv + '">' + (o.lv === 'err' ? 'SỬA' : 'XEM') + '</span>'
+    + '<b style="font-size:13px">' + o.d.date + '</b><p>' + o.text + '</p></div>').join('');
 }
 
 /* =====================================================================
-   GẮN SỰ KIỆN + NẠP DỮ LIỆU ĐÃ LƯU
+   BẢN ĐỒ — MapLibre GL
+   ===================================================================== */
+const OFM = 'https://tiles.openfreemap.org/styles/liberty';
+const FALLBACK = {
+  version:8,
+  sources:{ carto:{ type:'raster', tileSize:256,
+    tiles:['https://a.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}.png',
+           'https://b.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}.png',
+           'https://c.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}.png'],
+    attribution:'&copy; OpenStreetMap, &copy; CARTO' } },
+  layers:[{ id:'carto', type:'raster', source:'carto' }]
+};
+
+let map = null, sel = 'all', styleReady = false;
+const markers = {};
+let curPopup = null;
+
+function stopsFor(which){
+  return which === 'all' ? TRIP.days : TRIP.days.filter(d => d.d === +which);
+}
+
+function routeGeoJSON(which){
+  return { type:'FeatureCollection', features: stopsFor(which).map(day => {
+    const p = mapped(day);
+    if (p.length < 2) return null;
+    return { type:'Feature', properties:{ color:day.color, w: which === 'all' ? 2 : 3.5 },
+             geometry:{ type:'LineString', coordinates:p.map(x => [x.lng, x.lat]) } };
+  }).filter(Boolean) };
+}
+
+function addRouteLayer(){
+  if (map.getSource('routes')) return;
+  map.addSource('routes', { type:'geojson', data: routeGeoJSON(sel) });
+  map.addLayer({ id:'routes-line', type:'line', source:'routes',
+    layout:{ 'line-cap':'round', 'line-join':'round' },
+    paint:{ 'line-color':['get','color'], 'line-width':['get','w'],
+            'line-opacity':.65, 'line-dasharray':[1.6, 1.6] } });
+}
+
+function clearMarkers(){
+  Object.keys(markers).forEach(k => { markers[k].remove(); delete markers[k]; });
+}
+
+function draw(which, opts){
+  sel = which;
+  if (!map || !styleReady) return;
+
+  if (map.getSource('routes')) map.getSource('routes').setData(routeGeoJSON(sel));
+  clearMarkers();
+  if (curPopup){ curPopup.remove(); curPopup = null; }
+
+  const b = new maplibregl.LngLatBounds();
+  stopsFor(sel).forEach(day => {
+    mapped(day).forEach((p, i) => {
+      const d = document.createElement('div');
+      d.className = 'pin';
+      d.style.background = day.color;
+      d.textContent = String(i+1);
+      d.title = p.t + ' ' + p.name;
+      d.addEventListener('click', ev => { ev.stopPropagation(); openStop(day.d, i, true); });
+      markers[day.d + ':' + i] = new maplibregl.Marker({ element:d })
+        .setLngLat([p.lng, p.lat]).addTo(map);
+      b.extend([p.lng, p.lat]);
+    });
+  });
+
+  if (!b.isEmpty()){
+    map.fitBounds(b, { padding: fitPad(), maxZoom: sel === 'all' ? 8.5 : 14,
+                       duration: opts && opts.jump ? 0 : 700 });
+  }
+  $$('#daybar button').forEach(x => x.setAttribute('aria-pressed', x.dataset.day === String(sel) ? 'true' : 'false'));
+  mapFoot();
+}
+
+function fitPad(){
+  const mob = window.matchMedia('(max-width:820px)').matches;
+  return mob ? { top:70, right:30, bottom:170, left:30 } : { top:70, right:60, bottom:70, left:60 };
+}
+
+function mapFoot(){
+  const days = stopsFor(sel);
+  const pts = days.reduce((s,d) => s + mapped(d).length, 0);
+  const km  = days.reduce((s,d) => s + dayKm(d), 0);
+  const mv  = days.reduce((s,d) => s + dayMoveMin(d), 0);
+  el('mapsum').innerHTML = sel === 'all'
+    ? 'Cả chuyến · <b>' + pts + '</b> điểm · <b>' + km1(km) + '</b>'
+    : days[0].dowFull + ' ' + days[0].date + ' · <b>' + pts + '</b> điểm · <b>' + km1(km) + '</b> · ~<b>' + fmtMin(mv) + '</b>';
+  const g = sel === 'all' ? null : uGoogleDay(days[0]);
+  el('mapout').innerHTML = g ? '<a href="' + g + '" target="_blank" rel="noopener">Chỉ đường cả ngày</a>' : '';
+}
+
+function popHtml(day, s, i){
+  return '<div class="pop"><b>' + s.name + '</b>'
+    + '<span class="pt">' + day.dowFull + ' ' + day.date + ' · ' + s.t + ' · điểm ' + (i+1) + '</span>'
+    + (s.tip ? '<p>' + s.tip + '</p>' : '')
+    + '<span class="pl">'
+    +   '<a href="' + uNaver(s) + '" target="_blank" rel="noopener">Naver</a>'
+    +   '<a href="' + uKakaoTo(s) + '" target="_blank" rel="noopener">Chỉ đường</a>'
+    + '</span></div>';
+}
+
+/* mở một điểm: chọn ngày, bay tới, mở popup, mở dòng tương ứng trong sidebar */
+function openStop(dayD, mi, fromMap){
+  const day = TRIP.days.find(d => d.d === dayD);
+  if (!day) return;
+  const pts = mapped(day), p = pts[mi];
+  if (!p) return;
+
+  if (sel !== String(dayD)){ draw(String(dayD)); }
+
+  const go = () => {
+    const m = markers[dayD + ':' + mi];
+    $$('.pin.sel').forEach(x => x.classList.remove('sel'));
+    if (m) m.getElement().classList.add('sel');
+    if (curPopup) curPopup.remove();
+    curPopup = new maplibregl.Popup({ offset:18, closeButton:false, maxWidth:'270px' })
+      .setLngLat([p.lng, p.lat]).setHTML(popHtml(day, p, mi)).addTo(map);
+    map.easeTo({ center:[p.lng, p.lat], zoom: Math.max(map.getZoom(), 13), duration:500,
+                 padding: fitPad() });
+  };
+  setTimeout(go, sel === String(dayD) ? 0 : 260);
+
+  // mở dòng tương ứng trong sidebar
+  const si = day.stops.indexOf(p);
+  const row = el('s' + dayD + '-' + si);
+  if (row){
+    openDay(dayD, true);
+    $$('.stop.open').forEach(x => { if (x !== row) x.classList.remove('open'); });
+    row.classList.add('open');
+    if (fromMap){
+      switchTab('lich');
+      if (isMobile()) setSheet('half');
+      setTimeout(() => row.scrollIntoView({ behavior:'smooth', block:'center' }), 120);
+      row.classList.add('hit');
+      setTimeout(() => row.classList.remove('hit'), 1800);
+    }
+  }
+}
+
+function openDay(d, keep){
+  $$('.day').forEach(x => {
+    const on = +x.dataset.day === d;
+    x.classList.toggle('sel', on);
+    if (on) x.classList.add('open');
+    else if (!keep) x.classList.remove('open');
+  });
+}
+
+/* =====================================================================
+   TẤM KÉO (MOBILE)
+   ===================================================================== */
+const isMobile = () => window.matchMedia('(max-width:820px)').matches;
+let sheet = 'peek';
+function setSheet(s){
+  sheet = s;
+  const side = el('side');
+  side.style.transform = '';
+  side.classList.remove('half','full');
+  if (s !== 'peek') side.classList.add(s);
+  setTimeout(() => { if (map) map.resize(); }, 320);
+}
+function initSheet(){
+  const side = el('side'), grip = el('grip');
+  let startY = 0, startT = 0, dragging = false, h = 0;
+
+  const curT = () => {
+    const m = new DOMMatrixReadOnly(getComputedStyle(side).transform);
+    return m.m42 || 0;
+  };
+  grip.addEventListener('pointerdown', e => {
+    if (!isMobile()) return;
+    dragging = true; startY = e.clientY; startT = curT(); h = side.offsetHeight;
+    side.classList.add('drag'); grip.setPointerCapture(e.pointerId);
+  });
+  grip.addEventListener('pointermove', e => {
+    if (!dragging) return;
+    const t = Math.max(0, Math.min(h - 60, startT + (e.clientY - startY)));
+    side.style.transform = 'translateY(' + t + 'px)';
+  });
+  const end = () => {
+    if (!dragging) return;
+    dragging = false; side.classList.remove('drag');
+    const t = curT(), H = side.offsetHeight;
+    const snaps = { full:0, half:H*0.52, peek:H - 132 };
+    let best = 'peek', bd = Infinity;
+    for (const k in snaps){ const d = Math.abs(snaps[k] - t); if (d < bd){ bd = d; best = k; } }
+    setSheet(best);
+  };
+  grip.addEventListener('pointerup', end);
+  grip.addEventListener('pointercancel', end);
+  grip.addEventListener('click', () => {
+    if (!isMobile()) return;
+    setSheet(sheet === 'peek' ? 'half' : sheet === 'half' ? 'full' : 'peek');
+  });
+}
+
+/* =====================================================================
+   TAB
+   ===================================================================== */
+function switchTab(name){
+  $$('#tabs button').forEach(b => b.setAttribute('aria-selected', b.dataset.tab === name ? 'true' : 'false'));
+  $$('.pane').forEach(p => p.classList.toggle('on', p.dataset.pane === name));
+}
+
+/* =====================================================================
+   SỰ KIỆN
    ===================================================================== */
 function bind(){
+  el('tabs').addEventListener('click', e => {
+    const b = e.target.closest('button[data-tab]');
+    if (!b) return;
+    switchTab(b.dataset.tab);
+    if (isMobile() && sheet === 'peek') setSheet('half');
+  });
+
+  el('daybar').addEventListener('click', e => {
+    const b = e.target.closest('button[data-day]');
+    if (!b) return;
+    draw(b.dataset.day);
+    if (b.dataset.day !== 'all') openDay(+b.dataset.day);
+  });
+
+  el('panes').addEventListener('click', e => {
+    const dh = e.target.closest('[data-dayhead]');
+    if (dh){
+      const d = +dh.dataset.dayhead;
+      const art = dh.closest('.day');
+      const wasOpen = art.classList.contains('open');
+      $$('.day').forEach(x => x.classList.remove('open','sel'));
+      if (!wasOpen){ art.classList.add('open','sel'); draw(String(d)); }
+      else { art.classList.remove('open'); }
+      return;
+    }
+    const st = e.target.closest('.stop');
+    if (st && !e.target.closest('a')){
+      const wasOpen = st.classList.contains('open');
+      $$('.stop.open').forEach(x => x.classList.remove('open'));
+      if (!wasOpen) st.classList.add('open');
+      if (st.dataset.mi != null) openStop(+st.dataset.day, +st.dataset.mi, false);
+      return;
+    }
+    const rs = e.target.closest('#spend-reset');
+    if (rs){
+      if (!Object.keys(state.spend).length) return flash('Chưa có số nào để xoá');
+      state.spend = {}; paintSpend(); paintTot(); save();
+    }
+  });
+
   document.addEventListener('change', e => {
     const b = e.target.closest('input[data-task]');
     if (b){
@@ -1541,70 +1505,28 @@ function bind(){
   document.addEventListener('input', e => {
     const a = e.target.closest('textarea[data-note]');
     if (a){ state.notes[a.dataset.note] = a.value; queueSave(); return; }
-
     const sp = e.target.closest('input[data-spend]');
     if (sp){
       const d = +sp.dataset.spend;
       const v = sp.value.trim() === '' ? null : Number(sp.value);
       if (v === null || isNaN(v)) delete state.spend[d]; else state.spend[d] = v;
-      // đồng bộ ô kia (bảng tổng ↔ trong ngày) mà không cướp con trỏ
-      $$('input[data-spend="' + d + '"]').forEach(o => { if (o !== sp) o.value = sp.value; });
-      paintSpend(); renderBudgetTotalsOnly(); queueSave();
-      return;
+      paintSpend(); paintTot(); queueSave(); return;
     }
-
     const r = e.target.closest('#rate');
     if (r){
       const v = Number(r.value);
-      if (v > 0){ state.rate = v; renderDays(); renderBudget(); paintAll(); queueSave(); }
+      if (v > 0){ state.rate = v; renderLich(); renderTien(); paintAll(); queueSave(); }
     }
   });
 
-  document.addEventListener('click', e => {
-    const tab = e.target.closest('.map-tab');
-    if (tab){ draw(tab.dataset.day); return; }
-
-    const go = e.target.closest('[data-go]');
-    if (go){ const [d,i] = go.dataset.go.split(':'); goMap(+d, +i); return; }
-
-    const rs = e.target.closest('#spend-reset');
-    if (rs){
-      if (!Object.keys(state.spend).length) return flash('Chưa có số nào để xoá');
-      state.spend = {}; paintSpend(); renderBudget(); save();
-      return;
-    }
-  });
-}
-
-// vẽ lại riêng bảng tổng (giữ nguyên ô đang gõ)
-function renderBudgetTotalsOnly(){
-  const rate = state.rate;
-  let lo = 0, hi = 0, act = 0, nAct = 0;
-  TRIP.days.forEach(day => {
-    const b = dayBudget(day, rate); lo += b[0]; hi += b[1];
-    const sp = state.spend[day.d];
-    if (typeof sp === 'number' && !isNaN(sp)){ act += sp; nAct++; }
-  });
-  const tb = el('budget').tBodies[0];
-  if (!tb) return;
-  TRIP.days.forEach((day, i) => {
-    const b = dayBudget(day, rate), sp = state.spend[day.d], td = tb.rows[i].cells[3];
-    if (typeof sp !== 'number' || isNaN(sp)){ td.textContent = '—'; td.className = ''; return; }
-    if (sp > b[1]){ td.textContent = '+' + krw(sp - b[1]); td.className = 'over'; }
-    else if (sp < b[0]){ td.textContent = '−' + krw(b[0] - sp); td.className = 'under'; }
-    else { td.textContent = 'trong dự kiến'; td.className = 'under'; }
-  });
-  const tr = tb.rows[tb.rows.length - 1];
-  tr.cells[2].innerHTML = nAct ? krw(act) + '<em style="font-family:var(--sans);font-weight:400">' + nAct + '/' + TRIP.days.length + ' ngày đã ghi</em>' : '—';
-  tr.cells[3].textContent = nAct ? 'còn ' + krwR([Math.max(0, lo-act), Math.max(0, hi-act)]) : '—';
+  window.addEventListener('resize', () => { if (map) map.resize(); });
 }
 
 function renderProgress(){
   const boxes = $$('input[data-task]');
-  const done = boxes.filter(b => b.checked).length;
-  el('progress').textContent = done + ' / ' + boxes.length + ' việc đã xong';
+  const p = el('prog'); if (!p) return;
+  p.textContent = boxes.filter(b => b.checked).length + ' / ' + boxes.length + ' việc đã xong';
 }
-
 function paintAll(){
   $$('input[data-task]').forEach(b => {
     b.checked = !!state.checks[b.dataset.task];
@@ -1614,23 +1536,75 @@ function paintAll(){
     const v = state.notes[a.dataset.note];
     if (v){ a.value = v; const d = a.closest('details'); if (d) d.open = true; }
   });
-  el('rate').value = state.rate;
-  paintSpend();
-  renderProgress();
+  const r = el('rate'); if (r) r.value = state.rate;
+  const sm = el('storage-mode'); if (sm) sm.textContent = LABELS[store.mode];
+  paintSpend(); paintTot(); renderProgress();
 }
 
-/* ------------------------------------------------------------- chạy */
-renderHero();
-renderPrep();
-renderHotels();
-renderMapTabs();
-renderDays();
-renderBudget();
-renderTips();
-runChecks();
-bind();
-el('storage-mode').textContent = LABELS[store.mode];
-if (window.L) initMap();
+/* --------------------------------------------- ngày mặc định -------- */
+function defaultDay(){
+  const now = new Date();
+  const hit = TRIP.days.find(d => {
+    const [dd, mm] = d.date.split('/').map(Number);
+    return now.getFullYear() === 2026 && now.getMonth()+1 === mm && now.getDate() === dd;
+  });
+  return hit ? String(hit.d) : 'all';
+}
+
+/* =====================================================================
+   CHẠY
+   ===================================================================== */
+el('h1').innerHTML = TRIP.city1 + ' <span class="sep">/</span> ' + TRIP.city2;
+el('kick').textContent = TRIP.kicker;
+el('daybar').innerHTML =
+    '<button data-day="all" aria-pressed="true">Cả chuyến</button>'
+  + TRIP.days.map(d => '<button data-day="' + d.d + '" aria-pressed="false">'
+      + '<i style="background:' + d.color + '"></i>' + d.date + ' ' + d.short + '</button>').join('');
+
+renderLich(); renderChuanBi(); renderTien(); renderLuuY();
+bind(); initSheet(); paintAll();
+
+if (window.maplibregl){
+  map = new maplibregl.Map({
+    container:'map', style:OFM, center:[128.2, 36.3], zoom:6.4,
+    attributionControl:{ compact:true }
+  });
+  map.addControl(new maplibregl.NavigationControl({ visualizePitch:true }), 'bottom-right');
+
+  let failed = false;
+  // 'style.load' bắn ngay khi style được phân tích xong — đủ để thêm layer và vẽ.
+  // KHÔNG dùng 'load': sự kiện đó còn đợi tile của khung nhìn đầu tiên, có thể
+  // không bao giờ tới nếu mạng chậm hoặc khung nhìn bị ẩn.
+  const boot = () => {
+    if (styleReady) return;
+    styleReady = true;
+    addRouteLayer();
+    draw(sel === 'all' ? defaultDay() : sel, { jump:true });
+  };
+  map.on('style.load', boot);
+
+  function toFallback(why){
+    if (failed) return;
+    failed = true;
+    styleReady = false;
+    el('tiles-warn').classList.add('on');
+    map.setStyle(FALLBACK);
+    map.once('style.load', () => { addRouteLayer(); styleReady = true; draw(sel, { jump:true }); });
+  }
+  map.on('error', e => {
+    // chỉ đổi nền khi CHÍNH style hỏng, không đổi vì một ô tile lẻ lỗi
+    if (styleReady || failed) return;
+    const msg = (e && e.error && e.error.message) || '';
+    if (/style|sprite|glyph/i.test(msg)) toFallback(msg);
+  });
+  // lưới an toàn: 12 giây mà style vẫn chưa phân tích xong thì chuyển dự phòng
+  setTimeout(() => { if (!styleReady) toFallback('quá hạn'); }, 12000);
+} else {
+  el('mapsum').textContent = 'Không tải được thư viện bản đồ.';
+}
+
+const dd = defaultDay();
+if (dd !== 'all') openDay(+dd);
 
 Promise.resolve().then(() => store.get())
   .then(raw => {
@@ -1642,10 +1616,8 @@ Promise.resolve().then(() => store.get())
     if (p.rate > 0) state.rate = p.rate;
   })
   .catch(() => {})
-  .then(() => {
-    // tỷ giá đã lưu có thể khác mặc định → dựng lại phần phụ thuộc tiền
-    renderDays(); renderBudget(); paintAll();
-  }, () => paintAll());
+  .then(() => { renderLich(); renderTien(); paintAll(); if (dd !== 'all') openDay(+dd); },
+        () => paintAll());
 
 })();
 </script>
