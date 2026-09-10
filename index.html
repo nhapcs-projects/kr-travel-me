@@ -51,7 +51,7 @@
   .tabs{display:flex;gap:2px;padding:8px 10px 0;border-bottom:1px solid var(--rule);background:var(--paper)}
   .tabs button{
     flex:1;min-width:0;background:none;border:0;border-bottom:2px solid transparent;
-    font-size:13px;padding:7px 2px 8px;cursor:pointer;color:var(--ink-faint);
+    font-size:12.5px;padding:7px 1px 8px;cursor:pointer;color:var(--ink-faint);
     white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
   }
   .tabs button[aria-selected="true"]{color:var(--ink);font-weight:600;border-bottom-color:var(--ink)}
@@ -144,6 +144,13 @@
     border-radius:20px;padding:5px 14px;font-size:12px;box-shadow:var(--shadow);display:none;
   }
   .tiles-warn.on{display:block}
+  .offline-warn{
+    position:absolute;top:88px;left:50%;transform:translateX(-50%);z-index:7;
+    background:var(--ink);color:#fff;border-radius:20px;padding:6px 15px;
+    font-size:12px;line-height:1.4;max-width:min(90%,420px);text-align:center;
+    box-shadow:var(--shadow);display:none;
+  }
+  .offline-warn.on{display:block}
 
   /* =============== ĐIỂM TRÊN BẢN ĐỒ =============== */
   .pin{
@@ -154,6 +161,11 @@
     transition:transform .14s ease;
   }
   .pin:hover{transform:scale(1.18)}
+  .pin.dim{
+    opacity:.3;transform:scale(.66);box-shadow:0 1px 3px rgba(0,0,0,.25);
+    border-width:1.5px;font-size:9px;
+  }
+  .pin.dim:hover{opacity:.85;transform:scale(.95)}
   .pin.sel{transform:scale(1.3);box-shadow:0 0 0 4px rgba(24,34,46,.22),0 1px 5px rgba(0,0,0,.4)}
 
   .maplibregl-popup-content{
@@ -222,6 +234,18 @@
   .leg .sp{flex:0 0 40px;text-align:right}
   .leg.tight{color:var(--alert)}
   .leg.ks{color:#9A6B7A;font-style:italic}
+  .nowbar{
+    display:flex;flex-wrap:wrap;gap:4px 10px;align-items:baseline;
+    margin:8px 0;padding:7px 11px;border-radius:6px;
+    background:var(--ink);color:#fff;font-size:12.5px;line-height:1.4;
+  }
+  .nowbar b{font-family:var(--mono);font-size:11px;letter-spacing:.04em}
+  .nowbar span b{font-family:var(--sans);font-size:12.5px;letter-spacing:0}
+  .stop.cur{background:#F2F3EE;border-radius:5px;box-shadow:0 0 0 5px #F2F3EE}
+  .day.today .dhead{box-shadow:inset 3px 0 0 var(--ink)}
+  .day.today .dt::after{
+    content:" · HÔM NAY";font-weight:600;color:var(--ink);letter-spacing:.04em;
+  }
   .leg .go{
     display:block;font-family:var(--sans);font-style:normal;font-size:12px;
     line-height:1.45;color:var(--ink-soft);margin:3px 0 2px;
@@ -376,6 +400,7 @@
     </div>
     <div id="map"></div>
     <div class="tiles-warn" id="tiles-warn">Bản đồ vector không tải được — đang dùng bản dự phòng</div>
+    <div class="offline-warn" id="offline-warn">Đang offline — lịch, chi phí và ghi chú vẫn dùng được. Bản đồ chỉ hiện vùng đã xem trước đó.</div>
     <div class="mapfoot"><span id="mapsum"></span><span id="mapout"></span></div>
   </main>
 
@@ -388,8 +413,9 @@
     </div>
 
     <nav class="tabs" id="tabs" role="tablist">
-      <button role="tab" data-tab="lich"    aria-selected="true">Lịch trình</button>
+      <button role="tab" data-tab="lich"    aria-selected="true">Lịch</button>
       <button role="tab" data-tab="chuanbi" aria-selected="false">Chuẩn bị</button>
+      <button role="tab" data-tab="hanhly"  aria-selected="false">Hành lý</button>
       <button role="tab" data-tab="tien"    aria-selected="false">Tiền</button>
       <button role="tab" data-tab="luuy"    aria-selected="false">Lưu ý</button>
     </nav>
@@ -397,6 +423,7 @@
     <div class="panes" id="panes">
       <section class="pane on" data-pane="lich"    id="pane-lich"></section>
       <section class="pane"    data-pane="chuanbi" id="pane-chuanbi"></section>
+      <section class="pane"    data-pane="hanhly"  id="pane-hanhly"></section>
       <section class="pane"    data-pane="tien"    id="pane-tien"></section>
       <section class="pane"    data-pane="luuy"    id="pane-luuy"></section>
     </div>
@@ -471,9 +498,12 @@ const TRIP = {
     { id:'app',
       t:'Cài app: Naver Map, Korail Talk, Kakao T, Papago',
       d:'Google Maps hoạt động rất kém ở Hàn Quốc — không có chỉ đường đi bộ và ô tô. Mọi điểm trên trang này đều có sẵn nút Naver và Kakao, dùng hai cái đó để chỉ đường.' },
-    { id:'esim',
-      t:'Mua eSIM',
-      d:'Khoảng 10–20 USD cho 7 ngày, nhận ngay, rẻ hơn thuê pocket wifi.' }
+    { id:'roaming', urgent:true, due:'Làm khi còn ở Việt Nam',
+      t:'Bật chuyển vùng quốc tế Viettel — cả hai máy',
+      d:'Soạn <b>CVQT</b> gửi <b>138</b> (miễn phí) để mở dịch vụ, rồi soạn tên gói gửi <b>191</b> để đăng ký data. Gói đi Hàn từ khoảng 20.000đ/ngày; xem gói cụ thể ở <b>viettel.vn/cvqt</b> hoặc gọi 198. <b>Phải làm trước khi bay</b> — sang tới nơi không nhắn được về 138 nữa. Làm cho <b>cả hai số</b>, không phải một.' },
+    { id:'roaming-dk',
+      t:'Kiểm tra điều kiện đăng ký roaming',
+      d:'Thuê bao phải đang hoạt động hai chiều. <b>Nếu là trả trước</b>: cần cước thoại nội địa từ 100.000đ/tháng trong 2 tháng gần nhất, và tài khoản chính phải đủ tiền trừ gói. Kiểm tra sớm — nếu không đủ điều kiện thì còn kịp chuyển sang mua eSIM.' }
   ],
 
   /* ---------- khách sạn ---------- */
@@ -532,6 +562,55 @@ const TRIP = {
       tip:'Ga gần đường mòn Igidae nhất, ngày 6/10.' },
     { name:'Ga Singyeongju',  ko:'신경주역', line:'KTX', lat:35.798365, lng:129.138955,
       tip:'Ga KTX của Gyeongju, nằm xa trung tâm. Bắt xe buýt 50, 51, 60, 61 hoặc 70, mất 35–40 phút.' }
+  ],
+
+
+  /* ================================================================
+     HÀNH LÝ — cho MỘT người. Soạn theo đúng chuyến này: đầu tháng 10,
+     Seoul 14–24°C, Busan ấm hơn 2–3°C, khô, chênh sáng tối lớn;
+     ba hôm leo núi hoặc đi bộ đường dài; một tối ngồi bờ sông có gió.
+     ================================================================ */
+  packing: [
+    { g:'Giấy tờ & tiền', items:[
+      { id:'pk-hc',    t:'Hộ chiếu', d:'Còn hạn ít nhất 6 tháng. <b>Mang theo cả ngày 10/10</b> — hoàn thuế ở Lotte bắt buộc xuất trình.' },
+      { id:'pk-vemb',  t:'Vé máy bay + mã đặt chỗ', d:'Lưu ảnh chụp màn hình phòng khi hết pin hoặc mất mạng.' },
+      { id:'pk-ktx',   t:'Vé KTX (2 chặng)', d:'4/10 Seoul→Busan và 8/10 Busan→Seoul. Lưu trong app Korail Talk và chụp lại.' },
+      { id:'pk-ks',    t:'Xác nhận 3 khách sạn', d:'Beewon, Busan Station Prince, và chỗ Seoul đợt 2.' },
+      { id:'pk-the',   t:'Thẻ ngân hàng + ít tiền mặt', d:'Hàn Quốc quẹt thẻ gần như mọi nơi, nhưng chợ truyền thống (Gukje, Bupyeong, Jagalchi) nhiều quầy chỉ nhận tiền mặt.' },
+      { id:'pk-tmoney',t:'Thẻ T-money', d:'Mua ở cửa hàng tiện lợi trong sân bay ngay khi tới. Dùng cho metro và buýt cả Seoul lẫn Busan.' }
+    ]},
+    { g:'Điện tử', items:[
+      { id:'pk-sac',   t:'Sạc điện thoại + cáp' },
+      { id:'pk-oc',    t:'Ổ cắm chuyển đổi', d:'Hàn Quốc dùng <b>220V, chấu tròn loại C/F</b>. Sạc chấu dẹt kiểu Mỹ (loại A) sẽ không cắm vừa.' },
+      { id:'pk-pin',   t:'Pin dự phòng', d:'Ngày nào cũng dùng bản đồ và Naver liên tục. <b>Để trong hành lý xách tay</b>, không được ký gửi.' },
+      { id:'pk-roam',  t:'Đã bật roaming Viettel', d:'Xuống máy bay là tự bắt sóng, không phải đổi SIM. <b>Nhớ bật "Dữ liệu chuyển vùng" trong cài đặt máy</b>, nếu không sẽ có sóng mà không có mạng.' }
+    ]},
+    { g:'Quần áo', items:[
+      { id:'pk-lop',   t:'Áo khoác nhẹ hoặc áo gió', d:'Chênh sáng tối lớn. <b>Tối 9/10 ngồi bờ sông Hàn lạnh hơn trong phố vài độ và có gió.</b>' },
+      { id:'pk-len',   t:'1–2 áo len mỏng / hoodie', d:'Mặc nhiều lớp hợp hơn một áo dày.' },
+      { id:'pk-ao',    t:'Áo thun / sơ mi cho 7 ngày' },
+      { id:'pk-quan',  t:'2–3 quần dài', d:'Một cái co giãn để leo núi ngày 8/10 và 9/10.' },
+      { id:'pk-dolot', t:'Đồ lót + tất cho 7 ngày', d:'Thêm 2 đôi tất dày cho hai hôm leo núi.' },
+      { id:'pk-ngu',   t:'Đồ ngủ' }
+    ]},
+    { g:'Giày', items:[
+      { id:'pk-giay',  t:'Giày đi bộ có độ bám', d:'Quan trọng nhất trong danh sách. <b>Geumjeongsan 8/10 đường đá granite trơn</b>, Gamcheon nhiều dốc, Igidae và Inwangsan nhiều bậc thang.' },
+      { id:'pk-giay2', t:'Một đôi nhẹ để đi phố', d:'Đổi chân cho hôm không leo núi.' }
+    ]},
+    { g:'Thuốc & vệ sinh', items:[
+      { id:'pk-thuoc', t:'Thuốc cá nhân đang dùng', d:'Mang theo đơn thuốc nếu là thuốc kê toa.' },
+      { id:'pk-daubung',t:'Thuốc đau bụng, tiêu hoá', d:'Ăn hải sản sống ở Jagalchi ngày 5/10 — có sẵn cho yên tâm.' },
+      { id:'pk-cao',   t:'Dán giảm đau / cao dán', d:'Sau hai ngày leo núi sẽ cần.' },
+      { id:'pk-vs',    t:'Đồ vệ sinh cá nhân', d:'Khách sạn bình dân và guesthouse thường không có bàn chải, kem đánh răng.' },
+      { id:'pk-duong', t:'Kem dưỡng ẩm + son dưỡng', d:'Đầu tháng 10 ở Hàn rất khô.' },
+      { id:'pk-kcn',   t:'Kem chống nắng', d:'Trời khô nắng, ngày nào cũng ở ngoài nhiều.' }
+    ]},
+    { g:'Linh tinh', items:[
+      { id:'pk-tui',   t:'Túi đeo nhỏ đi trong ngày' },
+      { id:'pk-nuoc',  t:'Bình nước', d:'Ghi chú Igidae trong lịch có nhắc mang nước.' },
+      { id:'pk-o',     t:'Ô gấp nhỏ', d:'Đầu tháng 10 ít mưa, nhưng che nắng cũng được.' },
+      { id:'pk-tuivai',t:'Túi vải gấp', d:'Cho đồ mua ngày 10/10 ở Myeongdong và chợ Gukje.' }
+    ]}
   ],
 
   /* ================================================================
@@ -1088,6 +1167,8 @@ const TRIP = {
 
   /* ---------- lưu ý cuối trang ---------- */
   tips: [
+    { h:'Dùng data roaming cho đỡ tốn', p:'Gói roaming thường có hạn mức theo ngày, khác eSIM dung lượng lớn. Vài cách giữ cho đủ: <b>trang này đã lưu vào máy</b> nên mở lại không tốn data, và vùng bản đồ đã xem rồi thì lần sau không tải lại. Nặng data nhất là <b>kéo bản đồ sang vùng mới</b> và xem video — nên xem trước bản đồ ngày hôm sau lúc còn ở khách sạn có wifi. Metro và phần lớn quán cà phê ở Hàn đều có wifi miễn phí.' },
+    { h:'Lợi thế của roaming so với eSIM', p:'Số Việt Nam vẫn hoạt động, nên <b>nhận được OTP ngân hàng</b> và người nhà gọi được thẳng — đây thường là lý do chính để chọn roaming. Đổi lại giá mỗi GB đắt hơn eSIM và hay bị giới hạn theo ngày.' },
     { h:'Thời tiết', p:'Seoul khoảng 14–24°C, Busan ấm hơn 2–3°C. Trời khô, nắng đẹp, ít mưa. Chênh lệch sáng tối lớn nên mặc nhiều lớp.' },
     { h:'Chưa có lá đỏ', p:'Đầu tháng 10 không nơi nào có lá đỏ. Seoraksan phải sau 15/10, Seoul đầu tháng 11, Busan giữa tháng 11. Bù lại đây là thời tiết đi bộ và leo núi lý tưởng nhất năm.' },
     { h:'Không thuê được xe tự lái', p:'Bằng quốc tế do Việt Nam cấp theo Công ước Vienna 1968, Hàn Quốc chỉ công nhận Công ước Geneva 1949.' },
@@ -1280,7 +1361,9 @@ function stopLinks(day, s, mi){
   return out.length ? '<span class="lk">' + out.join('') + '</span>' : '';
 }
 
+let NOW = null;
 function renderLich(){
+  NOW = nowInfo();
   el('pane-lich').innerHTML = TRIP.days.map(day => {
     const pts = mapped(day), legs = dayLegs(day), bud = dayBudget(day, state.rate);
     let legI = 0;
@@ -1296,9 +1379,19 @@ function renderLich(){
       + '</span></div>';
     };
 
+    const ni = NOW && NOW.day.d === day.d ? NOW : null;
+    const nowBar = () =>
+      '<div class="nowbar"><b>BÂY GIỜ ' + ni.hhmm + '</b>'
+      + (ni.iNext === -1
+          ? '<span>Hết lịch hôm nay — về ' + (day.sleep || 'chỗ nghỉ') + '</span>'
+          : '<span>còn ' + fmtMin(toMin(day.stops[ni.iNext].t) - ni.mins)
+            + ' tới <b>' + day.stops[ni.iNext].name + '</b></span>')
+      + '</div>';
+
     const rows = day.stops.map((s, si) => {
       const mi = pts.indexOf(s);
-      let h = '<div class="stop" data-day="' + day.d + '" data-si="' + si + '"'
+      let h = (ni && si === ni.iNext ? nowBar() : '');
+      h += '<div class="stop' + (ni && si === ni.iCur ? ' cur' : '') + '" data-day="' + day.d + '" data-si="' + si + '"'
             + (mi >= 0 ? ' data-mi="' + mi + '"' : '') + ' id="s' + day.d + '-' + si + '">'
         + '<span class="tm">' + s.t + '</span><span class="bd">'
         + '<span class="nm">'
@@ -1319,10 +1412,10 @@ function renderLich(){
            + '</span></div>';
       }
       return h;
-    }).join('');
+    }).join('') + (ni && ni.iNext === -1 ? nowBar() : '');
 
     const g = uGoogleDay(day);
-    return '<article class="day" data-city="' + day.city + '" data-day="' + day.d + '" id="d' + day.d + '">'
+    return '<article class="day' + (ni ? ' open sel today' : '') + '" data-city="' + day.city + '" data-day="' + day.d + '" id="d' + day.d + '">'
       + '<button class="dhead" type="button" data-dayhead="' + day.d + '">'
       +   '<span class="ar">▾</span>'
       +   '<span class="dt">' + day.dowFull + ' ' + day.date + '</span>'
@@ -1375,6 +1468,21 @@ function renderChuanBi(){
       + '<div class="lk-row"><a href="' + uNaver(h) + '" target="_blank" rel="noopener">Naver Map</a>'
       +   '<a href="' + uKakaoTo(h) + '" target="_blank" rel="noopener">Chỉ đường</a></div>'
       + '</div>').join('');
+}
+
+/* --------------------------------------------------- TAB HÀNH LÝ --- */
+function renderHanhLy(){
+  const all = (TRIP.packing || []).flatMap(g => g.items);
+  el('pane-hanhly').innerHTML =
+      '<p class="fine" style="margin:4px 4px 12px">Danh sách cho <b>một người</b>, soạn theo đúng chuyến này — thời tiết đầu tháng 10, ba hôm leo núi hoặc đi bộ dài, một tối ngồi bờ sông có gió. Tick vào là lưu lại.</p>'
+    + (TRIP.packing || []).map(g =>
+        '<h2>' + g.g + '</h2>'
+      + g.items.map(it =>
+          '<label class="task"><input type="checkbox" data-task="' + it.id + '"><span>'
+        + '<span class="t">' + it.t + '</span>'
+        + (it.d ? '<span class="d">' + it.d + '</span>' : '')
+        + '</span></label>').join('')).join('')
+    + '<p class="prog" id="prog-pack">Đang tải…</p>';
 }
 
 /* ---------------------------------------------------- TAB TIỀN ------ */
@@ -1453,6 +1561,8 @@ function renderLuuY(){
     + '<b>Naver</b> hoặc <b>Kakao</b> — Google Maps không có chỉ đường đi bộ và ô tô trong nước Hàn. '
     + 'Quãng đường là đường chim bay nhân 1,3; thời gian là ước lượng thô. '
     + 'Nền bản đồ là OpenFreeMap (dữ liệu OpenStreetMap), tự chuyển sang bản dự phòng nếu không tải được. '
+    + '<b>Trang chạy được khi mất mạng:</b> mở một lần có mạng là máy lưu lại, sau đó lịch, chỉ dẫn đi lại, chi phí và ghi chú đều đọc được offline; bản đồ chỉ hiện những vùng đã xem trước đó. '
+    + 'Muốn xem thử chỉ báo “bây giờ” trước khi đi thì thêm <code>?now=2026-10-05T14:20</code> vào cuối địa chỉ. '
     + '<span id="storage-mode"></span> Trang này công khai với bất kỳ ai có link, nên đừng ghi số hộ chiếu, '
     + 'mã đặt phòng hay thông tin thẻ vào ô ghi chú.</p>';
   runChecks();
@@ -1520,16 +1630,25 @@ function stopsFor(which){
   return which === 'all' ? TRIP.days : TRIP.days.filter(d => d.d === +which);
 }
 
+// Vẽ CẢ TÁM ngày, không lọc bớt — ngày không được chọn thì mờ đi.
+// Nhờ vậy vẫn thấy bối cảnh cả chuyến khi đang xem một ngày.
+const dayOn = (day, which) => which === 'all' || day.d === +which;
+
 function routeGeoJSON(which){
   const f = [];
-  stopsFor(which).forEach(day => {
+  TRIP.days.forEach(day => {
+    const on = dayOn(day, which);
     const p = mapped(day);
     if (p.length > 1){
-      f.push({ type:'Feature', properties:{ kind:'trip', color:day.color, w: which === 'all' ? 2 : 3.5 },
+      f.push({ type:'Feature',
+               properties:{ kind:'trip', color:day.color,
+                            w: on ? (which === 'all' ? 2 : 3.5) : 1.2,
+                            op: on ? .65 : .14 },
                geometry:{ type:'LineString', coordinates:p.map(x => [x.lng, x.lat]) } });
     }
     hotelLegs(day).forEach(l => {
-      f.push({ type:'Feature', properties:{ kind:'hotel', color:day.color },
+      f.push({ type:'Feature',
+               properties:{ kind:'hotel', color:day.color, w: on ? 1.6 : 1, op: on ? .42 : .10 },
                geometry:{ type:'LineString', coordinates:[[l.a.lng, l.a.lat], [l.b.lng, l.b.lat]] } });
     });
   });
@@ -1543,13 +1662,13 @@ function addRouteLayer(){
   map.addLayer({ id:'routes-hotel', type:'line', source:'routes',
     filter:['==', ['get','kind'], 'hotel'],
     layout:{ 'line-cap':'round', 'line-join':'round' },
-    paint:{ 'line-color':['get','color'], 'line-width':1.6,
-            'line-opacity':.42, 'line-dasharray':[0.6, 2.4] } });
+    paint:{ 'line-color':['get','color'], 'line-width':['get','w'],
+            'line-opacity':['get','op'], 'line-dasharray':[0.6, 2.4] } });
   map.addLayer({ id:'routes-line', type:'line', source:'routes',
     filter:['==', ['get','kind'], 'trip'],
     layout:{ 'line-cap':'round', 'line-join':'round' },
     paint:{ 'line-color':['get','color'], 'line-width':['get','w'],
-            'line-opacity':.65, 'line-dasharray':[1.6, 1.6] } });
+            'line-opacity':['get','op'], 'line-dasharray':[1.6, 1.6] } });
 }
 
 function clearMarkers(){
@@ -1655,19 +1774,20 @@ function draw(which, opts){
   if (curPopup){ curPopup.remove(); curPopup = null; }
 
   const b = new maplibregl.LngLatBounds();
-  stopsFor(sel).forEach(day => {
+  TRIP.days.forEach(day => {
+    const on = dayOn(day, sel);
     mapped(day).forEach((p, i) => {
       const d = document.createElement('div');
-      d.className = 'pin';
+      d.className = 'pin' + (on ? '' : ' dim');
       d.style.background = day.color;
       d.textContent = String(i+1);
-      d.title = p.t + ' ' + p.name;
+      d.title = day.dowFull + ' ' + day.date + ' · ' + p.t + ' ' + p.name;
       d.addEventListener('click', ev => { ev.stopPropagation(); openStop(day.d, i, true); });
       markers[day.d + ':' + i] = new maplibregl.Marker({ element:d })
         .setLngLat([p.lng, p.lat]).addTo(map);
-      b.extend([p.lng, p.lat]);
+      if (on) b.extend([p.lng, p.lat]);      // chỉ ngày đang chọn mới kéo khung nhìn
     });
-    hotelLegs(day).forEach(l => { b.extend([l.a.lng, l.a.lat]); b.extend([l.b.lng, l.b.lat]); });
+    if (on) hotelLegs(day).forEach(l => { b.extend([l.a.lng, l.a.lat]); b.extend([l.b.lng, l.b.lat]); });
   });
 
   if (!b.isEmpty()){
@@ -1895,9 +2015,12 @@ function bind(){
 }
 
 function renderProgress(){
-  const boxes = $$('input[data-task]');
-  const p = el('prog'); if (!p) return;
-  p.textContent = boxes.filter(b => b.checked).length + ' / ' + boxes.length + ' việc đã xong';
+  const prep = $$('#pane-chuanbi input[data-task]');
+  const p = el('prog');
+  if (p) p.textContent = prep.filter(b => b.checked).length + ' / ' + prep.length + ' việc đã xong';
+  const pk = $$('#pane-hanhly input[data-task]');
+  const q = el('prog-pack');
+  if (q) q.textContent = pk.filter(b => b.checked).length + ' / ' + pk.length + ' món đã xếp';
 }
 function paintAll(){
   $$('input[data-task]').forEach(b => {
@@ -1913,14 +2036,34 @@ function paintAll(){
   paintSpend(); paintTot(); renderProgress();
 }
 
-/* --------------------------------------------- ngày mặc định -------- */
-function defaultDay(){
-  const now = new Date();
-  const hit = TRIP.days.find(d => {
-    const [dd, mm] = d.date.split('/').map(Number);
+/* --------------------------------------------- "bây giờ" ------------ */
+/* Thêm ?now=2026-10-05T14:20 vào địa chỉ để xem thử chỉ báo này
+   trước khi đi — nếu không có thì lấy giờ thật của máy. */
+function rightNow(){
+  const q = new URLSearchParams(location.search).get('now');
+  const d = q ? new Date(q) : new Date();
+  return isNaN(d.getTime()) ? new Date() : d;
+}
+function nowInfo(){
+  const now = rightNow();
+  const day = TRIP.days.find(x => {
+    const [dd, mm] = x.date.split('/').map(Number);
     return now.getFullYear() === 2026 && now.getMonth()+1 === mm && now.getDate() === dd;
   });
-  return hit ? String(hit.d) : 'all';
+  if (!day) return null;
+  const mins = now.getHours()*60 + now.getMinutes();
+  const iNext = day.stops.findIndex(st => toMin(st.t) > mins);
+  return {
+    day, mins,
+    hhmm: String(now.getHours()).padStart(2,'0') + ':' + String(now.getMinutes()).padStart(2,'0'),
+    iCur:  iNext === -1 ? day.stops.length - 1 : iNext - 1,   // -1 nghĩa là chưa bắt đầu
+    iNext: iNext                                              // -1 nghĩa là đã hết ngày
+  };
+}
+
+function defaultDay(){
+  const ni = nowInfo();
+  return ni ? String(ni.day.d) : 'all';
 }
 
 /* =====================================================================
@@ -1933,7 +2076,7 @@ el('daybar').innerHTML =
   + TRIP.days.map(d => '<button data-day="' + d.d + '" aria-pressed="false">'
       + '<i style="background:' + d.color + '"></i>' + d.date + ' ' + d.short + '</button>').join('');
 
-renderLich(); renderChuanBi(); renderTien(); renderLuuY();
+renderLich(); renderChuanBi(); renderHanhLy(); renderTien(); renderLuuY();
 bind(); initSheet(); paintAll();
 
 if (window.maplibregl){
@@ -1980,6 +2123,21 @@ if (window.maplibregl){
   setTimeout(() => { if (!styleReady) toFallback('quá hạn'); }, 12000);
 } else {
   el('mapsum').textContent = 'Không tải được thư viện bản đồ.';
+}
+
+/* ---- offline ---- */
+function syncOnline(){
+  const w = el('offline-warn');
+  if (w) w.classList.toggle('on', !navigator.onLine);
+}
+window.addEventListener('online', syncOnline);
+window.addEventListener('offline', syncOnline);
+syncOnline();
+
+if ('serviceWorker' in navigator && location.protocol !== 'file:'){
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('./sw.js').catch(() => {});
+  });
 }
 
 const dd = defaultDay();
