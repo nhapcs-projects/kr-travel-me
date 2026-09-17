@@ -86,11 +86,16 @@ self.addEventListener('fetch', e => {
   }
 
   // --- 1. trang: mạng trước, hỏng thì dùng bản đã lưu
+  //
+  // Phải dùng cache:'no-cache' — fetch() bên trong service worker VẪN đi qua
+  // HTTP cache của trình duyệt, nên nếu không ép kiểm tra lại với máy chủ thì
+  // "mạng trước" có thể lấy đúng bản cũ rồi lưu đè lên bản đã lưu, và trang
+  // đứng yên ở phiên bản cũ dù đã push bản mới.
   if (req.mode === 'navigate' || /\/$|\.html$/.test(new URL(url).pathname)){
     e.respondWith(
-      fetch(req)
+      fetch(req.url, { cache:'no-cache', credentials:'same-origin' })
         .then(res => {
-          caches.open(SHELL).then(c => c.put('./index.html', res.clone()));
+          if (res && res.ok) caches.open(SHELL).then(c => c.put('./index.html', res.clone()));
           return res;
         })
         .catch(() => caches.match('./index.html').then(r => r || caches.match('./')))
