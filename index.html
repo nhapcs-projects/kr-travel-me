@@ -41,7 +41,9 @@
     display:flex;flex-direction:column;min-height:0;min-width:0;
     background:var(--paper);border-right:1px solid var(--rule);z-index:10;
   }
+  .sheethead{flex:0 0 auto}
   .grip{display:none}
+  .peeksum{display:none}
 
   .brand{padding:16px 18px 12px;border-bottom:1px solid var(--rule)}
   .brand h1{font-size:23px;font-weight:800;letter-spacing:-.03em;margin:0;line-height:1.05}
@@ -95,6 +97,8 @@
     display:flex;gap:14px;align-items:baseline;flex-wrap:wrap;
   }
   .mapfoot b{font-weight:500;color:var(--ink)}
+  .mf-x, .mf-show{display:none}
+  .mapfoot.off{display:none}
   .mapfoot a{color:var(--ink-soft);text-decoration:none;border-bottom:1px solid var(--rule)}
   .mapfoot a:hover{color:var(--ink);border-bottom-color:var(--ink)}
 
@@ -365,27 +369,61 @@
     .side,.stage{grid-column:auto;grid-row:auto}
     .stage{position:absolute;inset:0}
     .daybar{padding:10px 10px 26px}
-    .mapfoot{left:10px;bottom:auto;top:56px;font-size:11px;padding:7px 11px}
+    /* Trước đây đặt top:56px, chồng lên hàng nút lớp (46–70px). Giờ nằm hẳn
+       bên dưới, chiếm trọn bề ngang, và đóng được. */
+    .mapfoot{
+      left:10px;right:10px;bottom:auto;top:82px;max-width:none;
+      font-size:11px;padding:7px 10px;gap:4px 12px;padding-right:32px;
+    }
+    .mf-x{
+      display:block;position:absolute;top:2px;right:2px;
+      width:28px;height:28px;border:0;background:none;cursor:pointer;
+      font-size:19px;line-height:1;color:var(--ink-faint);
+    }
+    .mf-x:active{color:var(--ink)}
+    .mapfoot.off + .mf-show{
+      display:flex;align-items:center;justify-content:center;
+      position:absolute;top:82px;right:10px;z-index:5;
+      width:30px;height:30px;border-radius:50%;
+      background:var(--card);border:1px solid var(--rule);box-shadow:var(--shadow);
+      font-family:var(--mono);font-size:13px;color:var(--ink-soft);cursor:pointer;
+    }
 
     .side{
       position:absolute;left:0;right:0;bottom:0;top:auto;height:88dvh;
       border-right:0;border-radius:15px 15px 0 0;box-shadow:var(--shadow-lg);
       z-index:20;transition:transform .3s cubic-bezier(.32,.72,0,1);
       transform:translateY(calc(88dvh - 132px));
-      touch-action:none;
     }
-    .side.half{transform:translateY(46dvh)}
-    .side.full{transform:translateY(0)}
     .side.drag{transition:none}
-    .grip{
-      display:block;padding:9px 0 5px;cursor:grab;flex:0 0 auto;
-      touch-action:none;background:var(--paper);border-radius:15px 15px 0 0;
+
+    /* CẢ phần đầu là vùng bám — chạm để đổi mức, kéo cũng được.
+       Trước đây chỉ có thanh 18px nên rất khó trúng ngón tay. */
+    .sheethead{
+      touch-action:none;cursor:grab;user-select:none;-webkit-user-select:none;
+      background:var(--paper);border-radius:15px 15px 0 0;
     }
-    .grip i{display:block;width:38px;height:4px;border-radius:3px;background:var(--ink-faint);opacity:.45;margin:0 auto}
-    .brand{padding:2px 16px 10px}
-    .brand h1{font-size:19px}
+    .sheethead:active{cursor:grabbing}
+    .grip{display:block;padding:10px 0 6px}
+    .grip i{
+      display:block;width:44px;height:5px;border-radius:3px;
+      background:var(--ink-faint);opacity:.5;margin:0 auto;
+    }
+    /* Dòng tóm tắt: ở mức peek phải thấy được việc đang tới, không phải chỉ cái tên chuyến */
+    .peeksum{
+      display:block;padding:0 16px 12px;line-height:1.35;
+    }
+    .peeksum .p1{font-family:var(--mono);font-size:11px;color:var(--ink-faint);display:block}
+    .peeksum .p1 b{color:var(--ink);font-weight:500}
+    .peeksum .p2{font-size:15px;font-weight:600;letter-spacing:-.01em;display:block;margin-top:2px}
+    .peeksum .p3{font-size:12.5px;color:var(--ink-soft);display:block;margin-top:1px}
+    .side.full .peeksum{display:none}
+    .brand{display:none}
+    .side.full .brand{display:block;padding:2px 16px 10px}
+    .side.full .brand h1{font-size:19px}
+
     .panes{touch-action:pan-y}
-    .side:not(.full) .panes{overflow:hidden}
+    .side:not(.half):not(.full) .panes{overflow:hidden}   /* chỉ khoá cuộn ở mức peek */
     .status{bottom:auto;top:64px}
   }
 </style>
@@ -401,15 +439,20 @@
     <div id="map"></div>
     <div class="tiles-warn" id="tiles-warn">Bản đồ vector không tải được — đang dùng bản dự phòng</div>
     <div class="offline-warn" id="offline-warn">Đang offline — lịch, chi phí và ghi chú vẫn dùng được. Bản đồ chỉ hiện vùng đã xem trước đó.</div>
-    <div class="mapfoot"><span id="mapsum"></span><span id="mapout"></span></div>
+    <div class="mapfoot" id="mapfoot"><span id="mapsum"></span><span id="mapout"></span>
+      <button class="mf-x" id="mapfoot-x" type="button" aria-label="Đóng bảng số liệu">×</button>
+    </div>
+    <button class="mf-show" id="mapfoot-show" type="button" aria-label="Hiện lại bảng số liệu">i</button>
   </main>
 
   <aside class="side" id="side">
-    <div class="grip" id="grip"><i></i></div>
-
-    <div class="brand">
-      <h1 id="h1"></h1>
-      <p class="kick" id="kick"></p>
+    <div class="sheethead" id="sheethead">
+      <div class="grip"><i></i></div>
+      <div class="peeksum" id="peeksum"></div>
+      <div class="brand">
+        <h1 id="h1"></h1>
+        <p class="kick" id="kick"></p>
+      </div>
     </div>
 
     <nav class="tabs" id="tabs" role="tablist">
@@ -1295,7 +1338,7 @@ const $$ = q => Array.prototype.slice.call(document.querySelectorAll(q));
    TRẠNG THÁI LƯU
    ===================================================================== */
 const KEY = 'trip-korea-oct2026';
-const state = { checks:{}, notes:{}, spend:{}, rate:TRIP.rate, layers:{ stations:false, places:false } };
+const state = { checks:{}, notes:{}, spend:{}, rate:TRIP.rate, layers:{ stations:false, places:false }, mapfootOff:false };
 
 const store = (function(){
   try{
@@ -1799,6 +1842,7 @@ function draw(which, opts){
   $$('#daybar button').forEach(x => x.setAttribute('aria-pressed', x.dataset.day === String(sel) ? 'true' : 'false'));
   drawExtra();
   mapFoot();
+  renderPeek();
 }
 
 function fitPad(){
@@ -1881,46 +1925,124 @@ function openDay(d, keep){
    ===================================================================== */
 const isMobile = () => window.matchMedia('(max-width:820px)').matches;
 let sheet = 'peek';
-function setSheet(s){
+
+/* Ba mức, tính bằng pixel thay vì để CSS quyết định — nhờ vậy lúc kéo và
+   lúc trượt về đều dùng chung một hệ toạ độ, không bị giật giữa hai cơ chế. */
+function snaps(){
+  // Tính từ innerHeight chứ không đọc offsetHeight: lúc mới tải, bố cục chưa
+  // xong nên offsetHeight trả về sai và tấm bị đặt lệch. 0.88 khớp với
+  // height:88dvh trong CSS.
+  const H = Math.round(window.innerHeight * 0.88);
+  return { full:0, half:Math.round(H*0.52), peek:Math.max(0, H - 132) };
+}
+
+function setSheet(s, instant){
   sheet = s;
   const side = el('side');
-  side.style.transform = '';
-  side.classList.remove('half','full');
-  if (s !== 'peek') side.classList.add(s);
-  setTimeout(() => { if (map) map.resize(); }, 320);
+  side.classList.toggle('half', s === 'half');
+  side.classList.toggle('full', s === 'full');
+  if (!isMobile()){ side.style.transform = ''; return; }
+  if (instant){
+    // Đặt vị trí không hiệu ứng, rồi bật lại ngay. Phải ép trình duyệt tính lại
+    // bố cục (đọc offsetHeight) chứ không dùng requestAnimationFrame — rAF có thể
+    // không chạy khi khung chưa vẽ, làm lớp 'drag' kẹt lại và mất hiệu ứng trượt.
+    side.classList.add('drag');
+    side.style.transform = 'translateY(' + snaps()[s] + 'px)';
+    void side.offsetHeight;
+    side.classList.remove('drag');
+  } else {
+    side.style.transform = 'translateY(' + snaps()[s] + 'px)';
+  }
+  setTimeout(() => { if (map) map.resize(); }, 330);
 }
+
+/* Dòng tóm tắt hiện ở mức peek: phải nói được việc đang tới,
+   chứ không phải chỉ tên chuyến như trước. */
+function renderPeek(){
+  const box = el('peeksum'); if (!box) return;
+  const day = NOW ? NOW.day : (sel !== 'all' ? TRIP.days.find(d => d.d === +sel) : null);
+  if (!day){
+    box.innerHTML = '<span class="p1">Cả chuyến</span>'
+      + '<span class="p2">' + TRIP.days.length + ' ngày · ' + TRIP.city1 + ' / ' + TRIP.city2 + '</span>'
+      + '<span class="p3">Chạm để mở lịch</span>';
+    return;
+  }
+  const head = '<span class="p1">' + day.dowFull + ' ' + day.date
+             + (NOW && NOW.day.d === day.d ? ' · <b>HÔM NAY</b>' : '') + '</span>';
+  if (NOW && NOW.day.d === day.d && NOW.iNext !== -1){
+    const st = day.stops[NOW.iNext];
+    box.innerHTML = head
+      + '<span class="p2">▸ ' + st.t + ' ' + st.name + '</span>'
+      + '<span class="p3">còn ' + fmtMin(toMin(st.t) - NOW.mins) + ' · chạm để mở lịch</span>';
+  } else {
+    box.innerHTML = head
+      + '<span class="p2">' + day.title + '</span>'
+      + '<span class="p3">' + mapped(day).length + ' điểm · ' + km1(dayKm(day)) + ' · chạm để mở lịch</span>';
+  }
+}
+
 function initSheet(){
-  const side = el('side'), grip = el('grip');
-  let startY = 0, startT = 0, dragging = false, h = 0;
+  const side = el('side'), head = el('sheethead');
+  let startY = 0, startT = 0, dragging = false, moved = 0, t0 = 0;
+  let lastY = 0, lastT = 0, vy = 0;      // vận tốc, px/ms
 
   const curT = () => {
     const m = new DOMMatrixReadOnly(getComputedStyle(side).transform);
     return m.m42 || 0;
   };
-  grip.addEventListener('pointerdown', e => {
+
+  head.addEventListener('pointerdown', e => {
     if (!isMobile()) return;
-    dragging = true; startY = e.clientY; startT = curT(); h = side.offsetHeight;
-    side.classList.add('drag'); grip.setPointerCapture(e.pointerId);
+    dragging = true; moved = 0; vy = 0;
+    startY = lastY = e.clientY; startT = curT();
+    t0 = lastT = e.timeStamp;
+    side.classList.add('drag');
+    head.setPointerCapture(e.pointerId);
   });
-  grip.addEventListener('pointermove', e => {
+
+  head.addEventListener('pointermove', e => {
     if (!dragging) return;
-    const t = Math.max(0, Math.min(h - 60, startT + (e.clientY - startY)));
-    side.style.transform = 'translateY(' + t + 'px)';
+    const dy = e.clientY - startY;
+    moved = Math.max(moved, Math.abs(dy));
+    const dt = e.timeStamp - lastT;
+    if (dt > 0) vy = (e.clientY - lastY) / dt;
+    lastY = e.clientY; lastT = e.timeStamp;
+    const S = snaps();
+    side.style.transform = 'translateY(' + Math.max(0, Math.min(S.peek, startT + dy)) + 'px)';
   });
-  const end = () => {
+
+  const end = e => {
     if (!dragging) return;
-    dragging = false; side.classList.remove('drag');
-    const t = curT(), H = side.offsetHeight;
-    const snaps = { full:0, half:H*0.52, peek:H - 132 };
-    let best = 'peek', bd = Infinity;
-    for (const k in snaps){ const d = Math.abs(snaps[k] - t); if (d < bd){ bd = d; best = k; } }
+    dragging = false;
+    side.classList.remove('drag');
+
+    // Chạm (không kéo) thì xoay vòng mức — kéo chỉ là tuỳ chọn.
+    // Trước đây dùng sự kiện click riêng nên sau mỗi lần kéo bị xoay thêm một nấc.
+    const tap = moved < 8 && (e ? e.timeStamp - t0 : 999) < 500;
+    if (tap){
+      setSheet(sheet === 'peek' ? 'half' : sheet === 'half' ? 'full' : 'peek');
+      return;
+    }
+
+    const S = snaps(), t = curT();
+    const order = ['full', 'half', 'peek'];
+    let best;
+    if (Math.abs(vy) > 0.45){                       // vuốt nhanh: đi theo hướng vuốt
+      const i = order.indexOf(sheet);
+      best = order[Math.max(0, Math.min(2, i + (vy > 0 ? 1 : -1)))];
+    } else {                                        // thả chậm: về mức gần nhất
+      let bd = Infinity;
+      order.forEach(k => { const d = Math.abs(S[k] - t); if (d < bd){ bd = d; best = k; } });
+    }
     setSheet(best);
   };
-  grip.addEventListener('pointerup', end);
-  grip.addEventListener('pointercancel', end);
-  grip.addEventListener('click', () => {
-    if (!isMobile()) return;
-    setSheet(sheet === 'peek' ? 'half' : sheet === 'half' ? 'full' : 'peek');
+  head.addEventListener('pointerup', end);
+  head.addEventListener('pointercancel', () => { dragging = false; side.classList.remove('drag'); setSheet(sheet); });
+
+  // Không đặt transform lúc khởi tạo — CSS đã để sẵn ở mức peek. Chỉ khi người
+  // dùng chạm hay xoay máy mới chuyển sang điều khiển bằng pixel.
+  window.addEventListener('resize', () => {
+    if (isMobile()) setSheet(sheet, true); else side.style.transform = '';
   });
 }
 
@@ -1941,6 +2063,13 @@ function bind(){
     if (!b) return;
     switchTab(b.dataset.tab);
     if (isMobile() && sheet === 'peek') setSheet('half');
+  });
+
+  el('mapfoot-x').addEventListener('click', () => {
+    state.mapfootOff = true; syncMapfoot(); queueSave();
+  });
+  el('mapfoot-show').addEventListener('click', () => {
+    state.mapfootOff = false; syncMapfoot(); queueSave();
   });
 
   el('layerbar').addEventListener('click', e => {
@@ -2033,6 +2162,7 @@ function paintAll(){
   });
   const r = el('rate'); if (r) r.value = state.rate;
   const sm = el('storage-mode'); if (sm) sm.textContent = LABELS[store.mode];
+  syncMapfoot();
   paintSpend(); paintTot(); renderProgress();
 }
 
@@ -2077,7 +2207,7 @@ el('daybar').innerHTML =
       + '<i style="background:' + d.color + '"></i>' + d.date + ' ' + d.short + '</button>').join('');
 
 renderLich(); renderChuanBi(); renderHanhLy(); renderTien(); renderLuuY();
-bind(); initSheet(); paintAll();
+bind(); initSheet(); paintAll(); renderPeek();
 
 if (window.maplibregl){
   map = new maplibregl.Map({
@@ -2126,6 +2256,11 @@ if (window.maplibregl){
 }
 
 /* ---- offline ---- */
+function syncMapfoot(){
+  const f = el('mapfoot');
+  if (f) f.classList.toggle('off', !!state.mapfootOff);
+}
+
 function syncOnline(){
   const w = el('offline-warn');
   if (w) w.classList.toggle('on', !navigator.onLine);
@@ -2152,6 +2287,7 @@ Promise.resolve().then(() => store.get())
     state.spend  = p.spend  || {};
     if (p.rate > 0) state.rate = p.rate;
     if (p.layers) state.layers = { stations:!!p.layers.stations, places:!!p.layers.places };
+    state.mapfootOff = !!p.mapfootOff;
   })
   .catch(() => {})
   .then(() => { renderLich(); renderTien(); paintAll(); if (dd !== 'all') openDay(+dd); },
