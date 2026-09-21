@@ -570,13 +570,15 @@ const TRIP = {
     { name:'City Hall',       ko:'시청',     line:'Tuyến 1 · 2', lat:37.565480, lng:126.977114,
       tip:'Ga cho cung Deoksugung, ngay cạnh cổng.' },
     { name:'Myeongdong',      ko:'명동',     line:'Tuyến 4', lat:37.560898, lng:126.986376,
-      tip:'Mua sắm ngày 10/10. Olive Young flagship và quầy hoàn thuế Lotte đều quanh đây.' },
-    { name:'Dongnimmun',      ko:'독립문',   line:'Tuyến 3', lat:37.574558, lng:126.957836,
-      tip:'Ga gần chân núi Inwangsan nhất, ngày 9/10.' },
+      tip:'<b>Ga của khách sạn đợt Seoul hai</b> — GH The Hill cách 360 m, đoạn cuối là dốc. Dùng cả ba ngày 8, 9, 10/10. Olive Young flagship và quầy hoàn thuế Lotte cũng quanh đây.' },
+    { name:'Jamsil',          ko:'잠실',     line:'Tuyến 2 · 8', lat:37.513350, lng:127.100210,
+      tip:'Lotte World Tower và văn phòng, chiều tối 9/10. Nối thẳng lên toà nhà từ trong ga, không phải ra đường.' },
+    { name:'DDP Dongdaemun',  ko:'동대문역사문화공원', line:'Tuyến 2 · 4 · 5', lat:37.565140, lng:127.007860,
+      tip:'Ga đổi tàu quan trọng nhất đợt Seoul hai: đi Seongsu (tuyến 2), đi Yeouinaru (tuyến 5), về Myeongdong (tuyến 4) đều đổi ở đây.' },
     { name:'Seongsu',         ko:'성수',     line:'Tuyến 2', lat:37.544569, lng:127.056102,
       tip:'Khu cà phê nhà máy cũ, sáng 9/10.' },
     { name:'Yeouinaru',       ko:'여의나루', line:'Tuyến 5', lat:37.526853, lng:126.932529,
-      tip:'Ra sông Hàn tối 9/10 — LỐI RA 2 hoặc 3 là xuống thẳng công viên.' },
+      tip:'Ra sông Hàn tối 8/10 — LỐI RA 2 hoặc 3 là xuống thẳng công viên. Từ Myeongdong đổi tàu ở DDP.' },
     { name:'Sân bay Incheon T1', ko:'인천공항1터미널', line:'AREX', lat:37.447159, lng:126.452781,
       tip:'AREX Express 43 phút 11.000₩, bản thường 59 phút 4.500₩ dùng được T-money. Kiểm tra kỹ T1 hay T2.' },
 
@@ -629,21 +631,21 @@ const TRIP = {
       { id:'pk-roam',  t:'Đã bật roaming Viettel', d:'Xuống máy bay là tự bắt sóng, không phải đổi SIM. <b>Nhớ bật "Dữ liệu chuyển vùng" trong cài đặt máy</b>, nếu không sẽ có sóng mà không có mạng.' }
     ]},
     { g:'Quần áo', items:[
-      { id:'pk-lop',   t:'Áo khoác nhẹ hoặc áo gió', d:'Chênh sáng tối lớn. <b>Tối 9/10 ngồi bờ sông Hàn lạnh hơn trong phố vài độ và có gió.</b>' },
+      { id:'pk-lop',   t:'Áo khoác nhẹ hoặc áo gió', d:'Chênh sáng tối lớn. <b>Tối 8/10 ngồi bờ sông Hàn lạnh hơn trong phố vài độ và có gió.</b>' },
       { id:'pk-len',   t:'1–2 áo len mỏng / hoodie', d:'Mặc nhiều lớp hợp hơn một áo dày.' },
       { id:'pk-ao',    t:'Áo thun / sơ mi cho 7 ngày' },
-      { id:'pk-quan',  t:'2–3 quần dài', d:'Một cái co giãn để leo núi ngày 8/10 và 9/10.' },
-      { id:'pk-dolot', t:'Đồ lót + tất cho 7 ngày', d:'Thêm 2 đôi tất dày cho hai hôm leo núi.' },
+      { id:'pk-quan',  t:'2–3 quần dài', d:'Một cái co giãn để leo Geumjeongsan sáng 8/10.' },
+      { id:'pk-dolot', t:'Đồ lót + tất cho 7 ngày', d:'Thêm 1 đôi tất dày cho hôm leo Geumjeongsan (sáng 8/10) — hôm duy nhất leo núi thật trong chuyến.' },
       { id:'pk-ngu',   t:'Đồ ngủ' }
     ]},
     { g:'Giày', items:[
-      { id:'pk-giay',  t:'Giày đi bộ có độ bám', d:'Quan trọng nhất trong danh sách. <b>Geumjeongsan 8/10 đường đá granite trơn</b>, Gamcheon nhiều dốc, Igidae và Inwangsan nhiều bậc thang.' },
+      { id:'pk-giay',  t:'Giày đi bộ có độ bám', d:'Quan trọng nhất trong danh sách. <b>Geumjeongsan 8/10 đường đá granite trơn</b> — đây là hôm nặng nhất. Ngoài ra Gamcheon nhiều dốc, Igidae và 108 bậc ở chùa Haedong Yonggungsa nhiều bậc thang. Cả chuyến đi bộ nhiều, nên một đôi êm chân quan trọng hơn một đôi đẹp.' },
       { id:'pk-giay2', t:'Một đôi nhẹ để đi phố', d:'Đổi chân cho hôm không leo núi.' }
     ]},
     { g:'Thuốc & vệ sinh', items:[
       { id:'pk-thuoc', t:'Thuốc cá nhân đang dùng', d:'Mang theo đơn thuốc nếu là thuốc kê toa.' },
       { id:'pk-daubung',t:'Thuốc đau bụng, tiêu hoá', d:'Ăn hải sản sống ở Jagalchi ngày 5/10 — có sẵn cho yên tâm.' },
-      { id:'pk-cao',   t:'Dán giảm đau / cao dán', d:'Sau hai ngày leo núi sẽ cần.' },
+      { id:'pk-cao',   t:'Dán giảm đau / cao dán', d:'Sau Gamcheon (5/10), Igidae (6/10) và Geumjeongsan (8/10) sẽ cần.' },
       { id:'pk-vs',    t:'Đồ vệ sinh cá nhân', d:'Khách sạn bình dân và guesthouse thường không có bàn chải, kem đánh răng.' },
       { id:'pk-duong', t:'Kem dưỡng ẩm + son dưỡng', d:'Đầu tháng 10 ở Hàn rất khô.' },
       { id:'pk-kcn',   t:'Kem chống nắng', d:'Trời khô nắng, ngày nào cũng ở ngoài nhiều.' }
@@ -1149,7 +1151,7 @@ const TRIP = {
       notes:[
         { title:'Từ khách sạn', text:'sáng đi Seongsu mất khoảng 30 phút: tuyến 4 hai ga tới DDP rồi đổi tuyến 2 đi 6 ga. Sau đó <b>Seongsu → Jamsil cùng tuyến 2, chỉ ~12 phút, không đổi tàu</b> — đây là lý do ghép hai chỗ này vào cùng một ngày. Tối về từ Jamsil khoảng 35 phút — chặng về muộn nhất chuyến, nên ở Myeongdong lợi hơn hẳn các khu phía tây.' },
         { title:'Bối cảnh', text:'ngày lễ kỷ niệm vua Sejong công bố bảng chữ Hangeul năm 1446. Jamsil và Lotte World Mall sẽ rất đông vì trúng ngày nghỉ — nếu định lên Seoul Sky thì <b>đặt vé online trước</b>, đừng xếp hàng tại chỗ.' },
-        { title:'Đã bỏ gì khỏi ngày này', text:'Insadong và Ikseon-dong chuyển về chiều 3/10 (đi bộ được từ Beewon). Công viên sông Hàn Yeouido chuyển sang tối 8/10. <b>Leo Inwangsan bỏ hẳn</b> — Seoul Sky ở Lotte Tower đã cho tầm nhìn toàn thành phố, và chuyến này đã có hai buổi leo núi ở Busan rồi.' }
+        { title:'Đã bỏ gì khỏi ngày này', text:'Insadong và Ikseon-dong chuyển về chiều 3/10 (đi bộ được từ Beewon). Công viên sông Hàn Yeouido chuyển sang tối 8/10. <b>Leo Inwangsan bỏ hẳn</b> — Seoul Sky ở Lotte Tower đã cho tầm nhìn toàn thành phố, và ngày này không còn chỗ trống sau khi có hẹn ở Jamsil. Lưu ý: cả chuyến chỉ còn <b>một buổi leo núi thật</b> là Geumjeongsan sáng 8/10 (Igidae và Gamcheon là đi bộ nhiều bậc thang, không phải leo núi). Nếu hai bạn thích leo thì Inwangsan vẫn nhét lại được vào sáng 10/10 nếu dậy sớm.' }
       ],
       costs:[
         { label:'Metro', krw:15000 },
