@@ -528,7 +528,7 @@ const TRIP = {
       d:'Chuyến khoảng 15:00. Dự phòng nếu hết vé: bay Gimhae → Gimpo, 55 phút.' },
     { id:'hanh-ly-ks',
       t:'Hỏi ba khách sạn về việc giữ hành lý',
-      d:'Cả ba đều đã đặt xong, nhưng còn một việc lịch phụ thuộc vào: có giữ va li sau khi trả phòng không. Beewon sáng 4/10 (đi cung điện tay không rồi quay về lấy đồ), Prince sáng 8/10 (leo Beomeosa), The Hill sáng 10/10 (trả phòng 10:00 mà 16:00 mới ra sân bay — Agoda ghi chỗ này có giữ hành lý, xác nhận lại là xong). Hỏi luôn Beewon có thang máy không.' },
+      d:'Cả ba đều đã đặt xong, nhưng còn một việc lịch phụ thuộc vào: có giữ va li sau khi trả phòng không. Beewon sáng 4/10 (đi cung điện tay không rồi quay về lấy đồ) và The Hill sáng 10/10 (trả phòng 10:00 mà 16:00 mới ra sân bay — Agoda ghi chỗ này có giữ hành lý, xác nhận lại là xong). Hỏi luôn Beewon có thang máy không.' },
     { id:'sky-capsule',
       t:'Đặt vé Sky Capsule ngày 6/10',
       d:'Hay hết vé, nên đặt online trước. Khoảng 35.000–45.000₩/cabin 4 chỗ, tuỳ chặng đi.' },
@@ -571,6 +571,8 @@ const TRIP = {
       tip:'Ga cho cung Deoksugung, ngay cạnh cổng.' },
     { name:'Myeongdong',      ko:'명동',     line:'Tuyến 4', lat:37.560898, lng:126.986376,
       tip:'<b>Ga của khách sạn đợt Seoul hai</b> — GH The Hill cách 360 m, đoạn cuối là dốc. Dùng cả ba ngày 8, 9, 10/10. Olive Young flagship và quầy hoàn thuế Lotte cũng quanh đây.' },
+    { name:'Dongnimmun',      ko:'독립문',   line:'Tuyến 3', lat:37.574558, lng:126.957836,
+      tip:'Cửa lên Inwangsan chiều 9/10 — ra <b>lối số 2</b> rồi đi bộ 10 phút tới cửa rừng.' },
     { name:'Jamsil',          ko:'잠실',     line:'Tuyến 2 · 8', lat:37.513350, lng:127.100210,
       tip:'Lotte World Tower và văn phòng, chiều tối 8/10. Nối thẳng lên toà nhà từ trong ga, không phải ra đường.' },
     { name:'DDP Dongdaemun',  ko:'동대문역사문화공원', line:'Tuyến 2 · 4 · 5', lat:37.565140, lng:127.007860,
@@ -597,8 +599,6 @@ const TRIP = {
       tip:'Chợ cá Jagalchi và BIFF Square đều đi bộ từ đây.' },
     { name:'Nampo',           ko:'남포',     line:'Tuyến 1', lat:35.097924, lng:129.034947,
       tip:'Chợ Gukje, BIFF Square, công viên Yongdusan đều quanh đây.' },
-    { name:'Beomeosa',        ko:'범어사',   line:'Tuyến 1', lat:35.273102, lng:129.092668,
-      tip:'Xuống ga rồi bắt XE BUÝT SỐ 90 lên chùa. Đầu bắc tuyến 1, từ ga Busan đi 17 ga.' },
     { name:'Haeundae',        ko:'해운대',   line:'Tuyến 2', lat:35.163753, lng:129.158747,
       tip:'Đi chùa Haedong Yonggungsa: từ đây bắt xe buýt 181, hoặc taxi khoảng 15.000₩.' },
     { name:'Gwangan',         ko:'광안',     line:'Tuyến 2', lat:35.157914, lng:129.113118,
@@ -634,18 +634,18 @@ const TRIP = {
       { id:'pk-lop',   t:'Áo khoác nhẹ hoặc áo gió', d:'Chênh sáng tối lớn. <b>Tối 8/10 ngồi bờ sông Hàn lạnh hơn trong phố vài độ và có gió.</b>' },
       { id:'pk-len',   t:'1–2 áo len mỏng / hoodie', d:'Mặc nhiều lớp hợp hơn một áo dày.' },
       { id:'pk-ao',    t:'Áo thun / sơ mi cho 7 ngày' },
-      { id:'pk-quan',  t:'2–3 quần dài', d:'Một cái co giãn để leo Geumjeongsan sáng 8/10.' },
-      { id:'pk-dolot', t:'Đồ lót + tất cho 7 ngày', d:'Thêm 1 đôi tất dày cho hôm leo Geumjeongsan (sáng 8/10) — hôm duy nhất leo núi thật trong chuyến.' },
+      { id:'pk-quan',  t:'2–3 quần dài', d:'Một cái co giãn để leo Inwangsan chiều 9/10.' },
+      { id:'pk-dolot', t:'Đồ lót + tất cho 7 ngày', d:'Thêm 1 đôi tất dày cho hôm leo Inwangsan (chiều 9/10) — hôm duy nhất leo núi trong chuyến.' },
       { id:'pk-ngu',   t:'Đồ ngủ' }
     ]},
     { g:'Giày', items:[
-      { id:'pk-giay',  t:'Giày đi bộ có độ bám', d:'Quan trọng nhất trong danh sách. <b>Geumjeongsan 8/10 đường đá granite trơn</b> — đây là hôm nặng nhất. Ngoài ra Gamcheon nhiều dốc, Igidae và 108 bậc ở chùa Haedong Yonggungsa nhiều bậc thang. Cả chuyến đi bộ nhiều, nên một đôi êm chân quan trọng hơn một đôi đẹp.' },
+      { id:'pk-giay',  t:'Giày đi bộ có độ bám', d:'Quan trọng nhất trong danh sách. <b>Inwangsan 9/10 là đường mòn đá</b>, Gamcheon 5/10 nhiều dốc, Igidae 6/10 và 108 bậc ở chùa Haedong Yonggungsa nhiều bậc thang. Cả chuyến đi bộ rất nhiều, nên một đôi êm chân quan trọng hơn một đôi đẹp.' },
       { id:'pk-giay2', t:'Một đôi nhẹ để đi phố', d:'Đổi chân cho hôm không leo núi.' }
     ]},
     { g:'Thuốc & vệ sinh', items:[
       { id:'pk-thuoc', t:'Thuốc cá nhân đang dùng', d:'Mang theo đơn thuốc nếu là thuốc kê toa.' },
       { id:'pk-daubung',t:'Thuốc đau bụng, tiêu hoá', d:'Ăn hải sản sống ở Jagalchi ngày 5/10 — có sẵn cho yên tâm.' },
-      { id:'pk-cao',   t:'Dán giảm đau / cao dán', d:'Sau Gamcheon (5/10), Igidae (6/10) và Geumjeongsan (8/10) sẽ cần.' },
+      { id:'pk-cao',   t:'Dán giảm đau / cao dán', d:'Sau Gamcheon (5/10), Igidae (6/10) và Inwangsan (9/10) sẽ cần.' },
       { id:'pk-vs',    t:'Đồ vệ sinh cá nhân', d:'Khách sạn bình dân và guesthouse thường không có bàn chải, kem đánh răng.' },
       { id:'pk-duong', t:'Kem dưỡng ẩm + son dưỡng', d:'Đầu tháng 10 ở Hàn rất khô.' },
       { id:'pk-kcn',   t:'Kem chống nắng', d:'Trời khô nắng, ngày nào cũng ở ngoài nhiều.' }
@@ -677,7 +677,7 @@ const TRIP = {
       addr:'19, Jungang-daero 229beon-gil, Dong-gu, Busan 48815',
       gia:'từ ~790.000₫/đêm',
       ga:'Ga metro Busan (tuyến 1) 250 m · ga tàu KTX 340 m — đều 5 phút đi bộ',
-      note:'Đi từ đây: ga Busan 5 phút đi bộ · chợ Gukje và Jagalchi 11–13 phút · Gamcheon 13 phút · Beomeosa 39 phút · Gwangalli 44 phút · <b>Haeundae và bờ đông 54 phút</b>. <b>Tối vẫn đi bộ được, dù không phải khu ăn chơi.</b> Ba thứ trong bán kính 15 phút đi bộ: <b>phố dwaeji gukbap Choryang</b> (~440 m, hơn 20 quán, nhiều quán mở 24/24), <b>công viên Bắc Cảng</b> (15 phút, ra lối 6 qua cầu vượt bộ hành, đèn tới 22:00), và <b>Chinatown</b> ngay đối diện ga. Cả ba đều đã có trên bản đồ, bật lớp “Địa điểm khác”.',
+      note:'Đi từ đây: ga Busan 5 phút đi bộ · chợ Gukje và Jagalchi 11–13 phút · Gamcheon 13 phút · Gwangalli 44 phút · <b>Haeundae và bờ đông 54 phút</b>. <b>Tối vẫn đi bộ được, dù không phải khu ăn chơi.</b> Ba thứ trong bán kính 15 phút đi bộ: <b>phố dwaeji gukbap Choryang</b> (~440 m, hơn 20 quán, nhiều quán mở 24/24), <b>công viên Bắc Cảng</b> (15 phút, ra lối 6 qua cầu vượt bộ hành, đèn tới 22:00), và <b>Chinatown</b> ngay đối diện ga. Cả ba đều đã có trên bản đồ, bật lớp “Địa điểm khác”.',
       hoi:'<b>Có giữ hành lý sáng 8/10 sau khi trả phòng không</b> — nếu có thì bỏ được khoản tủ khoá 4.000₩ ở ga.',
       tip:'8,9/10 · 2.956 đánh giá. Cách ga metro Busan 250 m, ga KTX 340 m. <b>Chấm này là vị trí gần đúng theo địa chỉ — chưa có trên OpenStreetMap.</b>' },
 
@@ -1082,21 +1082,16 @@ const TRIP = {
       d:6, date:'8/10', dow:'T5', dowFull:'Thứ Năm', city:'b2s', color:'#7A5AA8',
       short:'→ Seoul · Jamsil',
       wake:'Busan Station Prince', sleep:'GH The Hill Myeongdong',
-      goFrom:'Tuyến 1 từ ga Busan đi 17 ga tới ga Beomeosa (~39 phút), lối ra 5 hoặc 7, rồi <b>buýt số 90</b> lên chùa. <b>Rời khách sạn 06:30</b> — tàu 10:54 không chờ ai.',
+      goFrom:'Khách sạn cách ga Busan 250 m, đi bộ 4 phút. <b>Cả buổi sáng không phải đi đâu xa</b> — mọi thứ trong bán kính 500 m.',
       goTo:'Từ ga Jamsil về khách sạn: <b>tuyến 2</b> đi 11 ga tới ga <b>DDP</b> (~22 phút), đổi <b>tuyến 4</b> 2 ga tới ga Myeong-dong. Khoảng 35 phút — canh chuyến tàu cuối, metro Seoul chạy tới khoảng nửa đêm.',
       title:'Về Seoul buổi trưa, tối ở Jamsil',
       notePlaceholder:'Giờ hẹn đồng nghiệp, số toa KTX…',
       stops:[
-        { t:'07:30', name:'Chùa Beomeosa — chỉ chùa, không leo núi',
-          desc:'Chùa dựng năm 678 trên sườn Geumjeongsan. <b>Tàu 10:54 nên không còn chỗ cho phần leo núi</b> — chỉ kịp xem chùa. Rời chùa chậm nhất 09:00: buýt 90 xuống ga, tuyến 1 về ga Busan 39 phút, tới nơi khoảng 09:50.',
-          lat:35.2839899, lng:129.0687639, q:'Beomeosa Temple Busan',
-          read:'chùa Beomeosa Busan kinh nghiệm',
-          tip:'Rời khách sạn 06:30, rời chùa chậm nhất 09:00. Buýt 90 từ ga Beomeosa.' },
+        { t:'08:30', name:'Sáng cuối ở Busan — ngủ thêm, ăn sáng',
+          desc:'Tàu 10:54 nên buổi sáng nay <b>cố tình để trống</b>. Ăn sáng ở <b>phố dwaeji gukbap Choryang</b> cách 440 m (nhiều quán mở 24/24) hoặc <b>Chinatown</b> cách 300 m. Sau bốn ngày Busan kín lịch và một tối Jamsil dài đang chờ, đây là chỗ duy nhất trong chuyến để thở.' },
 
-        { t:'10:05', name:'Lấy hành lý, ra ga',
-          go:'Tuyến 1 từ ga Beomeosa về ga Busan, 17 ga, khoảng 39 phút.',
-          read:'tủ khoá gửi hành lý ga Busan kinh nghiệm',
-          desc:'Trả phòng từ sáng sớm và gửi đồ lại khách sạn (cách ga 250 m) hoặc tủ khoá ga (~4.000₩). Mua gì ăn sáng muộn ở ga rồi lên tàu.' },
+        { t:'10:00', name:'Trả phòng, ra ga',
+          desc:'Khách sạn cách ga 250 m nên không cần tủ khoá, không cần tính toán gì. Có mặt ở ga trước 10:35, mua ít đồ ăn mang lên tàu — KTX gần 3 tiếng.' },
 
         { t:'10:54', name:'KTX về Seoul',
           go:'Đi bộ 250 m ra ga, khoảng 4 phút.',
@@ -1130,14 +1125,12 @@ const TRIP = {
           desc:'Quanh Jamsil có Lotte World Mall và khu hồ Seokchon, nhiều chỗ ăn. <b>Giờ này là ước chừng</b> — chỉnh lại theo lịch hẹn thật của các bạn.' }
       ],
       notes:[
-        { title:'Buổi sáng rất gấp — đọc kỹ', text:'tàu <b>10:54</b> nghĩa là phải có mặt ở ga trước 10:35. Muốn kịp ghé Beomeosa thì <b>trả phòng và gửi đồ từ tối hôm trước hoặc trước 06:30</b>, rời khách sạn 06:30, tới chùa 07:30, <b>rời chùa chậm nhất 09:00</b>. Về tới ga khoảng 09:50, còn 45 phút dư. Nếu thấy mạo hiểm thì bỏ hẳn Beomeosa: ngủ thêm, ăn sáng ở phố gukbap cách 440 m, hoặc đi bộ 15 phút ra <b>công viên Bắc Cảng</b> (mở từ 05:00) rồi thong thả ra ga.' },
-        { title:'Geumjeongsan đã mất', text:'giờ tàu mới cắt mất phần leo núi — <b>cả chuyến giờ không còn buổi leo núi thật nào</b>. Chùa Beomeosa vẫn xem được, nhưng đoạn tường thành Geumjeong 2–3 tiếng thì không. Nếu hai bạn tiếc, chỗ bù gần nhất là <b>Inwangsan chiều 9/10</b> — 338 m, lên xuống 1–1,5 tiếng, ngay trung tâm Seoul và sát Gwanghwamun vốn đã có trong lịch ngày đó.' },
+        { title:'Đã bỏ Beomeosa', text:'với tàu 10:54, ghé Beomeosa nghĩa là rời khách sạn 06:30 và chạy đua với đúng một chuyến tàu đã đặt vé — mà cũng chỉ kịp xem chùa, phần tường thành Geumjeong 2–3 tiếng thì không. Bỏ hẳn thì đổi lại được một buổi sáng thong thả trước tối Jamsil. <b>Chỗ leo núi đã chuyển sang Inwangsan chiều 9/10.</b> Nếu vẫn muốn đi đâu đó sáng nay: <b>công viên Bắc Cảng</b> mở từ 05:00, đi bộ 15 phút từ ga — nhưng chỗ đó đẹp nhất lúc lên đèn, đã có sẵn trong lịch tối 7/10.' },
         { title:'Chiều nay đổi hẳn', text:'tàu về sớm hơn 4 tiếng nên buổi chiều giờ thuộc về Jamsil: 13:48 tới ga Seoul, 14:20 gửi đồ ở khách sạn, 15:30 có mặt ở Lotte World Tower. Công viên sông Hàn Yeouido đã chuyển sang <b>tối 9/10</b> — hôm đó đi từ Gwanghwamun chỉ mất một mạch tuyến 5, gần hơn hôm nay nhiều.' }
       ],
       costs:[
         { label:'KTX Busan → Seoul, 2 người', krw:119600 },
-        { label:'Tủ khóa ga',       krw:4000 },
-        { label:'Metro và xe buýt', krw:16000 },
+        { label:'Metro',            krw:7000 },
         { label:'Vé Seoul Sky, 2 người (nếu lên)', krw:[0,58000] },
         { label:'Ăn uống',          krw:[90000,130000] },
         { label:'GH The Hill Myeongdong, 1 đêm', vnd:[1691896,2100000] }
@@ -1160,24 +1153,31 @@ const TRIP = {
           read:'Seongsu-dong Seoul cà phê kinh nghiệm',
           tip:'Nhà máy cũ cải tạo thành quán cà phê và concept store.' },
 
-        { t:'14:00', name:'Quảng trường Gwanghwamun — ngày chữ Hàn',
-          go:'Tuyến 2 từ ga Seongsu đi 6 ga tới ga <b>DDP</b>, đổi <b>tuyến 5</b> đi 3 ga tới ga Gwanghwamun. Khoảng 35 phút, đổi tàu một lần.',
+        { t:'13:15', name:'Leo Inwangsan — 인왕산',
+          go:'Tuyến 2 từ ga Seongsu tới Euljiro 3-ga, đổi <b>tuyến 3</b> đi 4 ga tới ga <b>Dongnimmun</b>, ra <b>lối số 2</b> rồi đi bộ 10 phút tới cửa rừng. Khoảng 45 phút.',
+          desc:'Núi 338 m ngay trong nội thành, <b>khứ hồi 3,5 km, 1 tiếng 30 tới 2 tiếng</b>, độ khó vừa phải. Từ đỉnh nhìn thẳng xuống cung Gyeongbokgung, Bukhansan và cả dải trung tâm Seoul. Tuyến từ ga Dongnimmun là tuyến phổ biến nhất, đoạn đầu thoai thoải. <b>Đường mòn không có đèn</b> — xuất phát 13:15 thì xuống núi chừng 15:15, thừa sáng. Kiểm tra thông báo đóng đường mòn trong ngày trước khi đi.',
+          lat:37.5849155, lng:126.9578104, q:'인왕산 서울',
+          read:'Inwangsan leo núi Seoul ga Dongnimmun kinh nghiệm',
+          tip:'Ga Dongnimmun (tuyến 3) lối 2, đi bộ 10 phút tới cửa rừng. Khứ hồi 1h30–2h. Mang nước, giày có độ bám.' },
+
+        { t:'16:00', name:'Quảng trường Gwanghwamun — ngày chữ Hàn',
+          go:'Xuống núi về phía đông là tới khu Sajik–Gyeongbokgung, đi bộ hoặc tuyến 3 một ga rồi đi bộ. Khoảng 20 phút.',
           desc:'Hôm nay là ngày kỷ niệm vua Sejong công bố bảng chữ Hangeul năm 1446, và <b>tượng vua Sejong đứng ngay giữa quảng trường này</b> — không có chỗ nào hợp hơn để ở vào đúng ngày đó. Ngay dưới chân tượng là nhà trưng bày <b>“Câu chuyện vua Sejong”</b>, miễn phí, và <b>riêng thứ Sáu mở tới 21:00</b> (ngày thường đóng 18:30) — 9/10 đúng là thứ Sáu. Quảng trường thường có sự kiện trong ngày lễ này.',
           lat:37.572648, lng:126.976825, q:'Gwanghwamun Square Seoul',
           read:'quảng trường Gwanghwamun ngày chữ Hàn sự kiện',
           tip:'Nhà trưng bày vua Sejong dưới chân tượng, miễn phí, thứ Sáu mở tới 21:00. Cung Gyeongbokgung ngay cạnh nếu muốn xem lại.' },
 
-        { t:'17:30', name:'Công viên Hangang Yeouido',
+        { t:'18:00', name:'Công viên Hangang Yeouido',
           go:'<b>Tuyến 5 đi thẳng</b> từ ga Gwanghwamun tới ga <b>Yeouinaru</b>, 6 ga, khoảng 13 phút — không phải đổi tàu. Ra <b>lối 2 hoặc 3</b> là xuống thẳng công viên.',
-          desc:'Bờ sông Hàn, chỗ người Seoul ra trải bạt ngồi ăn tối ngắm cầu lên đèn. Miễn phí, không cần đặt gì. Thuê chiếu tại chỗ khoảng 5.000₩. Mua đồ ăn ở cửa hàng tiện lợi gần ga, hoặc gọi gà rán giao thẳng ra bãi cỏ — nhiều hàng nhận giao tận nơi. Tới lúc 17:30 là vừa kịp xem mặt trời lặn rồi cầu lên đèn.',
+          desc:'Bờ sông Hàn, chỗ người Seoul ra trải bạt ngồi ăn tối ngắm cầu lên đèn. Miễn phí, không cần đặt gì. Thuê chiếu tại chỗ khoảng 5.000₩. Mua đồ ăn ở cửa hàng tiện lợi gần ga, hoặc gọi gà rán giao thẳng ra bãi cỏ — nhiều hàng nhận giao tận nơi. <b>Mặt trời lặn lúc 18:06</b> nên tới 18:00 là vừa đúng lúc trời chuyển màu rồi cầu lên đèn.',
           lat:37.5267106, lng:126.9347112, q:'Yeouido Hangang Park Seoul',
           read:'công viên sông Hàn Yeouido kinh nghiệm',
           tip:'Ga Yeouinaru tuyến 5, lối ra 2 hoặc 3. Từ Gwanghwamun đi thẳng 13 phút. Thuê chiếu khoảng 5.000₩.' }
       ],
       notes:[
-        { title:'Một ngày chạy dọc tuyến 5', text:'ba điểm nối nhau gọn: Myeongdong → Seongsu đổi tàu một lần ở DDP (~30 phút), Seongsu → Gwanghwamun cũng đổi một lần ở DDP (~35 phút), rồi <b>Gwanghwamun → Yeouinaru là tuyến 5 đi thẳng 13 phút</b>. Tối về cũng tuyến 5 rồi đổi tuyến 4, khoảng 33 phút. Cả ngày chỉ 23,5 km đi/về khách sạn — nhẹ hơn hẳn phương án Jamsil cũ.' },
+        { title:'Ngày dài nhưng nối nhau gọn', text:'Myeongdong → Seongsu đổi tàu một lần (~30 phút), Seongsu → Dongnimmun đổi một lần (~45 phút), Inwangsan → Gwanghwamun <b>đi bộ được</b>, rồi <b>Gwanghwamun → Yeouinaru là tuyến 5 đi thẳng 13 phút</b>. Tối về cũng tuyến 5 rồi đổi tuyến 4, khoảng 33 phút. Chặng dài duy nhất là Seongsu → Inwangsan, băng ngang thành phố — nếu muốn cắt thì bỏ Seongsu và bắt đầu thẳng từ Inwangsan lúc 10:00.' },
         { title:'Vì sao Gwanghwamun', text:'hẹn với đồng nghiệp đã chuyển sang tối 8/10, nên ngày này trống ra. Mà 9/10 chính là <b>ngày chữ Hàn</b> — tượng vua Sejong, người tạo ra bảng chữ cái, đứng ngay giữa quảng trường Gwanghwamun. Ở đó vào đúng ngày đó là điều duy nhất trong chuyến không thể làm vào hôm khác. Nhà trưng bày dưới chân tượng miễn phí và riêng thứ Sáu mở tới 21:00.' },
-        { title:'Muốn leo núi thì đây là chỗ', text:'giờ tàu mới ngày 8/10 đã cắt mất Geumjeongsan, nên cả chuyến không còn buổi leo núi nào. <b>Inwangsan</b> (338 m, lên xuống 1–1,5 tiếng) nằm ngay phía tây Gwanghwamun, ga Dongnimmun tuyến 3. Nhét được vào chiều nay giữa Seongsu và Gwanghwamun, hoặc thay Seongsu hẳn nếu muốn buổi sáng leo núi. Nói tôi biết nếu muốn xếp.' },
+        { title:'Inwangsan thay Geumjeongsan', text:'giờ tàu mới ngày 8/10 đã cắt mất Geumjeongsan, nên buổi leo núi duy nhất của chuyến chuyển về đây. Inwangsan đặt giữa Seongsu và Gwanghwamun là hợp nhất: nó nằm <b>ngay phía tây Gwanghwamun</b> nên xuống núi là đi bộ sang quảng trường được, và cả ngày chạy một mạch từ đông sang tây — Seongsu → Inwangsan → Gwanghwamun → Yeouido, không quay đầu lần nào. Leo lúc 13:15 cũng an toàn hơn leo chiều muộn: đường mòn <b>không có đèn</b>.' },
         { title:'Đông người', text:'9/10 là ngày nghỉ lễ, Gwanghwamun và khu cung điện sẽ đông. Bù lại nhiều người mặc hanbok và có sự kiện ngoài trời — đó cũng là cái đáng xem.' }
       ],
       costs:[
