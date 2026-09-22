@@ -907,15 +907,22 @@ const TRIP = {
           read:'làng Huinnyeoul Busan kinh nghiệm',
           tip:'Đảo Yeongdo, yên tĩnh hơn Gamcheon. Quán cà phê nhìn thẳng ra biển.' },
 
-        { t:'17:00', name:'Chợ cá Jagalchi',
-          go:'Buýt hoặc taxi qua cầu Yeongdo về khu Nampo, khoảng 15 phút.',
+        { t:'16:30', name:'Chợ Gukje',
+          go:'Buýt hoặc taxi qua cầu Yeongdo về khu Nampo, khoảng 25 phút.',
+          desc:'Chợ truyền thống lớn nhất Busan. Đồ khô, rong biển, quà mang về. <b>Đóng cửa 18:00</b> nên phải đi trước Jagalchi — đây là lý do cụm Nampo xếp theo thứ tự này.',
+          lat:35.1013575, lng:129.0281978, q:'Gukje Market Busan',
+          read:'chợ Gukje Busan mua gì',
+          tip:'Mở 09:00–<b>18:00</b>. Mua quà và đồ khô ở đây. Cách Jagalchi 750 m đi bộ.' },
+
+        { t:'17:45', name:'Chợ cá Jagalchi',
+          go:'Đi bộ 750 m từ chợ Gukje, khoảng 10 phút.',
           desc:'Chợ hải sản lớn nhất Hàn Quốc. Chọn cá sống tầng 1, mang lên tầng 2 chế biến, trả thêm phí. Hỏi giá trước khi chọn.',
           lat:35.0966339, lng:129.0307965, q:'Jagalchi Market Busan',
           read:'chợ cá Jagalchi Busan kinh nghiệm ăn uống',
           tip:'Chọn cá tầng 1, mang lên tầng 2 chế biến. Hỏi giá trước.' },
 
         { t:'19:00', name:'BIFF Square và chợ đêm Bupyeong',
-          go:'Đi bộ 5 phút từ chợ cá.',
+          go:'Đi bộ 300 m từ chợ cá, khoảng 4 phút.',
           desc:'Ăn vặt: bánh rán nhân hạt ssiat hotteok, chả cá eomuk. Chợ Bupyeong ngay gần, mở tới khuya.',
           lat:35.098243, lng:129.029212, q:'BIFF Square Busan',
           read:'BIFF Square Busan ăn vặt',
@@ -923,7 +930,9 @@ const TRIP = {
       ],
       notes:[
         { title:'Di chuyển', text:'tới Gamcheon đi metro tới ga Toseong rồi xe buýt nhỏ số 2 hoặc 2-2. Từ khách sạn ra Toseong chỉ 4 ga tuyến 1, khoảng 13 phút — rời phòng lúc 09:00 là kịp. Cả ngày hôm nay xoay quanh khu Nampo nên đi bộ được nhiều.' },
-        { title:'Trên đường về', text:'BIFF Square và chợ Bupyeong cách ga Busan 2,2 km, tuyến 1 đi thẳng — đường về vốn đã qua ga Busan. Nếu còn sức và về trước 22:00 thì ghé <b>Công viên Bắc Cảng</b> (15 phút đi bộ từ ga, đèn tắt lúc 22:00).' }
+        { title:'Cụm Nampo — ba chợ trong 576 m', text:'chợ Gukje, chợ cá Jagalchi và BIFF Square đều nằm trong vòng <b>576 m</b> của nhau, nên gom hết vào chiều tối nay, đi bộ giữa ba chỗ. Thứ tự xếp theo giờ đóng cửa: <b>Gukje đóng 18:00</b> nên đi đầu, Jagalchi ăn tối, BIFF và chợ đêm Bupyeong mở tới khuya nên để cuối. Gukje trước đây xếp ở trưa 8/10 — chuyển về đây thì ngày về Seoul khỏi phải chạy ngược ra Nampo trước chuyến tàu.' },
+        { title:'Trên đường về', text:'BIFF Square và chợ Bupyeong cách ga Busan 2,8 km, tuyến 1 đi thẳng — đường về vốn đã qua ga Busan. Nếu còn sức và về trước 22:00 thì ghé <b>Công viên Bắc Cảng</b> (15 phút đi bộ từ ga, đèn tắt lúc 22:00).' },
+        { title:'Mua quà sớm thì phải vác', text:'đổi lại việc gom Gukje về hôm nay: đồ mua ở đây sẽ đi cùng hai bạn thêm <b>5 ngày</b> qua Gyeongju rồi lên Seoul. Đồ khô và rong biển thì nhẹ, nhưng đừng mua thứ gì cồng kềnh — Seoul còn Myeongdong và Namdaemun ngày 10/10.' }
       ],
       costs:[
         { label:'Bản đồ tem Gamcheon', krw:4000 },
@@ -971,16 +980,24 @@ const TRIP = {
           read:'biển Haeundae Busan kinh nghiệm',
           tip:'Ăn trưa milmyeon hoặc dwaeji gukbap.' },
 
-        { t:'16:00', name:'Đường mòn ven biển Igidae',
-          go:'Tuyến 2 từ ga Haeundae tới ga Kyungsung Univ·Pukyong, rồi buýt hoặc taxi vào cửa đường mòn. Khoảng 45 phút.',
+        { t:'14:30', name:'Đảo Dongbaek — 동백섬',
+          go:'Đi bộ tiếp về phía tây dọc bãi Haeundae, 1,2 km, khoảng 16 phút. <b>Cùng hướng với đoạn vừa đi từ ga Mipo</b> — không phải quay đầu.',
+          desc:'Mũi đất ở đầu tây bãi Haeundae, vốn là một hòn đảo. Có đường ván đi vòng quanh sát mặt nước, nhà <b>Nurimaru APEC House</b>, hải đăng, và <b>góc nhìn cầu Gwangan đẹp nhất từ đất liền</b>. Miễn phí, đi hết một vòng khoảng 50 phút. Đuối thì chỉ ra tới hải đăng rồi quay lại, chừng 30 phút.',
+          lat:35.1540639, lng:129.1520862, q:'동백섬 부산',
+          read:'đảo Dongbaek Nurimaru APEC House Busan kinh nghiệm',
+          tip:'Đi bộ tiếp 1,2 km từ chỗ ăn trưa. Vòng quanh đảo ~50 phút, miễn phí.' },
+
+        { t:'16:40', name:'Đường mòn ven biển Igidae',
+          go:'Từ đảo Dongbaek ngược lên ga Haeundae 1,6 km (đi bộ ~15 phút hoặc taxi 5 phút), rồi tuyến 2 tới ga Kyungsung Univ·Pukyong, buýt hoặc taxi vào cửa đường mòn. Tổng khoảng 1 tiếng.',
           desc:'Lối đi trên vách đá nhìn sang cầu Gwangan, có cầu gỗ và cầu treo nhỏ. Tuyến đầy đủ khoảng 5km, nhiều bậc thang, không cần đi hết. Hoàng hôn rất đẹp.',
           lat:35.1322108, lng:129.1210029, q:'Igidae Coastal Walk Busan',
           read:'đường mòn Igidae Busan',
-          tip:'Nhiều bậc thang. Không cần đi hết. Mang nước.' }
+          tip:'Nhiều bậc thang. Không cần đi hết. Mang nước. Mặt trời lặn 18:03 — quay ra trước khi tối.' }
       ],
       notes:[
         { title:'Phải đi sớm', text:'đây là ngày xa nhất tính từ khách sạn. Ra tới Haeundae mất khoảng 54 phút (tuyến 1 tới Seomyeon, đổi tuyến 2 đi 16 ga), rồi còn xe buýt hoặc taxi lên chùa. Muốn có mặt ở Yonggungsa lúc 08:30 thì <b>phải rời khách sạn khoảng 07:25</b>. Nếu thấy nặng thì lùi cả ngày xuống một tiếng và bỏ bớt Cheongsapo.' },
-        { title:'Di chuyển', text:'tới Haedong Yonggungsa đi metro ga Haeundae rồi xe buýt 181, hoặc taxi khoảng 15.000₩. Ngày này đi từ đông sang tây một mạch: chùa → Cheongsapo → Sky Capsule → Haeundae → Igidae, không quay đầu lần nào. Nên dùng taxi vài chặng cho đỡ mất thời gian.' }
+        { title:'Di chuyển', text:'tới Haedong Yonggungsa đi metro ga Haeundae rồi xe buýt 181, hoặc taxi khoảng 15.000₩. Ngày này đi từ đông sang tây một mạch: chùa → Cheongsapo → Sky Capsule → bãi Haeundae → đảo Dongbaek → Igidae, không quay đầu lần nào. Nên dùng taxi vài chặng cho đỡ mất thời gian.' },
+        { title:'Đảo Dongbaek và giờ hoàng hôn', text:'đảo Dongbaek nằm đúng ở đầu tây bãi Haeundae, tức là điểm kết thúc tự nhiên của đoạn đi bộ vốn đã có trong lịch — thêm vào gần như không tốn thêm đường. Đổi lại Igidae lùi từ 16:00 sang <b>16:40</b>. Không sao: <b>mặt trời lặn lúc 18:03</b>, tới nơi vẫn còn 1 tiếng 23 sáng trời, mà đường mòn Igidae vốn đã ghi là không cần đi hết. Nếu muốn thong thả hơn nữa thì bỏ Cheongsapo lúc 11:00.' }
       ],
       costs:[
         { label:'Sky Capsule, 1 cabin', krw:[35000,45000] },
@@ -1077,22 +1094,19 @@ const TRIP = {
           read:'chùa Beomeosa Geumjeongsan Busan leo núi',
           tip:'Metro tuyến 1 tới ga Beomeosa rồi xe buýt 90. Leo vừa phải rồi quay xuống, đừng cố lên đỉnh.' },
 
-        { t:'12:30', name:'Trả phòng, gửi đồ ở ga',
+        { t:'13:15', name:'Trả phòng, gửi đồ',
+          go:'Tuyến 1 từ ga Beomeosa về ga Busan, 17 ga, khoảng 39 phút — rời chùa chừng 12:25.',
           read:'tủ khoá gửi hành lý ga Busan kinh nghiệm',
-          desc:'Tủ khóa ga Busan khoảng 4.000₩.' },
+          desc:'Khách sạn cách ga 250 m. Nếu khách sạn giữ hành lý thì khỏi cần tủ khoá ga (khoảng 4.000₩).' },
 
-        { t:'13:00', name:'Chợ Gukje',
-          go:'Tuyến 1 ngược từ ga Beomeosa về Nampo, khoảng 19 ga, 40–50 phút. Chặng dài nhất trong ngày.',
-          desc:'Chợ truyền thống lớn nhất Busan, gần ga Nampo. Mua đồ khô, rong biển, quà. Ăn trưa luôn ở đây.',
-          lat:35.1013575, lng:129.0281978, q:'Gukje Market Busan',
-          read:'chợ Gukje Busan mua gì',
-          tip:'Mua quà, đồ khô. Ăn trưa luôn ở đây.' },
+        { t:'13:45', name:'Ăn trưa gần ga — bữa cuối ở Busan',
+          desc:'Tất cả trong vòng 6 phút đi bộ: <b>phố dwaeji gukbap Choryang</b> cách 440 m (hơn 20 quán, nhiều quán mở 24/24) hoặc <b>Chinatown</b> cách 300 m ngay đối diện ga. Ăn xong đi bộ 250 m ra ga là lên tàu.' },
 
         { t:'15:00', name:'KTX về Seoul',
-          go:'Tuyến 1 từ Nampo đi 3 ga về ga Busan, khoảng 10 phút.',
+          go:'Đi bộ 250 m ra ga, khoảng 4 phút.',
           lat:35.115225, lng:129.042243, q:'Busan Station',
           read:'KTX Busan về Seoul đặt vé kinh nghiệm',
-          tip:'Gửi hành lý ở tủ khóa tại ga từ sáng, khoảng 4.000₩.',
+          tip:'Mọi thứ buổi chiều đều trong bán kính 500 m quanh ga.',
           links:[{t:'Đặt vé Korail', u:'https://www.letskorail.com/ebizbf/EbizBfTicketSearch.do'}] },
 
         { t:'18:00', name:'Tới ga Seoul',
@@ -1117,14 +1131,15 @@ const TRIP = {
           tip:'Ga Yeouinaru tuyến 5, lối ra 2 hoặc 3. Từ Myeongdong ~33 phút, đổi tàu 1 lần ở DDP. Thuê chiếu khoảng 5.000₩.' }
       ],
       notes:[
-        { title:'Từ khách sạn', text:'lên Beomeosa đi tuyến 1 một mạch 17 ga từ ga Busan, khoảng 39 phút, không phải đổi tàu. Muốn có mặt lúc 08:00 thì rời phòng khoảng 07:15. Chiều về, chợ Gukje cách ga Busan 2,0 km và khách sạn cách ga 5 phút — hỏi khách sạn có giữ hành lý sau khi trả phòng không, nếu có thì khỏi cần tủ khoá ở ga.' },
+        { title:'Từ khách sạn', text:'lên Beomeosa đi tuyến 1 một mạch 17 ga từ ga Busan, khoảng 39 phút, không phải đổi tàu. Muốn có mặt lúc 08:00 thì rời phòng khoảng 07:15. Chiều về <b>mọi thứ đều quanh ga</b>: khách sạn 250 m, chỗ ăn trưa 300–440 m, ke tàu 4 phút đi bộ — hỏi khách sạn có giữ hành lý sau khi trả phòng không, nếu có thì khỏi cần tủ khoá.' },
+        { title:'Buổi sáng dài thêm 40 phút', text:'chợ Gukje đã chuyển về chiều 5/10 cùng cụm Nampo, nên sáng nay bỏ được <b>chặng dài nhất ngày</b> — 19 ga ngược từ Beomeosa về Nampo rồi lại quay ra ga trước chuyến 15:00. Thời gian đó trả về cho <b>Geumjeongsan</b>: rời chùa lúc 12:25 thay vì 11:45, tức gần <b>4 tiếng rưỡi trên núi</b>. Đây là buổi leo núi thật duy nhất của cả chuyến, nên đáng.' },
         { title:'Nếu về tới nơi đã thấy mệt', text:'hôm nay vừa leo Beomeosa vừa ngồi KTX 2 tiếng 40, mà Yeouido từ Myeongdong còn mất 33 phút và phải đổi tàu. Có phương án gần hơn hẳn: <b>công viên sông Hàn Ichon</b> — tuyến 4 đi thẳng 6 ga từ ga Myeong-dong, ~15 phút, <b>không đổi tàu</b>, ra khỏi ga chui hầm là tới bãi cỏ. Yên tĩnh hơn, ít hàng quán hơn, nhưng vẫn là sông Hàn và cầu lên đèn. Đã có trên bản đồ, bật lớp “Địa điểm khác”. Không đi đâu cũng được: khách sạn ở ngay Myeongdong, bước ra là phố ăn đêm.' },
         { title:'So với lịch cũ', text:'vì đã xuống Busan từ chiều Chủ nhật nên buổi sáng này không còn gấp. Leo núi xong vẫn kịp ăn trưa thong thả rồi lên tàu.' }
       ],
       costs:[
         { label:'KTX Busan → Seoul, 2 người', krw:119600 },
         { label:'Tủ khóa ga',       krw:4000 },
-        { label:'Metro và xe buýt', krw:18000 },
+        { label:'Metro và xe buýt', krw:15000 },
         { label:'Thuê chiếu ở công viên sông Hàn', krw:5000 },
         { label:'Ăn uống',          krw:[90000,120000] },
         { label:'GH The Hill Myeongdong, 1 đêm', vnd:[1691896,2100000] }
