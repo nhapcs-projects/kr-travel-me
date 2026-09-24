@@ -164,13 +164,20 @@
     border:2px solid #fff;box-shadow:0 1px 5px rgba(0,0,0,.4);
     transition:transform .14s ease;
   }
-  .pin:hover{transform:scale(1.18)}
+  /* Thang chồng chấm. Dùng !important vì MapLibre có thể tự ghi
+     style.zIndex lên marker mỗi lần cập nhật vị trí. Quy tắc :hover
+     bên dưới đặc hiệu hơn (0,2,0 so với 0,1,0) nên vẫn thắng. */
+  .mz1{z-index:1!important} .mz2{z-index:2!important} .mz3{z-index:3!important}
+  .mz4{z-index:4!important} .mz5{z-index:5!important} .mz6{z-index:6!important}
+
+  .pin:hover{transform:scale(1.18);z-index:9!important}
   .pin.dim{
     opacity:.3;transform:scale(.66);box-shadow:0 1px 3px rgba(0,0,0,.25);
     border-width:1.5px;font-size:9px;
   }
   .pin.dim:hover{opacity:.85;transform:scale(.95)}
   .pin.sel{transform:scale(1.3);box-shadow:0 0 0 4px rgba(24,34,46,.22),0 1px 5px rgba(0,0,0,.4)}
+  .stn:hover,.plc:hover,.htl:hover{z-index:9!important}
 
   .maplibregl-popup-content{
     border-radius:8px;padding:12px 14px;box-shadow:var(--shadow);font-family:var(--sans);
@@ -1751,6 +1758,55 @@ function clearMarkers(){
   Object.keys(markers).forEach(k => { markers[k].remove(); delete markers[k]; });
 }
 
+/* Thứ tự chồng chấm trên bản đồ.
+
+   MapLibre không tự đặt z-index cho marker — chấm nào thêm sau thì nằm trên.
+   Vì draw() duyệt các ngày theo thứ tự thời gian rồi mới gọi drawExtra(),
+   nên trước đây chấm ngày 10/10 luôn đè lên ngày 3/10, và ga/địa điểm/khách sạn
+   đè lên tất cả. Chọn ngày 3/10 thì chấm "ga Seoul" của nó nằm dưới ba chấm mờ
+   của các ngày khác ở ĐÚNG cùng toạ độ — coi như biến mất.
+
+   Thang dưới đây đảo lại: ngày đang chọn luôn ở trên cùng. */
+const Z = { dim:1, stn:2, plc:3, htl:4, on:5, sel:6 };
+const setZ = (elm, z) => {
+  elm.classList.remove('mz1','mz2','mz3','mz4','mz5','mz6');
+  elm.classList.add('mz' + z);
+};
+
+/* Nhiều ngày dùng chung một toạ độ: ga Seoul xuất hiện ở 3/10, 4/10, 8/10, 10/10;
+   ga Busan ở 4/10, 7/10, 8/10; sân bay Incheon ở 3/10 và 10/10. Gom theo toạ độ
+   làm tròn ~11 m để biết chấm nào cần toả ra cho khỏi nằm khuất nhau. */
+function coincidentGroups(){
+  const g = {};
+  TRIP.days.forEach(day => mapped(day).forEach((p, i) => {
+    const k = p.lat.toFixed(4) + ',' + p.lng.toFixed(4);
+    (g[k] = g[k] || []).push(day.d + ':' + i);
+  }));
+  return g;
+}
+
+/* Chấm của ngày đang chọn giữ nguyên vị trí thật; các ngày khác toả quanh nó
+   theo vòng tròn bán kính FAN px để vẫn thấy và vẫn bấm được. */
+const FAN = 13;
+const ring = (j, n) => {
+  const a = -Math.PI / 2 + j * 2 * Math.PI / n;
+  return [FAN * Math.cos(a), FAN * Math.sin(a)];
+};
+function fanOffset(members, key, onKeys){
+  if (members.length < 2) return [0, 0];
+  const on = members.filter(m => onKeys.has(m));
+  if (on.length === 1){
+    // Đúng một chấm thuộc ngày đang chọn: nó đứng đúng chỗ thật,
+    // các ngày khác toả quanh nên không chấm nào bị khuất.
+    if (on[0] === key) return [0, 0];
+    const others = members.filter(m => m !== on[0]);
+    return ring(others.indexOf(key) + 1, others.length + 1);
+  }
+  // Không chấm nào — hoặc mọi chấm — thuộc ngày đang chọn (xem "Cả chuyến"):
+  // chia đều vòng tròn cho tất cả.
+  return ring(members.indexOf(key), members.length);
+}
+
 const BED = '<svg viewBox="0 0 24 24" fill="#fff" aria-hidden="true">'
   + '<path d="M3 8a1 1 0 0 0-1 1v10h2.2v-2.4h15.6V19H22v-5.6a3 3 0 0 0-3-3h-7.6v4.2H4.2V9a1 1 0 0 0-1.2-1z"/>'
   + '<circle cx="7.6" cy="11.9" r="2.3"/></svg>';
@@ -1777,6 +1833,7 @@ function drawExtra(){
     (TRIP.stations || []).forEach(st => {
       const d = document.createElement('div');
       d.className = 'stn';
+      setZ(d, Z.stn);
       d.textContent = lineBadge(st.line);
       d.title = st.name + ' · ' + st.line;
       const html = '<div class="pop"><b>' + st.name + ' <span style="font-weight:400;color:var(--ink-faint)">' + st.ko + '</span></b>'
@@ -1795,6 +1852,7 @@ function drawExtra(){
     (TRIP.places || []).forEach(pl => {
       const d = document.createElement('div');
       d.className = 'plc';
+      setZ(d, Z.plc);
       d.textContent = '\u2605';
       d.title = pl.name;
       const html = '<div class="pop"><b>' + pl.name + '</b>'
@@ -1814,6 +1872,7 @@ function drawExtra(){
   (TRIP.hotels || []).forEach(h => {
     const d = document.createElement('div');
     d.className = 'htl' + (h.booked ? '' : ' soon');
+    setZ(d, Z.htl);
     d.innerHTML = BED;
     d.title = h.name + ' · ' + h.nights;
     const html = '<div class="pop"><b>' + h.name + '</b>'
@@ -1850,16 +1909,25 @@ function draw(which, opts){
   if (curPopup){ curPopup.remove(); curPopup = null; }
 
   const b = new maplibregl.LngLatBounds();
+  const groups = coincidentGroups();
+  const onKeys = new Set();                  // chấm thuộc ngày đang chọn
+  TRIP.days.forEach(day => {
+    if (dayOn(day, sel)) mapped(day).forEach((p, i) => onKeys.add(day.d + ':' + i));
+  });
+
   TRIP.days.forEach(day => {
     const on = dayOn(day, sel);
     mapped(day).forEach((p, i) => {
+      const key = day.d + ':' + i;
       const d = document.createElement('div');
       d.className = 'pin' + (on ? '' : ' dim');
       d.style.background = day.color;
       d.textContent = String(i+1);
       d.title = day.dowFull + ' ' + day.date + ' · ' + p.t + ' ' + p.name;
+      setZ(d, on ? Z.on : Z.dim);
       d.addEventListener('click', ev => { ev.stopPropagation(); openStop(day.d, i, true); });
-      markers[day.d + ':' + i] = new maplibregl.Marker({ element:d })
+      const mem = groups[p.lat.toFixed(4) + ',' + p.lng.toFixed(4)] || [key];
+      markers[key] = new maplibregl.Marker({ element:d, offset: fanOffset(mem, key, onKeys) })
         .setLngLat([p.lng, p.lat]).addTo(map);
       if (on) b.extend([p.lng, p.lat]);      // chỉ ngày đang chọn mới kéo khung nhìn
     });
@@ -1917,8 +1985,8 @@ function openStop(dayD, mi, fromMap){
 
   const go = () => {
     const m = markers[dayD + ':' + mi];
-    $$('.pin.sel').forEach(x => x.classList.remove('sel'));
-    if (m) m.getElement().classList.add('sel');
+    $$('.pin.sel').forEach(x => { x.classList.remove('sel'); setZ(x, Z.on); });
+    if (m){ m.getElement().classList.add('sel'); setZ(m.getElement(), Z.sel); }
     if (curPopup) curPopup.remove();
     curPopup = new maplibregl.Popup({ offset:18, closeButton:false, maxWidth:'270px' })
       .setLngLat([p.lng, p.lat]).setHTML(popHtml(day, p, mi)).addTo(map);
