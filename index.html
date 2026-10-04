@@ -626,7 +626,7 @@ const TRIP = {
     { name:'Haeundae',        ko:'해운대',   line:'Tuyến 2', lat:35.163753, lng:129.158747,
       tip:'Đi chùa Haedong Yonggungsa: từ đây bắt xe buýt 181, hoặc taxi khoảng 15.000₩.' },
     { name:'Gwangan',         ko:'광안',     line:'Tuyến 2', lat:35.157914, lng:129.113118,
-      tip:'Biển Gwangalli, tối 4/10.' },
+      tip:'Biển Gwangalli, tối 6/10 sau Igidae.' },
     { name:'Kyungsung Univ · Pukyong', ko:'경성대·부경대', line:'Tuyến 2', lat:35.137539, lng:129.100524,
       tip:'Ga gần đường mòn Igidae nhất, ngày 6/10.' },
     { name:'Ga Singyeongju',  ko:'신경주역', line:'KTX', lat:35.798365, lng:129.138955,
@@ -840,7 +840,7 @@ const TRIP = {
       short:'→ Busan',
       wake:'Beewon Guest House', sleep:'Busan Station Prince',
       goFrom:'Tuyến 3 từ Jongno 3-ga đi 2 ga tới ga Gyeongbokgung (qua Anguk), lối ra 5 lên thẳng cổng cung.',
-      goTo:'Tuyến 2 từ ga Gwangan về Seomyeon, đổi tuyến 1 về ga Busan. Khoảng 40 phút.',
+      goTo:'Đi bộ 15 phút từ Bắc Cảng về khách sạn, qua cầu vượt bộ hành và lối số 6 ga Busan.',
       title:'Cung điện buổi sáng, chiều xuống Busan',
       notePlaceholder:'Số toa số ghế, khách sạn Busan…',
       stops:[
@@ -881,16 +881,22 @@ const TRIP = {
           read:'ga Busan station kinh nghiệm đi lại',
           tip:'KTX 2 tiếng 40 phút. Nhận phòng rồi mới đi chơi.' },
 
-        { t:'19:30', name:'Biển Gwangalli',
-          go:'Tuyến 1 tới Seomyeon, đổi tuyến 2 tới ga Gwangan. Khoảng 35 phút. Ra lối 3 hoặc 5 rồi đi bộ 10 phút ra bờ biển.',
-          desc:'Cầu treo Gwangan lên đèn buổi tối. Ăn tối ở một trong các quán dọc bờ.',
-          lat:35.1531696, lng:129.118666, q:'Gwangalli Beach', ko:'광안리해수욕장',
-          read:'biển Gwangalli Busan kinh nghiệm',
-          tip:'Ăn tối dọc bờ, ngắm cầu Gwangan lên đèn.' }
+        { t:'19:00', name:'Ăn tối phố gukbap Choryang',
+          go:'Đi bộ 6 phút từ khách sạn, khoảng 440 m.',
+          desc:'Dãy hơn 20 quán dwaeji gukbap giữa ga Busan và ga Choryang, nhiều quán mở 24/24. Bữa tối đầu tiên ở Busan mà không phải đi tàu.',
+          lat:35.118500, lng:129.040500, q:'Choryang dwaeji gukbap Busan', ko:'초량 돼지국밥',
+          read:'phố dwaeji gukbap Choryang ga Busan 돼지국밥 골목',
+          tip:'Đi bộ 6 phút từ khách sạn. Nhiều quán mở 24/24.' },
+
+        { t:'20:15', name:'Công viên Bắc Cảng',
+          go:'Đi bộ 15 phút từ ga Busan, ra lối số 6 rồi qua cầu vượt bộ hành.',
+          desc:'Bờ nước rộng 19 ha, cầu Busanhangdaegyo lên đèn, đầu tháng 10 đúng mùa cỏ pampas. Miễn phí, mở tới 24:00 nhưng <b>đèn cảnh quan tắt lúc 22:00</b>. Trong công viên không có quán ăn — ăn trước ở Choryang.',
+          lat:35.111500, lng:129.044500, q:'Busan North Port Park', ko:'북항친수공원',
+          read:'công viên Bắc Cảng Busan 북항친수공원 kinh nghiệm',
+          tip:'Đèn tắt 22:00. Đi bộ 15 phút từ ga Busan.' }
       ],
       notes:[
-        { title:'Từ khách sạn', text:'tới ga Busan 17:40, đi bộ 5 phút là tới Busan Station Prince. Nhận phòng rồi mới đi Gwangalli — từ đây ra Gwangalli mất khoảng 44 phút mỗi chiều (tuyến 1 tới Seomyeon, đổi tuyến 2).' },
-        { title:'Phương án nhẹ hơn cho tối nay', text:'nếu thấy đuối sau buổi sáng ở Seoul và 2h40 trên tàu, đổi Gwangalli sang <b>Công viên Bắc Cảng</b> — đi bộ 15 phút từ ga Busan, ra lối số 6 rồi qua cầu vượt bộ hành. Bờ nước rộng 19 ha, có cầu Busanhangdaegyo lên đèn, đầu tháng 10 đúng mùa cỏ pampas. Mở 05:00–24:00, <b>đèn cảnh quan chỉ bật từ hoàng hôn (~18:20) tới 22:00</b>. Đi Bắc Cảng thì tiết kiệm được khoảng 90 phút đi lại; đổi lại Gwangalli có bãi cát và cả dãy quán ăn ven biển, còn Bắc Cảng không có quán ăn nào bên trong. Cầu Gwangan thì ngày 6/10 đi Igidae vẫn nhìn thấy.' },
+        { title:'Gwangalli chuyển sang tối 6/10', text:'tối nay không đi Gwangalli nữa — chuyển sang <b>tối 6/10</b>, ngay sau đường mòn Igidae. Igidae nằm sát Gwangalli nên từ đó ra biển chỉ ~10 phút taxi, thay vì 44 phút mỗi chiều từ khách sạn như tối nay. Tối nay ở gần khách sạn: ăn tối Choryang rồi dạo Bắc Cảng, cả hai đi bộ được.' },
         { title:'Đánh đổi', text:'buổi sáng này phải bỏ Insadong và Ikseon-dong, hai chỗ đó chuyển sang chiều 3/10, đi bộ được từ Beewon. Bù lại buổi sáng không bị gấp, có thể ngồi lâu hơn ở Bukchon. Nếu bạn bè chỉ rảnh chiều Chủ nhật chứ không rảnh sáng thì nên quay lại phương án đi Busan sáng thứ Hai.' }
       ],
       costs:[
@@ -970,7 +976,7 @@ const TRIP = {
       short:'Bờ đông',
       wake:'Busan Station Prince', sleep:'Busan Station Prince',
       goFrom:'Tuyến 1 tới Seomyeon, đổi tuyến 2 đi 16 ga tới ga Haeundae, rồi <b>buýt 181</b> hoặc taxi (~15.000₩) lên chùa. Tổng khoảng 1 tiếng — phải rời phòng từ 07:25.',
-      goTo:'Ra ga Kyungsung Univ·Pukyong, tuyến 2 về Seomyeon, đổi tuyến 1 về ga Busan. Khoảng 50 phút.',
+      goTo:'Từ ga Gwangan, tuyến 2 về Seomyeon, đổi tuyến 1 về ga Busan. Khoảng 44 phút.',
       title:'Bờ biển phía đông',
       notePlaceholder:'Vé Sky Capsule…',
       stops:[
@@ -1014,17 +1020,25 @@ const TRIP = {
           desc:'Lối đi trên vách đá nhìn sang cầu Gwangan, có cầu gỗ và cầu treo nhỏ. Tuyến đầy đủ khoảng 5km, nhiều bậc thang, không cần đi hết. Hoàng hôn rất đẹp.',
           lat:35.1322108, lng:129.1210029, q:'Igidae Coastal Walk Busan', ko:'이기대 해안산책로',
           read:'đường mòn Igidae Busan',
-          tip:'Nhiều bậc thang. Không cần đi hết. Mang nước. Mặt trời lặn 18:03 — quay ra trước khi tối.' }
+          tip:'Nhiều bậc thang. Không cần đi hết. Mang nước. Mặt trời lặn 18:03 — quay ra trước khi tối.' },
+
+        { t:'18:30', name:'Biển Gwangalli',
+          go:'Từ cửa đường mòn Igidae (phía Dongsaengmal) taxi khoảng 10 phút, ~6.000₩. Đi bộ dọc bờ cũng được, khoảng 30 phút.',
+          desc:'Cầu treo Gwangan lên đèn buổi tối, nhìn thẳng từ bãi cát. Ăn tối ở một trong các quán dọc bờ. Về khách sạn từ ga Gwangan, ra lối 3 hoặc 5 đi bộ 10 phút.',
+          lat:35.1531696, lng:129.118666, q:'Gwangalli Beach', ko:'광안리해수욕장',
+          read:'biển Gwangalli Busan kinh nghiệm',
+          tip:'Ăn tối dọc bờ, ngắm cầu Gwangan lên đèn. Chuyển từ tối 4/10 sang.' }
       ],
       notes:[
         { title:'Phải đi sớm', text:'đây là ngày xa nhất tính từ khách sạn. Ra tới Haeundae mất khoảng 54 phút (tuyến 1 tới Seomyeon, đổi tuyến 2 đi 16 ga), rồi còn xe buýt hoặc taxi lên chùa. Muốn có mặt ở Yonggungsa lúc 08:30 thì <b>phải rời khách sạn khoảng 07:25</b>. Nếu thấy nặng thì lùi cả ngày xuống một tiếng và bỏ bớt Cheongsapo.' },
-        { title:'Di chuyển', text:'tới Haedong Yonggungsa đi metro ga Haeundae rồi xe buýt 181, hoặc taxi khoảng 15.000₩. Ngày này đi từ đông sang tây một mạch: chùa → Cheongsapo → Sky Capsule → bãi Haeundae → đảo Dongbaek → Igidae, không quay đầu lần nào. Nên dùng taxi vài chặng cho đỡ mất thời gian.' },
-        { title:'Đảo Dongbaek và giờ hoàng hôn', text:'đảo Dongbaek nằm đúng ở đầu tây bãi Haeundae, tức là điểm kết thúc tự nhiên của đoạn đi bộ vốn đã có trong lịch — thêm vào gần như không tốn thêm đường. Đổi lại Igidae lùi từ 16:00 sang <b>16:40</b>. Không sao: <b>mặt trời lặn lúc 18:03</b>, tới nơi vẫn còn 1 tiếng 23 sáng trời, mà đường mòn Igidae vốn đã ghi là không cần đi hết. Nếu muốn thong thả hơn nữa thì bỏ Cheongsapo lúc 11:00.' }
+        { title:'Di chuyển', text:'tới Haedong Yonggungsa đi metro ga Haeundae rồi xe buýt 181, hoặc taxi khoảng 15.000₩. Ngày này đi từ đông sang tây một mạch: chùa → Cheongsapo → Sky Capsule → bãi Haeundae → đảo Dongbaek → Igidae → Gwangalli, không quay đầu lần nào. Nên dùng taxi vài chặng cho đỡ mất thời gian.' },
+        { title:'Đảo Dongbaek và giờ hoàng hôn', text:'đảo Dongbaek nằm đúng ở đầu tây bãi Haeundae, tức là điểm kết thúc tự nhiên của đoạn đi bộ vốn đã có trong lịch — thêm vào gần như không tốn thêm đường. Đổi lại Igidae lùi từ 16:00 sang <b>16:40</b>. Không sao: <b>mặt trời lặn lúc 18:03</b>, tới nơi vẫn còn 1 tiếng 23 sáng trời, mà đường mòn Igidae vốn đã ghi là không cần đi hết. Nếu muốn thong thả hơn nữa thì bỏ Cheongsapo lúc 11:00.' },
+        { title:'Gwangalli ăn tối', text:'Gwangalli chuyển từ tối 4/10 sang đây vì nằm ngay sát Igidae — đi hết đường mòn lúc hoàng hôn là ra biển ăn tối, cầu Gwangan vừa lên đèn. Về khách sạn từ ga Gwangan khoảng 44 phút, xa ngang tuyến về cũ từ Kyungsung Univ, nên không tốn thêm đường. Ngày này vốn dài, nếu đuối thì ăn tối Gwangalli xong về luôn, không cần nán lại.' }
       ],
       costs:[
         { label:'Sky Capsule, 1 cabin', krw:[35000,45000] },
         { label:'Taxi và xe buýt',      krw:40000 },
-        { label:'Ăn uống',              krw:[100000,140000] },
+        { label:'Ăn uống, tối ở Gwangalli', krw:[120000,170000] },
         { label:'Busan Station Prince, 1 đêm', vnd:[787597,1000000] }
       ]
     },
