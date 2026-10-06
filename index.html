@@ -1001,12 +1001,13 @@ const TRIP = {
           tip:'Hay hết vé trước cả tuần. Hết thì đi Beach Train, rẻ hơn mà vẫn ngắm được biển.',
           links:[{t:'Trang chính thức', u:'https://www.bluelinepark.com'}] },
 
-        { t:'13:30', name:'Ăn trưa Haeundae',
-          go:'Đi bộ 15 phút dọc bờ biển từ ga Mipo, hoặc đi Beach Train một chặng.',
-          desc:'Thử milmyeon, mì lạnh kiểu Busan, nhẹ hơn naengmyeon.',
-          lat:35.1586975, lng:129.1603842, q:'Haeundae Beach', ko:'해운대해수욕장',
-          read:'biển Haeundae Busan kinh nghiệm',
-          tip:'Ăn trưa milmyeon hoặc dwaeji gukbap.' },
+        { t:'13:30', name:'Ăn trưa Haemok — 해목',
+          go:'Từ ga Mipo đi bộ dọc bãi Haeundae rồi rẽ vào phố Gunam-ro, khoảng 15 phút. Quán ở 구남로24번길 8, giữa ga Haeundae và bãi biển.',
+          desc:'Cơm lươn kiểu Nagoya <b>hitsumabushi</b>, Michelin Bib Gourmand. Có thêm kaisendon, maguro-don. Mở 11:00–22:00, <b>lúc nào cũng xếp hàng</b> — lấy số từ xa qua app <b>Tabling</b> (mở lượt từ 11:30), nên lấy lúc đang ngồi Sky Capsule. Đông quá thì đổi sang <b>엄용백 돼지국밥</b> chi nhánh Haeundae cùng phố (구남로24번길 39). <b>Chấm này là vị trí gần đúng theo tên phố.</b>',
+          lat:35.161282, lng:129.159078, q:'해목 해운대점', ko:'해목 해운대점',
+          read:'해목 해운대점 히츠마부시 웨이팅',
+          tip:'Lấy số qua Tabling từ 11:30. Mở 11:00–22:00. ☎ 051-746-3730.',
+          links:[{t:'Tabling', u:'https://www.tabling.co.kr/restaurant/2124'}] },
 
         { t:'14:30', name:'Đảo Dongbaek — 동백섬',
           go:'Đi bộ tiếp về phía tây dọc bãi Haeundae, 1,2 km, khoảng 16 phút. <b>Cùng hướng với đoạn vừa đi từ ga Mipo</b> — không phải quay đầu.',
@@ -1024,21 +1025,28 @@ const TRIP = {
 
         { t:'18:30', name:'Biển Gwangalli',
           go:'Từ cửa đường mòn Igidae (phía Dongsaengmal) taxi khoảng 10 phút, ~6.000₩. Đi bộ dọc bờ cũng được, khoảng 30 phút.',
-          desc:'Cầu treo Gwangan lên đèn buổi tối, nhìn thẳng từ bãi cát. Ăn tối ở một trong các quán dọc bờ. Về khách sạn từ ga Gwangan, ra lối 3 hoặc 5 đi bộ 10 phút.',
+          desc:'Cầu treo Gwangan lên đèn buổi tối, nhìn thẳng từ bãi cát. Dạo bờ biển trước, rồi vào phố sau bãi ăn thịt nướng.',
           lat:35.1531696, lng:129.118666, q:'Gwangalli Beach', ko:'광안리해수욕장',
           read:'biển Gwangalli Busan kinh nghiệm',
-          tip:'Ăn tối dọc bờ, ngắm cầu Gwangan lên đèn. Chuyển từ tối 4/10 sang.' }
+          tip:'Ngắm cầu Gwangan lên đèn. Chuyển từ tối 4/10 sang.' },
+
+        { t:'19:15', name:'Ăn tối thịt nướng Gwangalli',
+          go:'Các quán đều ở bờ biển hoặc mấy phố ngay sau bãi, đi bộ vài phút.',
+          desc:'Vài quán được nhắc nhiều: <b>해안숯불갈비</b> (sườn heo nướng than, ngay trước bãi biển), <b>광안돼지갈비</b> (sườn heo, giá mềm), <b>마포나루</b> (samgyeopsal nướng than, trên đường ra bãi). Ăn xong về khách sạn từ ga Gwangan, ra lối 3 hoặc 5 đi bộ 10 phút.',
+          q:'광안리 숯불갈비',
+          read:'광안리 고기집 숯불갈비 맛집',
+          tip:'Sườn heo nướng than hoặc samgyeopsal. Về từ ga Gwangan.' }
       ],
       notes:[
         { title:'Phải đi sớm', text:'đây là ngày xa nhất tính từ khách sạn. Ra tới Haeundae mất khoảng 54 phút (tuyến 1 tới Seomyeon, đổi tuyến 2 đi 16 ga), rồi còn xe buýt hoặc taxi lên chùa. Muốn có mặt ở Yonggungsa lúc 08:30 thì <b>phải rời khách sạn khoảng 07:25</b>. Nếu thấy nặng thì lùi cả ngày xuống một tiếng và bỏ bớt Cheongsapo.' },
         { title:'Di chuyển', text:'tới Haedong Yonggungsa đi metro ga Haeundae rồi xe buýt 181, hoặc taxi khoảng 15.000₩. Ngày này đi từ đông sang tây một mạch: chùa → Cheongsapo → Sky Capsule → bãi Haeundae → đảo Dongbaek → Igidae → Gwangalli, không quay đầu lần nào. Nên dùng taxi vài chặng cho đỡ mất thời gian.' },
         { title:'Đảo Dongbaek và giờ hoàng hôn', text:'đảo Dongbaek nằm đúng ở đầu tây bãi Haeundae, tức là điểm kết thúc tự nhiên của đoạn đi bộ vốn đã có trong lịch — thêm vào gần như không tốn thêm đường. Đổi lại Igidae lùi từ 16:00 sang <b>16:40</b>. Không sao: <b>mặt trời lặn lúc 18:03</b>, tới nơi vẫn còn 1 tiếng 23 sáng trời, mà đường mòn Igidae vốn đã ghi là không cần đi hết. Nếu muốn thong thả hơn nữa thì bỏ Cheongsapo lúc 11:00.' },
-        { title:'Gwangalli ăn tối', text:'Gwangalli chuyển từ tối 4/10 sang đây vì nằm ngay sát Igidae — đi hết đường mòn lúc hoàng hôn là ra biển ăn tối, cầu Gwangan vừa lên đèn. Về khách sạn từ ga Gwangan khoảng 44 phút, xa ngang tuyến về cũ từ Kyungsung Univ, nên không tốn thêm đường. Ngày này vốn dài, nếu đuối thì ăn tối Gwangalli xong về luôn, không cần nán lại.' }
+        { title:'Gwangalli ăn tối', text:'Gwangalli chuyển từ tối 4/10 sang đây vì nằm ngay sát Igidae — đi hết đường mòn lúc hoàng hôn là ra biển ăn tối, cầu Gwangan vừa lên đèn. Về khách sạn từ ga Gwangan khoảng 44 phút, xa ngang tuyến về cũ từ Kyungsung Univ, nên không tốn thêm đường. Ăn tối là thịt nướng ở phố sau bãi biển. Ngày này vốn dài, nếu đuối thì ăn xong về luôn, không cần nán lại.' }
       ],
       costs:[
         { label:'Sky Capsule, 1 cabin', krw:[35000,45000] },
         { label:'Taxi và xe buýt',      krw:40000 },
-        { label:'Ăn uống, tối ở Gwangalli', krw:[120000,170000] },
+        { label:'Ăn uống, trưa Haemok, tối thịt nướng', krw:[150000,200000] },
         { label:'Busan Station Prince, 1 đêm', vnd:[787597,1000000] }
       ]
     },
