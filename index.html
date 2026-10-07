@@ -761,62 +761,79 @@ const TRIP = {
      big  hơi cồng kềnh, nên mua cho nhà hơn là chia quà
   */
   gifts: [
-    { g:'Mặt nạ', items:[
-      { id:'qua-medimask', t:'Mặt nạ Mediheal Essential', ko:'메디힐 에센셜 마스크', krw:10000, n:11, vn:30700, unit:'miếng',
-        pack:'Hộp 10 + 1 miếng, chọn 1 trong 7 loại (Madecassoside, Ceramide, Vitamin C, Collagen, PDRN…)', d:'15 năm liền đứng đầu bảng mặt nạ. Phẳng, nhẹ, tách lẻ chia cho nhiều người được — món quà dễ nhất.' },
-      { id:'qua-carrot', t:'Mặt nạ cà rốt Skinfood', ko:'스킨푸드 캐롯 카로틴 마스크', krw:12000,
-        pack:'7 + 3 miếng', d:'Làm dịu da, đang top 10 bán chạy.' },
-      { id:'qua-anuamask', t:'Mặt nạ Anua Daily Care', ko:'아누아 데일리케어 마스크팩', krw:9500,
-        pack:'5 miếng + tặng 1–2 miếng, 8 loại', d:'Hãng Anua đang rất hot ở Việt Nam.' }
-    ]},
-    { g:'Chống nắng', items:[
-      { id:'qua-roundlab', t:'Kem chống nắng Round Lab Birch', ko:'라운드랩 자작나무 수분 선크림', krw:24500, n:2, vn:375000, unit:'tuýp',
-        pack:'50ml × 2 (mua 1 tặng 1) + serum chống nắng 8ml', d:'Ai cũng dùng, mua 1 tặng 1 nên thành 2 phần quà.' },
-      { id:'qua-boj', t:'Kem chống nắng Beauty of Joseon Relief Sun', ko:'조선미녀 맑은쌀 선크림', krw:15000,
+    { g:'Kem chống nắng', items:[
+      { id:'qua-roundlab', t:'Round Lab Birch', ko:'라운드랩 자작나무 수분 선크림', krw:24500, n:2, vn:375000, unit:'tuýp',
+        pack:'50ml × 2 (mua 1 tặng 1) + serum chống nắng 8ml', d:'Số 1 kem chống nắng ở Olive Young. Mua 1 tặng 1 nên thành 2 phần quà.' },
+      { id:'qua-dalba', t:'d\'Alba nâng tông hồng', ko:'달바 핑크 톤업 선크림', krw:41900, n:2.6, vn:359000, unit:'tuýp 50ml',
+        pack:'65ml × 2', d:'Nâng tông, thay được kem lót. Đắt nhất nhóm nhưng tính theo ml vẫn rẻ hơn Hasaki.' },
+      { id:'qua-boj', t:'Beauty of Joseon Relief Sun', ko:'조선미녀 맑은쌀 선크림', krw:15000,
         pack:'50ml + tặng 20ml', d:'Kem chống nắng Hàn bán chạy nhất ở Việt Nam. Bản 2 tuýp 50ml giá 24.000₩.' },
       { id:'qua-skin1004', t:'Serum chống nắng Skin1004 Hyalu-Cica', ko:'스킨1004 워터핏 선세럼', krw:28000,
-        pack:'50ml × 2 + 15ml', d:'Số 1 dòng serum chống nắng ở Olive Young, mỏng nhẹ.' }
+        pack:'50ml × 2 + 15ml', d:'Số 1 dòng serum chống nắng, mỏng như nước.' },
+      { id:'qua-goodalsun', t:'Goodal diếp cá', ko:'구달 맑은 어성초 진정 수분 선크림', krw:17900,
+        pack:'50ml × 2', d:'Rẻ nhất nhóm tính theo tuýp, cho da nhạy cảm.' }
     ]},
-    { g:'Môi', items:[
-      { id:'qua-laneige', t:'Mặt nạ ngủ môi Laneige', ko:'라네즈 립 슬리핑 마스크', krw:15100,
-        pack:'20g + 3 mẫu thử', d:'Món quà quen thuộc, hũ nhỏ.' },
-      { id:'qua-romand', t:'Son tint Romand Juicy Lasting', ko:'롬앤 쥬시 래스팅 틴트', krw:9900,
-        pack:'1 cây, nhiều màu', d:'Tint số 1 Olive Young. Có bản mini 6.600₩.' },
-      { id:'qua-peripera', t:'Son tint Peripera Ink Mood Glowy', ko:'페리페라 잉크 무드 글로이 틴트', krw:9150,
-        pack:'1 cây, 32 màu, tặng móc khoá', d:'Rất nhỏ, hợp chia cho bạn nữ.' },
-      { id:'qua-uriage', t:'Son dưỡng có màu Uriage', ko:'유리아쥬 스틱레브르 컬러드', krw:9900,
-        pack:'1 thỏi, 9 màu', d:'Son dưỡng có chút màu, hợp cả người không trang điểm.' }
+    { g:'Tẩy da chết', items:[
+      { id:'qua-drg', t:'Gel tẩy da chết Dr.G Brightening', ko:'닥터지 브라이트닝 필링젤', krw:16000, n:1.5, vn:390000, unit:'tuýp 120g',
+        pack:'120g + 60g + serum 2ml', d:'Xoa lên da là vụn da chết lăn ra, rất dịu. Món đáng mua nhất danh sách.' },
+      { id:'qua-dokdopeel', t:'Gel tẩy da chết Round Lab Dokdo', ko:'라운드랩 1025 독도 필링젤', krw:13500,
+        pack:'120ml + sữa rửa mặt 20ml', d:'Cùng dòng Dokdo với toner bên dưới.' },
+      { id:'qua-papa', t:'Bột rửa mặt enzyme Papa Recipe', ko:'파파레서피 효소 파우더 클렌저', krw:14400,
+        pack:'50g, chọn loại theo da', d:'Bột enzyme tạo bọt, tẩy da chết nhẹ mỗi ngày. Lọ nhỏ, lạ với người chưa dùng.' },
+      { id:'qua-beplain', t:'Gel tẩy da chết Beplain đậu xanh', ko:'비플레인 녹두 밀크 필링젤', krw:17200,
+        pack:'120ml + 40ml', d:'Dạng sữa, cho da khô.' }
     ]},
-    { g:'Tẩy trang', items:[
-      { id:'qua-banila', t:'Sáp tẩy trang Banila Co Clean it Zero', ko:'바닐라코 클린잇제로 오리지널', krw:23900, n:2, vn:298000, unit:'hũ',
-        pack:'100ml × 2 + 4 gói 3ml', d:'Hũ nhỏ, dễ chia. Mấy gói 3ml làm quà lẻ được.' },
-      { id:'qua-manyo', t:'Dầu tẩy trang Ma:nyo Pure', ko:'마녀공장 퓨어 클렌징오일', krw:24900, n:2, vn:385000, unit:'chai', big:true,
-        pack:'200ml × 2 + 25ml + sữa rửa mặt 20ml', d:'Chai 200ml, hơi nặng vali.' },
-      { id:'qua-anuaoil', t:'Dầu tẩy trang Anua Diếp cá', ko:'아누아 어성초 클렌징오일', krw:24900, n:2, vn:343000, unit:'chai', big:true,
-        pack:'200ml × 2', d:'Cho da dầu, lỗ chân lông.' }
+    { g:'Sữa rửa mặt', items:[
+      { id:'qua-innisfree', t:'Innisfree tro núi lửa BHA', ko:'이니스프리 화산송이 바하 모공 클렌징폼', krw:11200, n:1.733, vn:179000, unit:'tuýp 150g',
+        pack:'130g × 2', d:'Cho da dầu, có BHA nên làm sạch cả lỗ chân lông. Bán hơn 50 triệu tuýp.' },
+      { id:'qua-anuafoam', t:'Anua diếp cá', ko:'아누아 어성초 피지쏙 모공 폼', krw:23900, n:2, vn:275000, unit:'tuýp',
+        pack:'150ml × 2', d:'Cho da dầu mụn.' },
+      { id:'qua-torridenfoam', t:'Torriden Dive-in', ko:'토리든 다이브인 클렌징폼', krw:18200,
+        pack:'150ml × 2 (mua 1 tặng 1)', d:'Dịu nhẹ, cho da khô và nhạy cảm.' },
+      { id:'qua-manyofoam', t:'Ma:nyo đậu nành', ko:'마녀공장 퓨어 소이빈 클렌징폼', krw:12100,
+        pack:'160ml × 2 + dầu tẩy trang 25ml', d:'Rẻ nhất nhóm tính theo tuýp.' }
     ]},
-    { g:'Dưỡng da', items:[
-      { id:'qua-cosrx', t:'Tinh chất ốc sên COSRX Snail 96', ko:'코스알엑스 스네일 96 에센스', krw:19660,
-        pack:'100ml', d:'Món kinh điển, ai dùng cũng quen.' },
-      { id:'qua-anuapdrn', t:'Serum Anua PDRN Hyaluronic', ko:'아누아 피디알엔 캡슐 세럼', krw:26900,
-        pack:'30ml + túi refill 30ml', d:'Đang top 10 Olive Young.' },
-      { id:'qua-goodal', t:'Serum vitamin C Goodal', ko:'구달 청귤 비타C 세럼', krw:26900,
-        pack:'50ml + refill 50ml', d:'Mờ thâm. Bản collab Sanrio.' },
-      { id:'qua-mediserum', t:'Serum Mediheal Madecassoside', ko:'메디힐 마데카소사이드 더마 세럼', krw:24900,
-        pack:'50ml + 50ml, bản Seoul Edition', d:'Bản Seoul Edition, có tặng thẻ treo vali.' },
-      { id:'qua-snature', t:'Kem dưỡng ẩm S.Nature Aqua Squalane', ko:'에스네이처 아쿠아 스쿠알란 수분크림', krw:18900,
-        pack:'60ml + 30ml', d:'Kem dưỡng ẩm bán chạy, giá mềm.' },
+    { g:'Nước hoa hồng', items:[
       { id:'qua-anuatoner', t:'Toner Anua Diếp cá 77', ko:'아누아 어성초 77 토너', krw:26900, n:2.8, vn:347000, unit:'chai 250ml', big:true,
-        pack:'350ml + túi refill 350ml (Hasaki so với chai 250ml)', d:'Rất rẻ, nhưng 700ml chất lỏng khá nặng.' },
-      { id:'qua-medipad', t:'Toner pad Mediheal', ko:'메디힐 토너패드', krw:28900, n:2, vn:393000, unit:'hũ 100 miếng', big:true,
-        pack:'2 hũ × 100 miếng, chọn 1 trong 7 loại', d:'Hai hũ to — mua cho người nhà.' }
+        pack:'350ml + túi refill 350ml', d:'Toner Hàn nổi nhất ở Việt Nam. Rất rẻ, nhưng 700ml khá nặng.' },
+      { id:'qua-dokdo', t:'Toner Round Lab Dokdo', ko:'라운드랩 1025 독도 토너', krw:27000, n:3, vn:217000, unit:'chai 200ml', big:true,
+        pack:'500ml + 100ml', d:'Toner số 1 Olive Young, dịu, ai dùng cũng được.' },
+      { id:'qua-paula', t:'Toner tẩy da chết Paula\'s Choice 2% BHA', ko:'폴라초이스 바하 리퀴드', krw:31200, n:1.254, vn:649000, unit:'chai 118ml',
+        pack:'118ml + 30ml', d:'Hãng Mỹ nhưng ở Olive Young có gói kèm chai 30ml. Chai 30ml tách ra làm quà riêng được.' },
+      { id:'qua-torridentoner', t:'Toner Torriden Dive-in', ko:'토리든 다이브인 토너', krw:19800, big:true,
+        pack:'500ml + bông tẩy trang', d:'Cấp ẩm, cho da khô.' }
+    ]},
+    { g:'Kem đánh răng', items:[
+      { id:'qua-median', t:'Median 93%', ko:'메디안 치석케어 치약', krw:6450, n:3, vn:46000, unit:'tuýp',
+        pack:'120g × 3, chọn trắng răng / nướu / hơi thở / gốc', d:'Kem đánh răng quốc dân của Hàn. Rẻ hơn không nhiều, nhưng gói 3 tuýp chia quà tiện.' },
+      { id:'qua-lucipelo', t:'Lucipelo', ko:'루치펠로 치약', krw:12500,
+        pack:'105g × 2 + giá để kem', d:'Kem đánh răng cao cấp Hàn, tuýp đẹp, mùi khuynh diệp hoặc chanh muối. Hợp làm quà.' },
+      { id:'qua-euthymol', t:'Kem đánh răng tím Euthymol', ko:'유시몰 화이트닝 퍼플코렉터 치약', krw:13900,
+        pack:'1 tuýp, có bản kèm bàn chải tím', d:'Màu tím trung hoà ố vàng, trắng răng ngay sau khi chải. Đang hot trên mạng.' },
+      { id:'qua-dentiste', t:'Dentiste Plus White', ko:'덴티스테 플러스화이트 치약', krw:8900,
+        pack:'100g + bàn chải', d:'Chải buổi tối, sáng dậy đỡ hôi miệng.' }
+    ]},
+    { g:'Lạ mà hữu ích', items:[
+      { id:'qua-kyusoku', t:'Miếng dán mát chân Kyusoku Jikan', ko:'휴족시간', krw:9400,
+        pack:'6 hoặc 18 miếng', d:'Dán bắp chân trước khi ngủ, mát lạnh, đỡ mỏi sau ngày đi bộ nhiều. Ở Việt Nam hiếm.' },
+      { id:'qua-footpeel', t:'Mặt nạ lột da chân', ko:'풋 필링 마스크', krw:3800,
+        pack:'1 đôi', d:'Đeo 1 tiếng, khoảng 1 tuần sau da chết bong hết, gót chân mềm. Rẻ, nhẹ, quà vui.' },
+      { id:'qua-tongue', t:'Dụng cụ cạo lưỡi Dr. Tongue\'s', ko:'닥터텅스 혀클리너', krw:9980,
+        pack:'Inox, kèm túi', d:'Thiết kế không gây buồn nôn. Dùng rồi là nghiện.' },
+      { id:'qua-nosepack', t:'Miếng lột mụn đầu đen ở mũi Ilso', ko:'일소 노우즈 팩', krw:11900,
+        pack:'5 miếng', d:'Miếng lột mụn đầu đen bán chạy nhất Olive Young.' },
+      { id:'qua-breath', t:'Xịt thơm miệng Dentiste', ko:'덴티스테 후레쉬 브레스 스프레이', krw:7100,
+        pack:'15ml', d:'Nhỏ bằng thỏi son, bỏ túi.' },
+      { id:'qua-medimask', t:'Mặt nạ Mediheal Essential', ko:'메디힐 에센셜 마스크', krw:10000, n:11, vn:30700, unit:'miếng',
+        pack:'Hộp 10 + 1 miếng, chọn 1 trong 7 loại', d:'Không lạ nhưng quá rẻ — tách lẻ chia cho mọi người.' }
     ]}
   ],
   giftSkip: [
+    { h:'Kem chống nắng Skin1004 Air-fit', p:'Olive Young 16.150₩ (~307k), Hasaki chỉ 259k — mua ở Việt Nam rẻ hơn.' },
     { h:'Serum Torriden', p:'50ml + refill 50ml 27.000₩, tính ra mỗi 50ml đắt hơn Hasaki (225k).' },
     { h:'Kem La Roche-Posay Cicaplast B5+', p:'100ml 29.800₩, gần bằng Hasaki (558k). Hãng Pháp, ở Việt Nam bán rẻ sẵn.' },
-    { h:'Serum xịt d\'Alba', p:'100ml × 2 giá 35.900₩, mỗi chai ngang Hasaki (325k).' },
-    { h:'Chai to', p:'Sữa dưỡng thể 600ml–1 lít, dầu gội 750ml, tẩy da chết 298g — rẻ nhưng nặng vali.' }
+    { h:'Miếng dán mụn', p:'Hữu ích nhưng Việt Nam có sẵn, giá tương đương (Acnes 48 miếng 83k).' },
+    { h:'Chai to', p:'Sữa dưỡng thể 600ml–1 lít, dầu gội 750ml — rẻ nhưng nặng vali.' }
   ],
 
   days: [
@@ -1757,7 +1774,8 @@ function giftCmp(it, rate){
 function renderQua(){
   const rate = state.rate;
   el('pane-qua').innerHTML =
-      '<p class="fine" style="margin:4px 4px 12px">20 món ở <b>Olive Young</b>, chọn theo: phổ biến, nhỏ gọn, dễ chia. '
+      '<p class="fine" style="margin:4px 4px 12px">' + (TRIP.gifts || []).reduce((n, g) => n + g.items.length, 0)
+    + ' món ở <b>Olive Young</b>: chống nắng, tẩy da chết, sữa rửa mặt, toner, kem đánh răng và vài món lạ mà hữu ích. '
     + 'Giá online ngày 7/10; giá có dấu “~” là loại rẻ nhất. So với <b>Hasaki</b> cùng ngày, quy theo tỷ giá ở tab Tiền ('
     + nf(rate) + '₫ / 1.000₩). Món nào Hasaki không bán thì ghi chưa so được. Tick vào là đánh dấu đã mua.</p>'
     + (TRIP.gifts || []).map(g =>
