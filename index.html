@@ -484,6 +484,7 @@
       <button role="tab" data-tab="chuanbi" aria-selected="false">Chuẩn bị</button>
       <button role="tab" data-tab="hanhly"  aria-selected="false">Hành lý</button>
       <button role="tab" data-tab="tien"    aria-selected="false">Tiền</button>
+      <button role="tab" data-tab="qua"     aria-selected="false">Quà</button>
       <button role="tab" data-tab="luuy"    aria-selected="false">Lưu ý</button>
     </nav>
 
@@ -492,6 +493,7 @@
       <section class="pane"    data-pane="chuanbi" id="pane-chuanbi"></section>
       <section class="pane"    data-pane="hanhly"  id="pane-hanhly"></section>
       <section class="pane"    data-pane="tien"    id="pane-tien"></section>
+      <section class="pane"    data-pane="qua"     id="pane-qua"></section>
       <section class="pane"    data-pane="luuy"    id="pane-luuy"></section>
     </div>
   </aside>
@@ -628,9 +630,7 @@ const TRIP = {
     { name:'Gwangan',         ko:'광안',     line:'Tuyến 2', lat:35.157914, lng:129.113118,
       tip:'Biển Gwangalli, tối 6/10 sau Igidae.' },
     { name:'Kyungsung Univ · Pukyong', ko:'경성대·부경대', line:'Tuyến 2', lat:35.137539, lng:129.100524,
-      tip:'Ga gần đường mòn Igidae nhất, ngày 6/10.' },
-    { name:'Ga Singyeongju',  ko:'신경주역', line:'KTX', lat:35.798365, lng:129.138955,
-      tip:'Ga KTX của Gyeongju, nằm xa trung tâm. Bắt xe buýt 50, 51, 60, 61 hoặc 70, mất 35–40 phút.' }
+      tip:'Ga gần đường mòn Igidae nhất, ngày 6/10.' }
   ],
 
 
@@ -746,14 +746,79 @@ const TRIP = {
     { name:'Công viên Yongdusan · tháp Busan', city:'Busan', lat:35.100495, lng:129.032788, q:'Yongdusan Park Busan', ko:'용두산공원',
       tip:'Ngay trên chợ Gukje và BIFF Square — leo thang cuốn lên là tới. Nhìn xuống cảng Busan.', read:'công viên Yongdusan tháp Busan kinh nghiệm' },
     { name:'Cáp treo biển Songdo', city:'Busan', lat:35.068932, lng:129.021990, q:'Songdo Marine Cable Car Busan', ko:'송도해상케이블카',
-      tip:'Busan Air Cruise, cabin đáy kính bay trên biển. Gần Gamcheon, ghép được vào ngày 5/10.', read:'cáp treo Songdo Busan Air Cruise kinh nghiệm' },
+      tip:'Busan Air Cruise, cabin đáy kính bay trên biển. Sáng 7/10.', read:'cáp treo Songdo Busan Air Cruise kinh nghiệm' },
     { name:'Taejongdae', city:'Busan', lat:35.058510, lng:129.087686, q:'Taejongdae Busan', ko:'태종대',
-      tip:'Vách đá và hải đăng ở mũi đảo Yeongdo. Cùng đảo với làng Huinnyeoul ngày 5/10.', read:'Taejongdae Busan kinh nghiệm' }
+      tip:'Vách đá và hải đăng ở mũi đảo Yeongdo. Chiều 7/10.', read:'Taejongdae Busan kinh nghiệm' }
   ],
 
   /* ================================================================
      LỊCH TỪNG NGÀY
      ================================================================ */
+  /* ---------- quà Olive Young ----------
+     krw  giá online Olive Young ngày 7/10/2026 (giá có "~" là loại rẻ nhất)
+     n    gói Hàn bằng bao nhiêu đơn vị của giá VN (vd 11 miếng, 2 tuýp)
+     vn   giá Hasaki cho MỘT đơn vị cùng ngày; bỏ trống nếu chưa tìm được
+     big  hơi cồng kềnh, nên mua cho nhà hơn là chia quà
+  */
+  gifts: [
+    { g:'Mặt nạ', items:[
+      { id:'qua-medimask', t:'Mặt nạ Mediheal Essential', ko:'메디힐 에센셜 마스크', krw:10000, n:11, vn:30700, unit:'miếng',
+        pack:'Hộp 10 + 1 miếng, chọn 1 trong 7 loại (Madecassoside, Ceramide, Vitamin C, Collagen, PDRN…)', d:'15 năm liền đứng đầu bảng mặt nạ. Phẳng, nhẹ, tách lẻ chia cho nhiều người được — món quà dễ nhất.' },
+      { id:'qua-carrot', t:'Mặt nạ cà rốt Skinfood', ko:'스킨푸드 캐롯 카로틴 마스크', krw:12000,
+        pack:'7 + 3 miếng', d:'Làm dịu da, đang top 10 bán chạy.' },
+      { id:'qua-anuamask', t:'Mặt nạ Anua Daily Care', ko:'아누아 데일리케어 마스크팩', krw:9500,
+        pack:'5 miếng + tặng 1–2 miếng, 8 loại', d:'Hãng Anua đang rất hot ở Việt Nam.' }
+    ]},
+    { g:'Chống nắng', items:[
+      { id:'qua-roundlab', t:'Kem chống nắng Round Lab Birch', ko:'라운드랩 자작나무 수분 선크림', krw:24500, n:2, vn:375000, unit:'tuýp',
+        pack:'50ml × 2 (mua 1 tặng 1) + serum chống nắng 8ml', d:'Ai cũng dùng, mua 1 tặng 1 nên thành 2 phần quà.' },
+      { id:'qua-boj', t:'Kem chống nắng Beauty of Joseon Relief Sun', ko:'조선미녀 맑은쌀 선크림', krw:15000,
+        pack:'50ml + tặng 20ml', d:'Kem chống nắng Hàn bán chạy nhất ở Việt Nam. Bản 2 tuýp 50ml giá 24.000₩.' },
+      { id:'qua-skin1004', t:'Serum chống nắng Skin1004 Hyalu-Cica', ko:'스킨1004 워터핏 선세럼', krw:28000,
+        pack:'50ml × 2 + 15ml', d:'Số 1 dòng serum chống nắng ở Olive Young, mỏng nhẹ.' }
+    ]},
+    { g:'Môi', items:[
+      { id:'qua-laneige', t:'Mặt nạ ngủ môi Laneige', ko:'라네즈 립 슬리핑 마스크', krw:15100,
+        pack:'20g + 3 mẫu thử', d:'Món quà quen thuộc, hũ nhỏ.' },
+      { id:'qua-romand', t:'Son tint Romand Juicy Lasting', ko:'롬앤 쥬시 래스팅 틴트', krw:9900,
+        pack:'1 cây, nhiều màu', d:'Tint số 1 Olive Young. Có bản mini 6.600₩.' },
+      { id:'qua-peripera', t:'Son tint Peripera Ink Mood Glowy', ko:'페리페라 잉크 무드 글로이 틴트', krw:9150,
+        pack:'1 cây, 32 màu, tặng móc khoá', d:'Rất nhỏ, hợp chia cho bạn nữ.' },
+      { id:'qua-uriage', t:'Son dưỡng có màu Uriage', ko:'유리아쥬 스틱레브르 컬러드', krw:9900,
+        pack:'1 thỏi, 9 màu', d:'Son dưỡng có chút màu, hợp cả người không trang điểm.' }
+    ]},
+    { g:'Tẩy trang', items:[
+      { id:'qua-banila', t:'Sáp tẩy trang Banila Co Clean it Zero', ko:'바닐라코 클린잇제로 오리지널', krw:23900, n:2, vn:298000, unit:'hũ',
+        pack:'100ml × 2 + 4 gói 3ml', d:'Hũ nhỏ, dễ chia. Mấy gói 3ml làm quà lẻ được.' },
+      { id:'qua-manyo', t:'Dầu tẩy trang Ma:nyo Pure', ko:'마녀공장 퓨어 클렌징오일', krw:24900, n:2, vn:385000, unit:'chai', big:true,
+        pack:'200ml × 2 + 25ml + sữa rửa mặt 20ml', d:'Chai 200ml, hơi nặng vali.' },
+      { id:'qua-anuaoil', t:'Dầu tẩy trang Anua Diếp cá', ko:'아누아 어성초 클렌징오일', krw:24900, n:2, vn:343000, unit:'chai', big:true,
+        pack:'200ml × 2', d:'Cho da dầu, lỗ chân lông.' }
+    ]},
+    { g:'Dưỡng da', items:[
+      { id:'qua-cosrx', t:'Tinh chất ốc sên COSRX Snail 96', ko:'코스알엑스 스네일 96 에센스', krw:19660,
+        pack:'100ml', d:'Món kinh điển, ai dùng cũng quen.' },
+      { id:'qua-anuapdrn', t:'Serum Anua PDRN Hyaluronic', ko:'아누아 피디알엔 캡슐 세럼', krw:26900,
+        pack:'30ml + túi refill 30ml', d:'Đang top 10 Olive Young.' },
+      { id:'qua-goodal', t:'Serum vitamin C Goodal', ko:'구달 청귤 비타C 세럼', krw:26900,
+        pack:'50ml + refill 50ml', d:'Mờ thâm. Bản collab Sanrio.' },
+      { id:'qua-mediserum', t:'Serum Mediheal Madecassoside', ko:'메디힐 마데카소사이드 더마 세럼', krw:24900,
+        pack:'50ml + 50ml, bản Seoul Edition', d:'Bản Seoul Edition, có tặng thẻ treo vali.' },
+      { id:'qua-snature', t:'Kem dưỡng ẩm S.Nature Aqua Squalane', ko:'에스네이처 아쿠아 스쿠알란 수분크림', krw:18900,
+        pack:'60ml + 30ml', d:'Kem dưỡng ẩm bán chạy, giá mềm.' },
+      { id:'qua-anuatoner', t:'Toner Anua Diếp cá 77', ko:'아누아 어성초 77 토너', krw:26900, n:2.8, vn:347000, unit:'chai 250ml', big:true,
+        pack:'350ml + túi refill 350ml (Hasaki so với chai 250ml)', d:'Rất rẻ, nhưng 700ml chất lỏng khá nặng.' },
+      { id:'qua-medipad', t:'Toner pad Mediheal', ko:'메디힐 토너패드', krw:28900, n:2, vn:393000, unit:'hũ 100 miếng', big:true,
+        pack:'2 hũ × 100 miếng, chọn 1 trong 7 loại', d:'Hai hũ to — mua cho người nhà.' }
+    ]}
+  ],
+  giftSkip: [
+    { h:'Serum Torriden', p:'50ml + refill 50ml 27.000₩, tính ra mỗi 50ml đắt hơn Hasaki (225k).' },
+    { h:'Kem La Roche-Posay Cicaplast B5+', p:'100ml 29.800₩, gần bằng Hasaki (558k). Hãng Pháp, ở Việt Nam bán rẻ sẵn.' },
+    { h:'Serum xịt d\'Alba', p:'100ml × 2 giá 35.900₩, mỗi chai ngang Hasaki (325k).' },
+    { h:'Chai to', p:'Sữa dưỡng thể 600ml–1 lít, dầu gội 750ml, tẩy da chết 298g — rẻ nhưng nặng vali.' }
+  ],
+
   days: [
 
     /* ---------------------------- 3/10 ---------------------------- */
@@ -960,7 +1025,7 @@ const TRIP = {
         { title:'Di chuyển', text:'tới Gamcheon đi metro tới ga Toseong rồi xe buýt nhỏ số 2 hoặc 2-2. Từ khách sạn ra Toseong chỉ 4 ga tuyến 1, khoảng 13 phút — rời phòng lúc 09:00 là kịp. Cả ngày hôm nay xoay quanh khu Nampo nên đi bộ được nhiều.' },
         { title:'Cụm Nampo — ba chợ trong 576 m', text:'chợ Gukje, chợ cá Jagalchi và BIFF Square đều nằm trong vòng <b>576 m</b> của nhau, nên gom hết vào chiều tối nay, đi bộ giữa ba chỗ. Thứ tự xếp theo giờ đóng cửa: <b>Gukje đóng 18:00</b> nên đi đầu, Jagalchi ăn tối, BIFF và chợ đêm Bupyeong mở tới khuya nên để cuối. Gukje trước đây xếp ở trưa 8/10 — chuyển về đây thì ngày về Seoul khỏi phải chạy ngược ra Nampo trước chuyến tàu.' },
         { title:'Trên đường về', text:'BIFF Square và chợ Bupyeong cách ga Busan 2,8 km, tuyến 1 đi thẳng — đường về vốn đã qua ga Busan. Nếu còn sức và về trước 22:00 thì ghé <b>Công viên Bắc Cảng</b> (15 phút đi bộ từ ga, đèn tắt lúc 22:00).' },
-        { title:'Mua quà sớm thì phải vác', text:'đổi lại việc gom Gukje về hôm nay: đồ mua ở đây sẽ đi cùng hai bạn thêm <b>5 ngày</b> qua Gyeongju rồi lên Seoul. Đồ khô và rong biển thì nhẹ, nhưng đừng mua thứ gì cồng kềnh — Seoul còn Myeongdong và Namdaemun ngày 10/10.' }
+        { title:'Mua quà sớm thì phải vác', text:'đổi lại việc gom Gukje về hôm nay: đồ mua ở đây sẽ đi cùng hai bạn thêm <b>5 ngày</b> rồi lên Seoul. Đồ khô và rong biển thì nhẹ, nhưng đừng mua thứ gì cồng kềnh — Seoul còn Myeongdong và Namdaemun ngày 10/10.' }
       ],
       costs:[
         { label:'Bản đồ tem Gamcheon', krw:4000 },
@@ -1054,71 +1119,63 @@ const TRIP = {
     /* ---------------------------- 7/10 ---------------------------- */
     {
       d:5, date:'7/10', dow:'T4', dowFull:'Thứ Tư', city:'busan', color:'#8A6D1F',
-      short:'Gyeongju',
+      short:'Songdo · Taejongdae',
       wake:'Busan Station Prince', sleep:'Busan Station Prince',
-      goFrom:'Đi bộ 5 phút ra ga Busan.',
-      goTo:'Buýt ra ga Singyeongju rồi KTX về Busan, sau đó đi bộ 5 phút. Tổng khoảng 1 tiếng 30.',
-      title:'Gyeongju trong ngày',
-      notePlaceholder:'Chốt Gyeongju hay ở lại Busan…',
+      goFrom:'Taxi từ khách sạn ra bãi Songdo khoảng 15–20 phút, ~8.000₩.',
+      goTo:'Taxi từ Taejongdae về khách sạn khoảng 25 phút, ~15.000₩. Hoặc buýt 101 / 88 về ga Busan, khoảng 40 phút.',
+      title:'Bờ biển phía nam',
+      notePlaceholder:'Vé cáp treo, giờ Danubi…',
       stops:[
-        { t:'08:30', name:'KTX đi Singyeongju',
-          desc:'Chỉ 30 phút từ ga Busan.',
-          lat:35.115225, lng:129.042243, q:'Busan Station', ko:'부산역',
-          read:'KTX Busan đi Gyeongju ga Singyeongju kinh nghiệm',
-          tip:'KTX đi Singyeongju, chỉ 30 phút.' },
+        { t:'09:30', name:'Cáp treo biển Songdo',
+          go:'Taxi từ khách sạn khoảng 15–20 phút. Lên cáp ở <b>ga Songdo Bay</b>, đầu đông bãi biển.',
+          desc:'Cáp treo vượt biển 1,62 km, nối bãi Songdo với công viên Amnam trên mũi đá. Hai loại cabin: <b>Crystal Cruise</b> sàn kính 24.000₩/người khứ hồi, <b>Air Cruise</b> thường 19.000₩. Xuống ga Amnam dạo một vòng rồi đi cáp về. Mở từ 09:00.',
+          lat:35.076332, lng:129.023540, q:'Songdo Marine Cable Car Busan', ko:'송도해상케이블카 송도베이스테이션',
+          read:'cáp treo Songdo Busan Air Cruise kinh nghiệm',
+          tip:'Mở 09:00. Crystal 24.000₩, Air 19.000₩ khứ hồi.' },
 
-        { t:'09:10', name:'Tới ga Singyeongju',
-          go:'KTX, chỉ 30 phút.',
-          desc:'Ga nằm xa trung tâm Gyeongju. Bắt xe buýt 50, 51, 60, 61 hoặc 70 vào trung tâm, mất 35–40 phút.',
-          lat:35.798365, lng:129.138955, q:'Singyeongju Station', ko:'신경주역',
-          read:'ga Singyeongju đi trung tâm Gyeongju xe buýt',
-          tip:'Ga xa trung tâm. Xe buýt 50/51/60/61/70, mất 35–40 phút.' },
+        { t:'11:00', name:'Bãi Songdo — cầu mây Skywalk',
+          go:'Đi bộ dọc bãi từ ga cáp treo, vài phút.',
+          desc:'Bãi tắm công cộng đầu tiên của Hàn Quốc. <b>Songdo Skywalk (송도구름산책로)</b> là cầu đi bộ cong vươn ra biển, sàn có đoạn lưới nhìn xuống nước, nối ra hòn đảo Rùa nhỏ. Miễn phí, đi hết khoảng 20 phút.',
+          lat:35.075513, lng:129.017308, q:'Songdo Skywalk Busan', ko:'송도구름산책로',
+          read:'Songdo Skywalk 송도구름산책로 Busan',
+          tip:'Cầu đi bộ trên biển, miễn phí.' },
 
-        { t:'10:00', name:'Chùa Bulguksa',
-          go:'Bắt buýt ngay trước cửa ga Singyeongju. <b>Đây là chặng sát giờ nhất cả chuyến</b> — ước lượng ~1 tiếng mà lịch chỉ chừa 50 phút.',
-          desc:'Di sản UNESCO, xây năm 751 thời Silla. Hai tháp đá Dabotap và Seokgatap trong sân chùa là biểu tượng kiến trúc Phật giáo Hàn Quốc. Vé khoảng 6.000₩. Khoảng 2 tiếng là đủ.',
-          lat:35.7898804, lng:129.3318909, q:'Bulguksa Temple Gyeongju', ko:'불국사',
-          read:'chùa Bulguksa Gyeongju kinh nghiệm',
-          tip:'Di sản UNESCO, xây năm 751. Khoảng 2 tiếng là đủ.' },
+        { t:'12:00', name:'Ăn trưa ở Songdo',
+          desc:'Dãy quán dọc bãi Songdo: hải sản, kalguksu, hoặc cà phê nhìn ra biển. Ăn nhẹ để chiều còn đi bộ ở Taejongdae.' },
 
-        { t:'13:00', name:'Khu lăng mộ Daereungwon',
-          go:'Buýt về trung tâm Gyeongju, khoảng 40 phút. Taxi khoảng 20 phút nếu muốn gỡ lại thời gian.',
-          desc:'23 gò mộ hoàng gia Silla nổi lên giữa công viên, hình dáng rất lạ. Có một mộ mở cho vào trong xem. Vé 3.000₩.',
-          lat:35.8381282, lng:129.2108206, q:'Daereungwon Tomb Complex Gyeongju', ko:'대릉원',
-          read:'khu lăng mộ Daereungwon Gyeongju',
-          tip:'Một mộ mở cho vào trong xem. Vé 3.000₩.' },
+        { t:'13:30', name:'Taejongdae — tàu Danubi',
+          go:'Taxi qua cầu Namhang sang đảo Yeongdo, khoảng 20 phút, ~13.000₩.',
+          desc:'Mũi đá cuối đảo Yeongdo, vách đá dựng đứng nhìn ra biển mở. Vào cửa miễn phí. Đường vòng quanh dài khoảng 4,3 km — đi tàu nhỏ <b>Danubi</b> cho đỡ chân, xuống ở các trạm đài quan sát, hải đăng Yeongdo, chùa Taejongsa rồi lên chuyến sau. Danubi nghỉ thứ Hai, hôm nay thứ Tư nên chạy bình thường. Xem giờ chuyến cuối ở quầy vé.',
+          lat:35.059567, lng:129.079979, q:'Taejongdae Danubi Train', ko:'태종대 다누비 순환열차',
+          read:'Taejongdae Danubi Busan kinh nghiệm',
+          tip:'Miễn phí vào cửa. Đi Danubi cho đỡ chân. Nghỉ thứ Hai.' },
 
-        { t:'15:00', name:'Cheomseongdae',
-          go:'Đi bộ 10 phút, cùng khu công viên.',
-          desc:'Đài thiên văn xây thế kỷ 7, được coi là công trình thiên văn còn nguyên vẹn cổ nhất Đông Á. Đi bộ từ Daereungwon sang. Tháng 10–11 có cánh đồng cỏ hồng muhly.',
-          lat:35.8347306, lng:129.2190014, q:'Cheomseongdae Gyeongju', ko:'첨성대',
-          read:'đài thiên văn Cheomseongdae Gyeongju',
-          tip:'Đi bộ từ Daereungwon sang. Tháng 10–11 có cỏ hồng muhly.' },
+        { t:'14:30', name:'Đài quan sát và hải đăng Yeongdo',
+          go:'Xuống Danubi ở trạm đài quan sát. Hải đăng cách đó vài trăm mét.',
+          desc:'Đài quan sát trên vách đá, ngày trong nhìn thấy cả đảo Tsushima của Nhật. Từ hải đăng có bậc thang xuống <b>bãi đá Sinseon-bawi</b> sát mặt nước — dốc, xuống được thì đẹp, mệt thì ngắm từ trên.',
+          lat:35.051435, lng:129.089966, q:'Yeongdo Lighthouse Taejongdae', ko:'영도등대',
+          read:'hải đăng Yeongdo Taejongdae Sinseonbawi',
+          tip:'Bãi đá Sinseon-bawi dưới chân hải đăng, bậc thang dốc.' },
 
-        { t:'17:30', name:'Cung Donggung và hồ Wolji',
-          go:'Đi bộ 10 phút. Canh tới lúc chập tối để thấy đèn phản chiếu xuống hồ.',
-          desc:'Nền cung điện cũ bên hồ nhân tạo. Lên đèn lúc chập tối, phản chiếu xuống mặt nước — cảnh đẹp nhất Gyeongju. Vé 3.000₩, mở tới 22:00. Xem khoảng 30 phút.',
-          lat:35.8348173, lng:129.2265645, q:'Donggung Palace and Wolji Pond', ko:'동궁과 월지',
-          read:'cung Donggung hồ Wolji Gyeongju',
-          tip:'Đẹp nhất lúc lên đèn chập tối. Mở tới 22:00.' },
+        { t:'16:30', name:'Về khách sạn nghỉ',
+          desc:'Taxi khoảng 25 phút, hoặc buýt 101 / 88 về ga Busan. Nghỉ ngơi trước tối cuối ở Busan.' },
 
-        { t:'20:00', name:'KTX về Busan',
-          read:'KTX Gyeongju về Busan giờ tàu cuối',
-          desc:'Về tới ga Busan khoảng 20:30. Khách sạn cách ga 5 phút đi bộ.' },
-
-        { t:'20:45', name:'Công viên Bắc Cảng — tuỳ chọn',
-          desc:'Nếu chưa quá mệt: đi bộ 15 phút từ ga Busan (lối số 6, qua cầu vượt bộ hành) ra bờ nước Bắc Cảng. Cầu Busanhangdaegyo lên đèn, đường dạo dọc kênh, cỏ pampas đúng mùa. Miễn phí, mở tới 24:00 nhưng <b>đèn tắt lúc 22:00</b> nên phải tới trước giờ đó. Trong công viên không có quán ăn — ăn tối trên đường về.',
-          q:'북항친수공원 부산',
-          read:'công viên Bắc Cảng Busan 북항친수공원 kinh nghiệm' }
+        { t:'18:30', name:'Tối cuối ở Busan — Chinatown',
+          go:'Ngay đối diện ga Busan, đi bộ 5 phút từ khách sạn.',
+          desc:'Quán Trung, Nga, Uzbek mở tới tối. Hoặc quay lại phố gukbap Choryang cách 440 m. Sáng mai tàu 10:54 nên không cần ngủ sớm.',
+          lat:35.115000, lng:129.039500, q:'Busan Chinatown', ko:'부산 차이나타운',
+          read:'Busan Chinatown Texas Street ga Busan kinh nghiệm',
+          tip:'Đối diện ga Busan. Quán Trung, Nga, Uzbek.' }
       ],
       notes:[
-        { title:'Phương án thay thế', text:'nếu thấy mệt, ở lại Busan cho thong thả — cáp treo Songdo, chợ Bupyeong, hoặc chỉ ngồi cà phê ven biển. Gyeongju đẹp nhưng là một ngày đi bộ nhiều.' }
+        { title:'Đã bỏ Gyeongju', text:'Gyeongju là một ngày KTX + xe buýt khứ hồi hơn 3 tiếng, đi bộ nhiều — sau ba ngày Busan kín lịch thì quá nặng. Thay bằng bờ biển phía nam: Songdo và Taejongdae đều chỉ cách khách sạn 15–25 phút taxi. <b>Nếu đã đặt vé KTX Singyeongju thì huỷ trên app Korail</b> — huỷ trước giờ tàu chạy chỉ mất phí nhỏ.' },
+        { title:'Di chuyển', text:'ba chặng taxi là nhanh nhất: khách sạn → Songdo, Songdo → Taejongdae (qua cầu Namhang), Taejongdae → khách sạn. Tổng khoảng 35.000₩. Đi buýt thì rẻ hơn nhưng mỗi chặng mất gấp đôi thời gian.' }
       ],
       costs:[
-        { label:'KTX khứ hồi Singyeongju, 2 người', krw:44000 },
-        { label:'Vé Bulguksa, Daereungwon, Wolji',  krw:24000 },
-        { label:'Xe buýt trong Gyeongju',           krw:10000 },
-        { label:'Ăn uống',        krw:[94000,134000] },
+        { label:'Cáp treo Crystal Cruise khứ hồi, 2 người', krw:48000 },
+        { label:'Tàu Danubi, 2 người', krw:[6000,10000] },
+        { label:'Taxi',                krw:[35000,45000] },
+        { label:'Ăn uống',             krw:[100000,140000] },
         { label:'Busan Station Prince, 1 đêm', vnd:[787597,1000000] }
       ]
     },
@@ -1688,6 +1745,39 @@ function paintSpend(){
   });
 }
 
+/* ---------------------------------------------------- TAB QUÀ ------- */
+function giftCmp(it, rate){
+  if (!it.vn) return '<span style="color:var(--ink-faint)">chưa có giá VN để so</span>';
+  const per = it.krw * rate / 1000 / it.n, pct = Math.round((1 - per / it.vn) * 100);
+  const txt = '~' + nf(Math.round(per / 1000)) + 'k/' + it.unit + ' · Hasaki ' + nf(Math.round(it.vn / 1000)) + 'k';
+  return pct >= 10 ? '<b>rẻ hơn ~' + pct + '%</b> · ' + txt
+       : pct > 0   ? 'chỉ rẻ hơn ~' + pct + '% · ' + txt
+       :             'đắt hơn VN · ' + txt;
+}
+function renderQua(){
+  const rate = state.rate;
+  el('pane-qua').innerHTML =
+      '<p class="fine" style="margin:4px 4px 12px">20 món ở <b>Olive Young</b>, chọn theo: phổ biến, nhỏ gọn, dễ chia. '
+    + 'Giá online ngày 7/10; giá có dấu “~” là loại rẻ nhất. So với <b>Hasaki</b> cùng ngày, quy theo tỷ giá ở tab Tiền ('
+    + nf(rate) + '₫ / 1.000₩). Món nào Hasaki không bán thì ghi chưa so được. Tick vào là đánh dấu đã mua.</p>'
+    + (TRIP.gifts || []).map(g =>
+        '<h2>' + g.g + '</h2>'
+      + g.items.map(it =>
+          '<label class="task"><input type="checkbox" data-task="' + it.id + '"><span>'
+        + '<span class="t">' + it.t + ' · ' + nf(it.krw) + '₩' + (it.big ? ' · <span style="font-weight:400;color:var(--ink-faint)">cồng kềnh</span>' : '') + '</span>'
+        + '<span class="d">' + it.pack + ' ≈ ' + nf(Math.round(it.krw * rate / 1000 / 1000)) + 'k₫. ' + it.d + '</span>'
+        + '<span class="d">' + giftCmp(it, rate) + ' · <a href="https://www.oliveyoung.co.kr/store/search/getSearchMain.do?query='
+        + encodeURIComponent(it.ko) + '" target="_blank" rel="noopener">' + it.ko + '</a></span>'
+        + '</span></label>').join('')).join('')
+    + '<p class="prog" id="prog-qua">Đang tải…</p>'
+    + '<h2>Không đáng mua ở Hàn</h2>'
+    + (TRIP.giftSkip || []).map(t => '<div class="ni"><h3>' + t.h + '</h3><p>' + t.p + '</p></div>').join('')
+    + '<h2>Khi mua</h2>'
+    + '<p class="fine"><b>Mang hộ chiếu</b> — Olive Young thường hoàn thuế ngay tại quầy, giá thực trả còn thấp hơn. '
+    + 'Khuyến mãi “10월 올영픽” thường áp dụng cả ở cửa hàng, nhưng <b>coupon chỉ online thì không</b>. '
+    + 'Chưa mua kịp ở Busan thì Myeongdong ngày 10/10 có nhiều cửa hàng Olive Young lớn.</p>';
+}
+
 /* ---------------------------------------------------- TAB LƯU Ý ----- */
 function renderLuuY(){
   el('pane-luuy').innerHTML =
@@ -1829,7 +1919,7 @@ const setZ = (elm, z) => {
 };
 
 /* Nhiều ngày dùng chung một toạ độ: ga Seoul xuất hiện ở 3/10, 4/10, 8/10, 10/10;
-   ga Busan ở 4/10, 7/10, 8/10; sân bay Incheon ở 3/10 và 10/10. Gom theo toạ độ
+   ga Busan ở 4/10, 8/10; sân bay Incheon ở 3/10 và 10/10. Gom theo toạ độ
    làm tròn ~11 m để biết chấm nào cần toả ra cho khỏi nằm khuất nhau. */
 function coincidentGroups(){
   const g = {};
@@ -2338,7 +2428,7 @@ function bind(){
     const r = e.target.closest('#rate');
     if (r){
       const v = Number(r.value);
-      if (v > 0){ state.rate = v; renderLich(); renderTien(); paintAll(); queueSave(); }
+      if (v > 0){ state.rate = v; renderLich(); renderTien(); renderQua(); paintAll(); queueSave(); }
     }
   });
 
@@ -2352,6 +2442,9 @@ function renderProgress(){
   const pk = $$('#pane-hanhly input[data-task]');
   const q = el('prog-pack');
   if (q) q.textContent = pk.filter(b => b.checked).length + ' / ' + pk.length + ' món đã xếp';
+  const gq = $$('#pane-qua input[data-task]');
+  const g = el('prog-qua');
+  if (g) g.textContent = gq.filter(b => b.checked).length + ' / ' + gq.length + ' món đã mua';
 }
 function paintAll(){
   $$('input[data-task]').forEach(b => {
@@ -2408,7 +2501,7 @@ el('daybar').innerHTML =
   + TRIP.days.map(d => '<button data-day="' + d.d + '" aria-pressed="false">'
       + '<i style="background:' + d.color + '"></i>' + d.date + ' ' + d.short + '</button>').join('');
 
-renderLich(); renderChuanBi(); renderHanhLy(); renderTien(); renderLuuY();
+renderLich(); renderChuanBi(); renderHanhLy(); renderTien(); renderQua(); renderLuuY();
 bind(); initSheet(); paintAll(); renderPeek();
 
 if (window.maplibregl){
